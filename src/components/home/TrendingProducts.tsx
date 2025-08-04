@@ -212,6 +212,11 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
     setCurrentSlide(index)
   }
 
+
+  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
+
+
   return (
     <section className="py-16 px-4 bg-gray-50">
       {/* Remove the complex background tech elements and replace with simple background */}
@@ -275,7 +280,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                           <div className="relative aspect-square overflow-hidden bg-gray-50">
                             <img
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              src={`http://api.jajamblockprints.com${product.images}`}
+                              src={`${Image_BaseURL}${product.images[0]}`}
                               alt={product.productName}
                             />
 
@@ -451,7 +456,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
               <div className="flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-3xl p-8 border border-gray-200/50">
                 <img
                   className="rounded-2xl object-contain max-h-[500px] shadow-2xl"
-                  src={`http://api.jajamblockprints.com${selectedProduct.images}`}
+                  src={`${Image_BaseURL}${selectedProduct.images[0]}`}
                   alt={selectedProduct.productName}
                 />
               </div>

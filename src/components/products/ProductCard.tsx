@@ -147,7 +147,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Second Image on Hover */}
           {product.images?.[1] && (
             <img
-              src={`https://api.jajamblockprints.com/api${product.images} ` || "/placeholder.svg"}
+              src={`http://localhost:5008/api${product.images} ` || "/placeholder.svg"}
               alt={`${product.productName} - View 2`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                 isHovered ? "opacity-100" : "opacity-0"
