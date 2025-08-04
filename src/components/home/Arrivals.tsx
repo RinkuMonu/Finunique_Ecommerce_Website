@@ -20,6 +20,9 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const dispatch = useDispatch()
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const [addedProduct, setAddedProduct] = useState<any>(null)
@@ -64,6 +67,25 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
       document.body.style.overflow = "auto"
     }
   }, [isModalOpen])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
+        if (Array.isArray(data.products)) {
+          setProducts(data.products.slice(0, 12)); // Get 12 products for slider
+        } else {
+          console.error("Unexpected products format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, [baseUrl, referenceWebsite]);
 
   const openProductModal = (product: any) => {
     setSelectedProduct(product)
@@ -129,6 +151,12 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     ))
   }
 
+//   setTimeout(() => {
+//     setIsPopupVisible(false);
+//   }, 3000);
+
+//   closeModal();
+// };
   const handleAddToWishlist = (product: any) => {
     const isUserLoggedIn = !!localStorage.getItem("token")
     if (!isUserLoggedIn) {
@@ -175,6 +203,11 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
   }
+
+
+  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
+
 
   return (
     <section className="py-16 px-4 bg-white">
@@ -383,7 +416,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
           </div>
         </div>
       )}
-
       {/* Product Modal */}
       {isModalOpen && selectedProduct && (
         <div
