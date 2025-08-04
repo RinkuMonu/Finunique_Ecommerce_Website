@@ -143,7 +143,7 @@ console.log(banners,"banneres ")
             <SwiperSlide key={item._id}>
               <div className="relative w-full h-auto">
                 <img
-                  src={`https://api.jajamblockprints.com${item.images[0]}`}
+                  src={`http://localhost:5008${item.images[0]}`}
                   alt={item.bannerName}
                   className="w-full h-auto object-fill"
                   loading="eager"

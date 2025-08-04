@@ -246,6 +246,11 @@ const TrendingProducts = ({
     setCurrentSlide(index);
   };
 
+
+  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
+
+
   return (
     <section className="py-16 px-12 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -336,8 +341,10 @@ const TrendingProducts = ({
                           {/* Product Image */}
                           <div className="relative aspect-square overflow-hidden">
                             <img
-                              className="absolute inset-0 w-full h-full object-cover"
-                              src={`http://api.jajamblockprints.com${product.images}`}
+                              className="absolute inset-0 w-full h-full object-cover" 
+                              // src={product.images}
+                                src={`${Image_BaseURL}${product.images[0]}`}
+
                               alt={product.productName}
                             />
 
@@ -576,7 +583,9 @@ const TrendingProducts = ({
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px]"
-                  src={`http://api.jajamblockprints.com${selectedProduct.images}`}
+                  // src={`http://api.jajamblockprints.com${selectedProduct.images}`}
+                      src={`${Image_BaseURL}${selectedProduct.images[0]}`}
+
                   alt={selectedProduct.productName}
                 />
               </div>
