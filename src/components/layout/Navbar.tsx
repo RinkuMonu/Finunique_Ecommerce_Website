@@ -1,401 +1,257 @@
-"use client";
-import { useEffect, useState, useRef, useCallback, memo } from "react";
-import { Search, User, Heart, ShoppingCart, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
-import logo from "../../assest/logo.jpg";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
-import { FaHeart, FaUser } from "react-icons/fa";
-import { CiLogin } from "react-icons/ci";
-
-interface NavbarProps {
-  onCartClick: () => void;
-  cartItemCount: number;
-}
-
-interface UserData {
-  firstName: string;
-  lastName?: string;
-  email: string;
-}
+"use client"
+import { useEffect, useState, useRef, useCallback, memo } from "react"
+import { Search, Heart, ShoppingCart, Menu, X, ChevronDown, Smartphone, Cpu, User } from "lucide-react"
+import { Link } from "react-router-dom"
+import logo from "../../assest/logo.jpg"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice"
+import { FaHeart, FaUser } from "react-icons/fa"
+import { CiLogin } from "react-icons/ci"
 
 const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
-  const dispatch = useDispatch();
-  const wishlistCount = useSelector(
-    (state: any) => state.wishlist.items.length
-  );
-  const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const dispatch = useDispatch()
+  const wishlistCount = useSelector((state: any) => state.wishlist.items.length)
+  const navigate = useNavigate()
+  const isLoggedIn = !!localStorage.getItem("token")
 
-  // For guest users: get items from localStorage, fallback to empty array
-  const cartItemsFromLocalStorage = JSON.parse(
-    localStorage.getItem("addtocart") || "[]"
-  );
+  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem("addtocart") || "[]")
+  const totalCart = isLoggedIn ? cartItemCount : cartItemsFromLocalStorage.length
 
-  // If logged in, use Redux or server count (assumed as `cartItemCount`); else, use local cart length
-  const totalCart = isLoggedIn
-    ? cartItemCount
-    : cartItemsFromLocalStorage.length;
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [categories, setCategories] = useState<string[]>([])
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
+  const [isSticky, setIsSticky] = useState(false)
+  const [user, setUser] = useState<UserData | null>(null)
 
-  // State management
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categories, setCategories] = useState<string[]>([]);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
-  const [user, setUser] = useState<UserData | null>(null);
+  const searchRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+  const moreMenuRef = useRef<HTMLDivElement>(null)
 
-  // Refs
-  const searchRef = useRef<HTMLDivElement>(null);
-  const userMenuRef = useRef<HTMLDivElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
-  // Constants
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
-  const primaryColor = "rgb(157 48 137)";
-  const textColor = "#1B2E4F";
-
-  // Memoized styles
-  const gradientStyle = {
-    background: `linear-gradient(135deg, ${primaryColor}, #2A4172)`,
-  };
-  const buttonHoverStyle = {
-    background: `linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))`,
-    color: primaryColor,
-  };
-
-  // Event handlers
   const handleLogout = useCallback(() => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("token");
-    setUser(null);
-    window.dispatchEvent(new Event("storage"));
-    dispatch(clearWishlist());
-    navigate("/login");
-    window.location.reload();
-    setUserMenuOpen(false);
-  }, [dispatch, navigate]);
+    localStorage.removeItem("userData")
+    localStorage.removeItem("token")
+    setUser(null)
+    window.dispatchEvent(new Event("storage"))
+    dispatch(clearWishlist())
+    navigate("/login")
+    window.location.reload()
+    setUserMenuOpen(false)
+  }, [dispatch, navigate])
 
-  const handleSearchSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      if (searchQuery) {
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-        setSearchQuery("");
-        setSearchOpen(false);
-      }
-    },
-    [searchQuery, navigate]
-  );
+  const handleSearchSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`)
+      setSearchQuery("")
+      setSearchOpen(false)
+    }
+  }, [searchQuery, navigate])
 
-  const handleCategorySelect = useCallback(
-    (category: string) => {
-      navigate(`/category/${category.toLowerCase()}`);
-      setSearchQuery("");
-      setMoreMenuOpen(false);
-      setMenuOpen(false);
-    },
-    [navigate]
-  );
+  const handleCategorySelect = useCallback((category: string) => {
+    navigate(`/category/${category.toLowerCase()}`)
+    setSearchQuery("")
+    setMoreMenuOpen(false)
+    setMenuOpen(false)
+  }, [navigate])
 
-  // Data fetching
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
-        const data = await res.json();
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
+        const data = await res.json()
         if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name));
+          setCategories(data.website.categories.map((cat: any) => cat.name))
         }
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        console.error("Failed to fetch categories:", error)
       }
-    };
-    fetchCategories();
-  }, [baseUrl, referenceWebsite]);
+    }
+    fetchCategories()
+  }, [baseUrl, referenceWebsite])
 
-  // User and scroll effects
   useEffect(() => {
     const loadUser = () => {
       try {
-        const storedUser = localStorage.getItem("userData");
-        setUser(storedUser ? JSON.parse(storedUser) : null);
+        const storedUser = localStorage.getItem("userData")
+        setUser(storedUser ? JSON.parse(storedUser) : null)
       } catch (error) {
-        console.error("Failed to parse user from localStorage:", error);
-        setUser(null);
+        console.error("Failed to parse user from localStorage:", error)
+        setUser(null)
       }
-    };
-
-    loadUser();
-    const handleScroll = () => setIsSticky(window.scrollY > 100);
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("storage", loadUser);
+    }
+    loadUser()
+    const handleScroll = () => setIsSticky(window.scrollY > 100)
+    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("storage", loadUser)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("storage", loadUser);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("storage", loadUser)
+    }
+  }, [])
 
-  // Wishlist and click outside effects
   useEffect(() => {
-    dispatch(fetchWishlist());
-  }, [dispatch]);
+    dispatch(fetchWishlist())
+  }, [dispatch])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
-        setSearchQuery("");
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setSearchQuery("")
       }
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(event.target as Node)
-      ) {
-        setUserMenuOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false)
       }
-      if (
-        moreMenuRef.current &&
-        !moreMenuRef.current.contains(event.target as Node)
-      ) {
-        setMoreMenuOpen(false);
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
+        setMoreMenuOpen(false)
       }
-    };
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Render functions for reusable components
   const renderSearchResults = () => (
-    <div
-      className="absolute z-20 mt-3 w-full bg-gradient-to-b from-slate-50 to-blue-50 shadow-2xl rounded-2xl overflow-hidden border-3 max-h-60 overflow-y-auto"
-      style={{ borderColor: primaryColor }}
-    >
+    <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
       {categories
         .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
         .map((cat, index) => (
           <div
             key={cat}
-            className="px-4 xl:px-6 py-3 xl:py-4 cursor-pointer transition-all duration-200 flex items-center justify-between border-b last:border-b-0 hover:shadow-md"
-            style={{
-              borderColor: primaryColor,
-              background:
-                index % 2 === 0 ? "transparent" : "rgba(56, 77, 137, 0.05)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background =
-                "linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background =
-                index % 2 === 0 ? "transparent" : "rgba(56, 77, 137, 0.05)";
-            }}
+            className="px-6 py-4 cursor-pointer transition-all duration-300 flex items-center justify-between border-b last:border-b-0 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 group"
             onClick={() => handleCategorySelect(cat)}
           >
-            <span
-              className="font-bold text-sm xl:text-base"
-              style={{ color: textColor }}
-            >
-              {cat}
-            </span>
-            <div className="flex items-center">
-              <span
-                className="text-xs text-white px-2 xl:px-3 py-1 rounded-full font-semibold"
-                style={{
-                  background: "linear-gradient(135deg, #A13C78, #872D67)",
-                }}
-              >
-                Category
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                <Cpu size={14} className="text-white" />
+              </div>
+              <span className="font-semibold text-sm text-gray-800 group-hover:text-blue-600 transition-colors">
+                {cat}
               </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 xl:h-5 xl:w-5 ml-2 xl:ml-3"
-                style={{ color: primaryColor }}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
             </div>
           </div>
         ))}
     </div>
-  );
+  )
 
   const renderUserMenu = () => (
-    <div
-      className="absolute right-0 mt-3 w-56 xl:w-64 bg-gradient-to-b from-slate-50 to-blue-50 shadow-2xl rounded-2xl overflow-hidden z-30 border-3"
-      style={{ borderColor: primaryColor }}
-    >
+    <div className="absolute right-0 mt-3 w-72 bg-white shadow-lg rounded-2xl overflow-hidden z-30 border border-gray-100">
       {user ? (
         <>
-          <div
-            className="px-4 xl:px-6 py-3 xl:py-4 border-b-2"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))",
-              borderColor: primaryColor,
-            }}
-          >
+          <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-cyan-600">
             <button onClick={() => setUserMenuOpen(false)}>
-              <Link
-                to={"/profile"}
-                className="flex justify-start items-center gap-3"
-              >
-                <div>
-                  <FaUser color="#C35DAE" />
+              <Link to={"/profile"} className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                  <FaUser color="white" size={18} />
                 </div>
                 <div className="flex flex-col items-start">
-                  <p className="text-sm font-bold" style={{ color: textColor }}>
+                  <p className="text-white font-bold text-base">
                     {user?.firstName} {user?.lastName || ""}
                   </p>
-                  <p
-                    className="text-xs truncate"
-                    style={{ color: primaryColor }}
-                  >
-                    {user.email}
-                  </p>
+                  <p className="text-blue-100 text-sm">{user.email}</p>
                 </div>
               </Link>
             </button>
           </div>
-          <div className="py-2">
+          <div className="py-3">
             <Link
               to="/wishlist"
-              className="block px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md flex justify-start items-center gap-3"
-              style={{ color: textColor }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = buttonHoverStyle.background;
-                e.currentTarget.style.color = primaryColor;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = textColor;
-              }}
+              className="block px-6 py-4 text-sm font-semibold transition-all hover:bg-gray-50 flex items-center gap-4 group"
               onClick={() => setUserMenuOpen(false)}
             >
-              <FaHeart color="#C35DAE" />
-              Your Wishlist
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FaHeart color="white" size={14} />
+              </div>
+              <div>
+                <span className="block">Your Wishlist</span>
+                <span className="text-xs text-gray-500">{wishlistCount} items saved</span>
+              </div>
             </Link>
           </div>
-          <div
-            className="py-2 border-t-2"
-            style={{ borderColor: primaryColor }}
-          >
+          <div className="py-3 border-t border-gray-100">
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md flex justify-start items-center gap-3"
-              style={{ color: textColor }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background =
-                  "linear-gradient(90deg, rgba(193, 70, 127, 0.1), rgba(135, 45, 103, 0.1))";
-                e.currentTarget.style.color = "#872D67";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = textColor;
-              }}
+              className="block w-full text-left px-6 py-4 text-sm font-semibold transition-all hover:bg-red-50 flex items-center gap-4 group"
             >
-              <CiLogin color="#C35DAE" size={20} />
-              Sign out
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <CiLogin color="white" size={18} />
+              </div>
+              <span className="group-hover:text-red-600 transition-colors">Sign out</span>
             </button>
           </div>
         </>
       ) : (
-        <div className="py-2">
+        <div className="p-6">
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center">
+              <User size={24} className="text-white" />
+            </div>
+            <h3 className="font-bold text-lg text-gray-800">Welcome!</h3>
+            <p className="text-sm text-gray-500">Sign in for the best experience</p>
+          </div>
           <Link
             to="/login"
-            className="block px-4 xl:px-6 py-3 xl:py-4 text-center text-white font-bold transition-all hover:shadow-lg"
-            style={gradientStyle}
+            className="block w-full text-center py-4 text-white font-bold transition-all hover:shadow-lg rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transform hover:scale-105"
             onClick={() => setUserMenuOpen(false)}
           >
             Login / Register
           </Link>
-          <div className="p-4 xl:p-6">
-            <p
-              className="text-xs text-center font-medium"
-              style={{ color: primaryColor }}
-            >
-              Join our heritage family for exclusive collections and faster
-              checkout
-            </p>
-          </div>
+          <p className="text-xs text-center text-gray-400 mt-4">Join us for exclusive tech deals and faster checkout</p>
         </div>
       )}
     </div>
-  );
+  )
 
   const renderMobileMenu = () => (
-    <div className="fixed inset-0 z-40 lg:hidden bg-black bg-opacity-60 transition-opacity">
-      <div
-        className="fixed inset-y-0 right-0 w-4/5 max-w-sm bg-gradient-to-b from-slate-50 to-blue-50 shadow-2xl z-50 transform transition-transform duration-300 border-l-4"
-        style={{ borderColor: primaryColor }}
-      >
-        <div className="flex flex-col h-full relative">
-          <div
-            className="p-4 sm:p-6 relative overflow-hidden"
-            style={gradientStyle}
-          >
+    <div className="fixed inset-0 z-40 lg:hidden bg-black bg-opacity-60 backdrop-blur-sm">
+      <div className="fixed inset-y-0 right-0 w-4/5 max-w-sm bg-white shadow-2xl z-50">
+        <div className="flex flex-col h-full">
+          <div className="p-6 bg-gradient-to-r from-blue-600 to-cyan-600">
             <button
               onClick={() => setMenuOpen(false)}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-white hover:text-blue-200 focus:outline-none z-40"
+              className="absolute top-6 right-6 text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-all"
               aria-label="Close menu"
             >
-              <X size={24} className="sm:w-7 sm:h-7" />
+              <X size={20} />
             </button>
             {user ? (
-              <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
-                <Link
-                  to={"/profile"}
-                  className="flex items-center space-x-3 sm:space-x-4 relative z-10"
-                >
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white bg-opacity-20 text-white rounded-full border-2 border-white border-opacity-30">
-                    <User size={20} className="sm:w-6 sm:h-6" />
+              <div className="flex items-center space-x-4 text-white">
+                <Link to={"/profile"} className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <User size={20} />
                   </div>
                   <div>
-                    <p className="font-bold text-white text-base sm:text-lg">
-                      {user.firstName}
-                    </p>
-                    <p className="text-xs text-blue-100">Welcome back!</p>
+                    <p className="font-bold text-lg">{user.firstName}</p>
+                    <p className="text-sm opacity-80">Welcome back!</p>
                   </div>
                 </Link>
               </div>
             ) : (
-              <div
-                className="space-y-3 sm:space-y-4 relative z-10"
-                style={{ width: "fit-content" }}
-              >
-                <p
-                  className="text-white font-bold text-base sm:text-lg"
-                  style={{ width: "fit-content" }}
-                >
-                  Welcome to Heritage Store!
-                </p>
-                <div className="flex space-x-2 sm:space-x-3">
+              <div className="text-white">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                    <Zap size={20} />
+                  </div>
+                  <div>
+                    <p className="text-sm opacity-80">Electronics & More</p>
+                  </div>
+                </div>
+                <div className="flex space-x-3">
                   <Link
                     to="/login"
-                    className="flex-1 bg-white bg-opacity-20 text-white text-center py-2 sm:py-3 rounded-lg font-bold border-2 border-white border-opacity-30 hover:bg-opacity-30 transition-all text-sm sm:text-base"
+                    className="flex-1 bg-white bg-opacity-20 text-center py-3 rounded-xl font-semibold backdrop-blur-sm hover:bg-opacity-30 transition-all"
                     onClick={() => setMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="flex-1 bg-white text-center py-2 sm:py-3 rounded-lg font-bold hover:bg-blue-50 transition-all text-sm sm:text-base"
-                    style={{ color: primaryColor }}
+                    className="flex-1 bg-white text-center py-3 rounded-xl font-semibold text-blue-600 hover:bg-gray-100 transition-all"
                     onClick={() => setMenuOpen(false)}
                   >
                     Register
@@ -404,76 +260,43 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             )}
           </div>
-
           <div className="flex-1 overflow-y-auto">
-            <div className="py-4">
-              <h3
-                className="px-4 sm:px-6 py-3 text-xs font-bold uppercase tracking-wider border-b-2"
-                style={{ color: textColor, borderColor: primaryColor }}
-              >
-                Heritage Categories
+            <div className="py-6">
+              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100">
+                Categories
               </h3>
-              <div className="space-y-1 mt-2">
+              <div className="mt-4 space-y-1">
                 {categories.map((item) => (
                   <Link
                     key={item}
                     to={`/category/${item.toLowerCase()}`}
-                    className="block px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-all border-l-4 border-transparent text-sm sm:text-base"
-                    style={{ color: textColor }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background =
-                        buttonHoverStyle.background;
-                      e.currentTarget.style.color = primaryColor;
-                      e.currentTarget.style.borderColor = primaryColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = textColor;
-                      e.currentTarget.style.borderColor = "transparent";
-                    }}
+                    className="flex items-center px-6 py-4 font-semibold transition-all hover:bg-blue-50 hover:text-blue-600 group"
                     onClick={() => setMenuOpen(false)}
                   >
+                    <div className="w-8 h-8 mr-3 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Smartphone size={14} className="text-white" />
+                    </div>
                     {item}
                   </Link>
                 ))}
               </div>
             </div>
-            <div
-              className="py-4 border-t-2"
-              style={{ borderColor: primaryColor }}
-            >
-              <h3
-                className="px-4 sm:px-6 py-3 text-xs font-bold uppercase tracking-wider"
-                style={{ color: textColor }}
-              >
-                Your Account
-              </h3>
-              <div className="space-y-1 mt-2">
+            <div className="py-6 border-t border-gray-100">
+              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">Account</h3>
+              <div className="mt-4">
                 <Link
                   to="/wishlist"
-                  className="block px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-all border-l-4 border-transparent text-sm sm:text-base"
-                  style={{ color: textColor }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background =
-                      buttonHoverStyle.background;
-                    e.currentTarget.style.color = primaryColor;
-                    e.currentTarget.style.borderColor = primaryColor;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.borderColor = "transparent";
-                  }}
+                  className="flex items-center justify-between px-6 py-4 font-semibold transition-all hover:bg-pink-50 hover:text-pink-600 group"
                   onClick={() => setMenuOpen(false)}
                 >
-                  Your Wishlist
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 mr-3 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Heart size={14} className="text-white" />
+                    </div>
+                    <span>Your Wishlist</span>
+                  </div>
                   {wishlistCount > 0 && (
-                    <span
-                      className="ml-2 sm:ml-3 text-white text-xs px-2 sm:px-3 py-1 rounded-full font-bold"
-                      style={{
-                        background: "linear-gradient(135deg, #A13C78, #872D67)",
-                      }}
-                    >
+                    <span className="text-white text-xs px-3 py-1 rounded-full font-bold bg-gradient-to-r from-pink-500 to-red-500">
                       {wishlistCount}
                     </span>
                   )}
@@ -481,19 +304,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             </div>
             {user && (
-              <div
-                className="p-4 sm:p-6 border-t-2"
-                style={{ borderColor: primaryColor }}
-              >
+              <div className="p-6 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
-                  className="w-full py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-bold transition-all border-2 text-sm sm:text-base"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))",
-                    color: textColor,
-                    borderColor: primaryColor,
-                  }}
+                  className="w-full py-4 px-6 rounded-xl font-semibold transition-all border-2 border-gray-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                 >
                   Sign Out
                 </button>
@@ -503,77 +317,34 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </div>
     </div>
-  );
+  )
 
   return (
     <>
-      {/* Top announcement bar */}
-      <div
-        className="relative overflow-hidden text-white text-xs sm:text-sm text-center py-2 sm:py-3 px-4"
-        style={{
-          background:
-            "linear-gradient(135deg, rgb(108 30 108) 0%, rgb(167 86 135) 50%, rgb(143 0 138) 100%)",
-        }}
-      >
-        <div className="relative z-10 font-semibold tracking-wide">
-          <span className="hidden sm:inline">
-            ✨ Authentic Heritage Collection | Free Shipping Above ₹999 |
-            Handcrafted Excellence ✨
-          </span>
-          <span className="sm:hidden">✨ Free Shipping Above ₹999 ✨</span>
-        </div>
-      </div>
-
-      {/* Main Navbar */}
-      <nav className="relative transition-all duration-300 bg-white py-3 sm:py-4">
-        <div
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{
-            background:
-              "linear-gradient(90deg, rgb(157 48 137) 0%, #A13C78 25%, #872D67 50%, #681853 75%, rgb(157 48 137) 100%)",
-          }}
-        ></div>
-
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center relative group">
-              <div className="relative" style={{ borderColor: primaryColor }}>
-                <img
-                  src={logo || "/placeholder.svg"}
-                  alt="Logo"
-                  className="transition-all duration-300 w-24 sm:w-32 md:w-36 rounded-lg"
-                />
-              </div>
+      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-lg py-2">
+        <div className="container mx-auto px-10">
+          <div className="flex items-center justify-between h-18">
+            <Link to="/" className="flex items-center space-x-3">
+              <img src={logo || "/placeholder.svg"} alt="Logo" className="h-20 w-25 rounded" />
             </Link>
 
-            {/* Desktop Search */}
-            <div className="hidden lg:flex flex-1 max-w-xl xl:max-w-2xl mx-6 xl:mx-10">
+            {/* Desktop Search Bar */}
+            <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
               <div className="relative w-full" ref={searchRef}>
                 <form onSubmit={handleSearchSubmit} className="w-full">
                   <div className="relative">
                     <input
                       type="search"
-                      id="default-search"
-                      className="block w-full pl-4 xl:pl-6 pr-12 xl:pr-14 py-3 xl:py-4 text-sm rounded-full border-3 bg-gradient-to-r from-slate-50 to-blue-50 focus:outline-none focus:ring-3 transition-all shadow-inner font-medium"
-                      style={{
-                        borderColor: primaryColor,
-                        color: "rgb(139 59 122)",
-                      }}
-                      placeholder="Search for traditional treasures..."
+                      className="w-full pl-6 pr-14 py-3 text-sm border-2 border-gray-200 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50 hover:bg-white"
+                      placeholder="Search for electronics, gadgets, accessories..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      required
                     />
                     <button
                       type="submit"
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white rounded-full p-2 xl:p-3 transition-all shadow-lg border-2 border-white"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgb(149 21 137), rgb(220 133 195))",
-                      }}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
                     >
-                      <Search size={16} className="xl:w-[18px] xl:h-[18px]" />
+                      <Search size={16} />
                     </button>
                   </div>
                   {searchQuery && renderSearchResults()}
@@ -582,160 +353,95 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </div>
 
             {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center space-x-3 xl:space-x-6">
+            <div className="hidden lg:flex items-center space-x-2">
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-2 xl:space-x-3 transition-all group"
-                  style={{ color: textColor }}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
                 >
-                  <div
-                    className="w-9 h-9 xl:w-11 xl:h-11 flex items-center justify-center rounded-full border-3 group-hover:shadow-lg transition-all"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))",
-                      borderColor: primaryColor,
-                    }}
-                  >
-                    <User
-                      size={18}
-                      className="xl:w-5 xl:h-5"
-                      style={{ color: primaryColor }}
-                    />
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <User size={16} className="text-white" />
                   </div>
-                  {user ? (
-                    <span className="text-xs xl:text-sm font-bold hidden xl:block">
-                      {user.firstName}
-                    </span>
-                  ) : (
-                    <span className="text-xs xl:text-sm font-bold hidden xl:block">
-                      Account
-                    </span>
-                  )}
+                  <span className="text-sm font-semibold">{user ? user.firstName : "Account"}</span>
                 </button>
                 {userMenuOpen && renderUserMenu()}
               </div>
 
+              {/* Wishlist */}
               <button
                 onClick={() => navigate("/wishlist")}
-                className="relative p-2 xl:p-3 transition-all group rounded-full"
-                style={{ color: textColor }}
+                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
-                <div
-                  className="absolute inset-0 rounded-full border-2 group-hover:shadow-lg transition-all"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))",
-                    borderColor: primaryColor,
-                  }}
-                ></div>
-                <Heart size={20} className="relative z-10 xl:w-6 xl:h-6" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-100 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Heart size={16} className="text-white" />
+                </div>
                 {wishlistCount > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 xl:w-6 xl:h-6 flex items-center justify-center border-2 border-white shadow-lg"
-                    style={{
-                      background: "linear-gradient(135deg, #A13C78, #872D67)",
-                    }}
-                  >
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-500 shadow-lg animate-pulse">
                     {wishlistCount}
                   </span>
                 )}
               </button>
 
+              {/* Shopping Cart */}
               <button
                 onClick={onCartClick}
-                className="relative p-2 xl:p-3 transition-all group rounded-full"
-                style={{ color: textColor }}
+                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
-                <div
-                  className="absolute inset-0 rounded-full border-2 group-hover:shadow-lg transition-all"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))",
-                    borderColor: primaryColor,
-                  }}
-                ></div>
-                <ShoppingCart
-                  size={20}
-                  className="relative z-10 xl:w-6 xl:h-6"
-                />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <ShoppingCart size={16} className="text-white" />
+                </div>
                 {totalCart > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 xl:w-6 xl:h-6 flex items-center justify-center border-2 border-white shadow-lg"
-                    style={{
-                      background: "linear-gradient(135deg, #A13C78, #872D67)",
-                    }}
-                  >
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-green-100 to-emerald-500 shadow-lg animate-bounce">
                     {totalCart}
                   </span>
                 )}
               </button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="flex lg:hidden items-center space-x-2 sm:space-x-4">
+            {/* Mobile Menu */}
+            <div className="flex lg:hidden items-center space-x-4">
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2 transition-colors"
-                style={{ color: textColor }}
+                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
               >
-                <Search size={20} className="sm:w-6 sm:h-6" />
+                <Search size={20} />
               </button>
               <button
                 onClick={onCartClick}
-                className="relative p-2 transition-colors"
-                style={{ color: textColor }}
+                className="relative p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
               >
-                <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
+                <ShoppingCart size={20} />
                 {totalCart > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center"
-                    style={{
-                      background: "linear-gradient(135deg, #A13C78, #872D67)",
-                    }}
-                  >
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-500">
                     {totalCart}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="p-2 transition-colors"
-                style={{ color: textColor }}
-                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
               >
-                {menuOpen ? (
-                  <X size={22} className="sm:w-7 sm:h-7" />
-                ) : (
-                  <Menu size={22} className="sm:w-7 sm:h-7" />
-                )}
+                {menuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
 
           {/* Mobile Search */}
           {searchOpen && (
-            <div className="lg:hidden mt-4 transition-all duration-300">
+            <div className="lg:hidden pb-4">
               <div className="relative" ref={searchRef}>
-                <form onSubmit={handleSearchSubmit} className="w-full">
+                <form onSubmit={handleSearchSubmit}>
                   <div className="relative">
                     <input
                       type="search"
-                      id="mobile-search"
-                      className="block w-full pl-4 pr-12 py-3 text-sm rounded-full border-3 bg-gradient-to-r from-slate-50 to-blue-50 focus:outline-none focus:ring-3 font-medium"
-                      style={{
-                        borderColor: primaryColor,
-                        color: textColor,
-                      }}
-                      placeholder="Search traditional items..."
+                      className="w-full pl-6 pr-14 py-4 text-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50"
+                      placeholder="Search electronics..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      required
                     />
                     <button
                       type="submit"
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white rounded-full p-2 transition-all"
-                      style={gradientStyle}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white"
                     >
                       <Search size={16} />
                     </button>
@@ -746,260 +452,72 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </div>
           )}
         </div>
-
-        {/* Bottom decorative border */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-1"
-          style={{
-            background:
-              "linear-gradient(90deg, #681853 0%, #872D67 25%, #A13C78 50%, #C1467F 75%, #681853 100%)",
-          }}
-        ></div>
       </nav>
 
       {/* Category Navigation */}
-      <div
-        className={`hidden xl:block border-t-2 transition-all duration-300 ${
-          isSticky ? "sticky top-0 z-50 shadow-lg" : "relative"
-        }`}
-        style={{
-          background:
-            "linear-gradient(135deg, rgb(255 246 254), rgb(255 210 237 / 97%))",
-          borderColor: primaryColor,
-        }}
-      >
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between py-3">
-            {/* Traditional ornamental left divider */}
-            <div className="flex items-center space-x-2">
-              <div
-                className="w-12 h-0.5 rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)",
-                }}
-              ></div>
-              <div
-                className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                style={{
-                  borderColor: primaryColor,
-                  background: "rgba(157, 48, 137, 0.1)",
-                }}
-              >
-                <div
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: primaryColor }}
-                ></div>
-              </div>
-            </div>
+      <div className="hidden lg:block bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center space-x-3 py-4">
+          {categories.length > 4 && (
+              <div className="relative" ref={moreMenuRef}>
+                <button
+                  onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-black hover:font-bold hover:bg-white hover:rounded-sm transition-all group"
+                >
+                  <span>Browse All Collection</span>
 
-            {/* Home Link */}
+                  <div className=" flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <ChevronDown
+                      size={12}
+                      className={`text-black transition-transform ${moreMenuOpen ? "rotate-180" : ""}`}
+                    />
+                  </div>
+                </button>
+                <div
+                  className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-80 bg-white shadow-lg rounded-2xl border border-gray-100 z-50 ${moreMenuOpen ? 'block' : 'hidden'}`}
+                  onMouseLeave={() => setMoreMenuOpen(false)}
+                >
+                  <div className="p-6">
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">More Categories</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {categories.slice(6).map((item) => (
+                        <Link
+                          key={item}
+                          to={`/category/${item.toLowerCase()}`}
+                          className="flex items-center space-x-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all group"
+                          onClick={() => handleCategorySelect(item)}
+                        >
+                          {item}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             <Link
               to="/"
-              className="text-[13px] font-semibold transition-all duration-300 hover:text-[#872D67] text-[#1B2E4F]"
+              className="flex items-center space-x-2 px-4 py-2 rounded-sm text-sm font-semibold text-gray-700 hover:font-blod hover:bg-white transition-all group"
             >
               Home
             </Link>
-
-            {/* Main Categories (First 6) */}
-            <div className="flex items-center space-x-1">
-              {categories.slice(0, 6).map((item) => (
-                <Link
-                  key={item}
-                  to={`/category/${item.toLowerCase()}`}
-                  className="relative group px-3 py-2 text-sm font-bold transition-all duration-300"
-                  style={{ color: textColor }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 25px rgba(157, 48, 137, 0.4)";
-                    e.currentTarget.style.borderColor = primaryColor;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.background =
-                      "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <span className="relative z-10 text-[12px]">{item}</span>
-                  <div
-                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    style={{
-                      background: "linear-gradient(135deg, #C1467F, #A13C78)",
-                    }}
-                  ></div>
-                </Link>
-              ))}
-
-              {/* More Categories Dropdown */}
-              {categories.length > 6 && (
-                <div className="relative" ref={moreMenuRef}>
-                  <button
-                    onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-                    className="relative px-4 py-2 text-sm bg-[#c561b1] font-bold transition-all duration-300 rounded-full flex items-center space-x-2 group"
-                    style={{ color: "#fff" }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#fff";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.borderColor = primaryColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!moreMenuOpen) {
-                        e.currentTarget.style.color = "#fff";
-                        e.currentTarget.style.transform = "translateY(0)";
-                      }
-                    }}
-                  >
-                    <span>More Categories</span>
-                    <svg
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        moreMenuOpen ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {moreMenuOpen && (
-                    <div
-                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-80 z-50"
-                      style={{
-                        background: "linear-gradient(135deg, #f8fafc, #f1f5f9)",
-                        border: "1px solid rgb(157 48 137)",
-                        borderRadius: "10px",
-                        boxShadow: "0 20px 40px rgba(157, 48, 137, 0.2)",
-                      }}
-                    >
-                      <div className="px-6 py-4 border-b-2">
-                        <h3 className="text-sm font-bold text-center relative z-10">
-                          ✦ Explore More Collections ✦
-                        </h3>
-                      </div>
-
-                      <div className="p-4">
-                        <div className="grid grid-cols-2 gap-2">
-                          {categories.slice(6).map((item) => (
-                            <Link
-                              key={item}
-                              to={`/category/${item.toLowerCase()}`}
-                              className="relative group px-4 py-3 text-sm font-semibold transition-all duration-300 rounded-lg border"
-                              style={{
-                                color: textColor,
-                                background: "rgba(157, 48, 137, 0.05)",
-                                borderColor: "rgba(157, 48, 137, 0.1)",
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.color = "white";
-                                e.currentTarget.style.background =
-                                  "linear-gradient(135deg, rgb(157, 48, 137), rgb(135, 45, 103))";
-                                e.currentTarget.style.transform =
-                                  "translateX(4px)";
-                                e.currentTarget.style.boxShadow =
-                                  "0 4px 15px rgba(157, 48, 137, 0.3)";
-                                e.currentTarget.style.borderColor =
-                                  primaryColor;
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.color = textColor;
-                                e.currentTarget.style.background =
-                                  "rgba(157, 48, 137, 0.05)";
-                                e.currentTarget.style.transform =
-                                  "translateX(0)";
-                                e.currentTarget.style.boxShadow = "none";
-                                e.currentTarget.style.borderColor =
-                                  "rgba(157, 48, 137, 0.1)";
-                              }}
-                              onClick={() => handleCategorySelect(item)}
-                            >
-                              <div className="flex items-center justify-between text-xs">
-                                <span>{item}</span>
-                                <svg
-                                  className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 5l7 7-7 7"
-                                  />
-                                </svg>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* <div
-                        className="px-6 py-3 border-t"
-                        style={{ borderColor: "rgba(157, 48, 137, 0.2)" }}
-                      >
-                        <div className="flex justify-center">
-                          <div className="flex items-center space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="w-1 h-1 rounded-full"
-                                style={{
-                                  background:
-                                    i === 2
-                                      ? primaryColor
-                                      : "rgba(157, 48, 137, 0.3)",
-                                }}
-                              ></div>
-                            ))}
-                          </div>
-                        </div>
-                      </div> */}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Traditional ornamental right divider */}
-            <div className="flex items-center space-x-2">
-              <div
-                className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                style={{
-                  borderColor: primaryColor,
-                  background: "rgba(157, 48, 137, 0.1)",
-                }}
+            {categories.slice(0, 4).map((item) => (
+              <Link
+                key={item}
+                to={`/category/${item.toLowerCase()}`}
+                className="flex items-center space-x-2 px-4 py-2 rounded-sm gap-2 text-[12px] font-semibold text-gray-700 hover:font-bold hover:bg-white transition-all group"
               >
-                <div
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: primaryColor }}
-                ></div>
-              </div>
-              <div
-                className="w-12 h-0.5 rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)",
-                }}
-              ></div>
-            </div>
+                {item}
+              </Link>
+            ))}
+            
           </div>
         </div>
       </div>
 
       {menuOpen && renderMobileMenu()}
     </>
-  );
-};
+  )
+}
 
-export default memo(Navbar);
+export default memo(Navbar)

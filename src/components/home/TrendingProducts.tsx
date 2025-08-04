@@ -1,5 +1,8 @@
-"use client";
-import { useEffect, useState } from "react";
+"use client"
+
+import type React from "react"
+
+import { useEffect, useState } from "react"
 import {
   Eye,
   Heart,
@@ -8,307 +11,244 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
-import { addItemToCart } from "../../reduxslice/CartSlice";
-import LoginModal from "../loginModal/LoginModal"; 
-import Login1 from "../../pages/Login1";
-const TrendingProducts = ({
-  addToCart,
-}: {
-  addToCart: (product: any) => void;
-}) => {
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [quantity, setQuantity] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [products, setProducts] = useState<any[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [itemsPerSlide, setItemsPerSlide] = useState(4);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const dispatch = useDispatch();
+  Zap,
+  Cpu,
+  Smartphone,
+  Monitor,
+  Headphones,
+  Camera,
+  Gamepad2,
+  Tablet,
+  Watch,
+  Speaker,
+  TrendingUp,
+} from "lucide-react"
+import { Link } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
+import { addItemToCart } from "../../reduxslice/CartSlice"
+import LoginModal from "../loginModal/LoginModal"
+import Login1 from "../../pages/Login1"
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) => {
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [quantity, setQuantity] = useState(1)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
+  const [products, setProducts] = useState<any[]>([])
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [itemsPerSlide, setItemsPerSlide] = useState(4)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const dispatch = useDispatch()
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
   // Popup States
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [addedProduct, setAddedProduct] = useState<any>(null);
-  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false)
+  const [addedProduct, setAddedProduct] = useState<any>(null)
+  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false)
+  const [wishlistProduct, setWishlistProduct] = useState<any>(null)
+
+  // Electronics category icons mapping
+  const getCategoryIcon = (category: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      smartphones: <Smartphone size={16} className="text-cyan-400" />,
+      laptops: <Monitor size={16} className="text-blue-400" />,
+      headphones: <Headphones size={16} className="text-purple-400" />,
+      cameras: <Camera size={16} className="text-green-400" />,
+      gaming: <Gamepad2 size={16} className="text-red-400" />,
+      tablets: <Tablet size={16} className="text-yellow-400" />,
+      watches: <Watch size={16} className="text-pink-400" />,
+      speakers: <Speaker size={16} className="text-indigo-400" />,
+      default: <Cpu size={16} className="text-cyan-400" />,
+    }
+    return iconMap[category.toLowerCase()] || iconMap.default
+  }
 
   // Responsive items per slide
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setItemsPerSlide(1);
+        setItemsPerSlide(1)
       } else if (window.innerWidth < 1024) {
-        setItemsPerSlide(2);
+        setItemsPerSlide(2)
       } else if (window.innerWidth < 1280) {
-        setItemsPerSlide(3);
+        setItemsPerSlide(3)
       } else {
-        setItemsPerSlide(4);
+        setItemsPerSlide(4)
       }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   // Auto-slide functionality
   useEffect(() => {
-    if (products.length === 0) return;
-
-    const maxSlides = Math.ceil(products.length / itemsPerSlide);
+    if (products.length === 0) return
+    const maxSlides = Math.ceil(products.length / itemsPerSlide)
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % maxSlides);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [products.length, itemsPerSlide]);
+      setCurrentSlide((prev) => (prev + 1) % maxSlides)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [products.length, itemsPerSlide])
 
   useEffect(() => {
     if (isModalOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"
     }
     return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isModalOpen]);
+      document.body.style.overflow = "auto"
+    }
+  }, [isModalOpen])
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(
-          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
+        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
+        const data = await res.json()
         if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, 12)); // Get 12 products for slider
+          setProducts(data.products.slice(0, 12)) // Get 12 products for slider
         } else {
-          console.error("Unexpected products format:", data);
+          console.error("Unexpected products format:", data)
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error)
       }
-    };
-    fetchProducts();
-  }, [baseUrl, referenceWebsite]);
+    }
+    fetchProducts()
+  }, [baseUrl, referenceWebsite])
 
   const openProductModal = (product: any) => {
-    setSelectedProduct(product);
-    setQuantity(1);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProduct(null), 300);
-  };
-
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
-  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
-
-  const handleAddToCart = (product: any) => {
-  const token = localStorage.getItem("token");
-
-  const cartItem = {
-    id: product._id,
-    name: product.productName,
-    image: product.images?.[0] || "",
-    category: product.category?.name || "Uncategorized",
-    price: product.actualPrice || product.price,
-    quantity,
-  };
-
-  if (!token) {
-    // Get existing cart or initialize empty array
-    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
-
-    // Check if product already in cart
-    const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
-
-    if (existingProductIndex !== -1) {
-      // Product exists – increase quantity
-      existingCart[existingProductIndex].quantity += quantity;
-    } else {
-      // New product – add to cart
-      existingCart.push(cartItem);
-    }
-
-    // Save updated cart back to localStorage
-    localStorage.setItem("addtocart", JSON.stringify(existingCart));
-    window.dispatchEvent(new Event("guestCartUpdated"));
-  } else {
-    // User is logged in – use Redux
-    dispatch(addItemToCart(cartItem));
+    setSelectedProduct(product)
+    setQuantity(1)
+    setIsModalOpen(true)
   }
 
-  // UI feedback
-  setAddedProduct(product);
-  setIsPopupVisible(true);
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setTimeout(() => setSelectedProduct(null), 300)
+  }
 
-  closeModal();
-};
+  const handleIncrease = () => setQuantity((prev) => prev + 1)
+  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1)
 
-
-  // const handleAddToCart = (product: any) => {
-    
-  //   dispatch(
-  //     addItemToCart({
-  //       id: product._id,
-  //       name: product.productName,
-  //       image: product.images?.[0] || "",
-  //       category: product.category?.name || "Uncategorized",
-  //       price: product.actualPrice || product.price,
-  //       quantity,
-  //     })
-  //   );
-  //   setAddedProduct(product);
-  //   setIsPopupVisible(true);
-
-  //   setTimeout(() => {
-  //     setIsPopupVisible(false);
-  //   }, 3000);
-
-  //   closeModal();
-  // };
-
-// const handleAddToCart = (product: any) => {
-//   dispatch(
-//     addItemToCart({
-//       id: product._id,
-//       name: product.productName,
-//       image: product.images?.[0] || "",
-//       category: product.category?.name || "Uncategorized",
-//       price: product.actualPrice || product.price,
-//       quantity: quantity || 1 
-//     })
-//   );
-//   setAddedProduct(product);
-//   setIsPopupVisible(true);
-
-//   setTimeout(() => {
-//     setIsPopupVisible(false);
-//   }, 3000);
-
-//   closeModal();
-// };
-  const handleAddToWishlist = (product: any) => {
-    const isUserLoggedIn = !!localStorage.getItem("token");
-
-    if (!isUserLoggedIn) {
-      setShowLoginModal(true); // Trigger login modal
-      return;
+  const handleAddToCart = (product: any) => {
+    const token = localStorage.getItem("token")
+    const cartItem = {
+      id: product._id,
+      name: product.productName,
+      image: product.images?.[0] || "",
+      category: product.category?.name || "Uncategorized",
+      price: product.actualPrice || product.price,
+      quantity,
     }
-    dispatch(addItemToWishlist(product._id));
-    setWishlistProduct(product);
-    setIsWishlistPopupVisible(true);
 
+    if (!token) {
+      // Get existing cart or initialize empty array
+      const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]")
+      // Check if product already in cart
+      const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id)
+      if (existingProductIndex !== -1) {
+        // Product exists – increase quantity
+        existingCart[existingProductIndex].quantity += quantity
+      } else {
+        // New product – add to cart
+        existingCart.push(cartItem)
+      }
+      // Save updated cart back to localStorage
+      localStorage.setItem("addtocart", JSON.stringify(existingCart))
+      window.dispatchEvent(new Event("guestCartUpdated"))
+    } else {
+      // User is logged in – use Redux
+      dispatch(addItemToCart(cartItem))
+    }
+
+    // UI feedback
+    setAddedProduct(product)
+    setIsPopupVisible(true)
     setTimeout(() => {
-      setIsWishlistPopupVisible(false);
-    }, 3000);
-  };
+      setIsPopupVisible(false)
+    }, 3000)
+    closeModal()
+  }
+
+  const handleAddToWishlist = (product: any) => {
+    const isUserLoggedIn = !!localStorage.getItem("token")
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true) // Trigger login modal
+      return
+    }
+    dispatch(addItemToWishlist(product._id))
+    setWishlistProduct(product)
+    setIsWishlistPopupVisible(true)
+    setTimeout(() => {
+      setIsWishlistPopupVisible(false)
+    }, 3000)
+  }
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         size={14}
-        className={`${
-          i < Math.floor(rating)
-            ? "fill-yellow-400 stroke-yellow-400"
-            : "stroke-gray-300"
-        }`}
+        className={`${i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}`}
       />
-    ));
-  };
+    ))
+  }
 
-  const maxSlides = Math.ceil(products.length / itemsPerSlide);
-
+  const maxSlides = Math.ceil(products.length / itemsPerSlide)
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % maxSlides);
-  };
+    setCurrentSlide((prev) => (prev + 1) % maxSlides)
+  }
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides);
-  };
+    setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides)
+  }
 
   const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
+    setCurrentSlide(index)
+  }
 
   return (
-    <section className="py-16 px-12 bg-white">
+    <section className="py-16 px-4 bg-gray-50">
+      {/* Remove the complex background tech elements and replace with simple background */}
+
       <div className="max-w-7xl mx-auto">
-        {/* Simple Header */}
+        {/* Simplified Header */}
         <div className="text-center mb-12">
-          <h2
-            className="text-4xl md:text-5xl font-bold mb-4"
-            style={{ color: "#1B2E4F" }}
-          >
-            Trending <span style={{ color: "rgb(157 48 137)" }}>Products</span>
-          </h2>
+          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <TrendingUp size={16} />
+            <span>Trending Products</span>
+          </div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Popular Electronics</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our most popular items loved by customers worldwide
+            Discover the most popular electronics and gadgets loved by our customers
           </p>
         </div>
 
         {/* Products Slider */}
         <div className="relative">
-          {/* Navigation Arrows */}
+          {/* Enhanced Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -ml-6 sm:hidden md:flex xs:hidden"
-            style={{
-              background: "white",
-              border: "2px solid rgb(157 48 137)",
-              color: "rgb(157 48 137)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgb(157 48 137)";
-              e.currentTarget.style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "white";
-              e.currentTarget.style.color = "rgb(157 48 137)";
-            }}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center -ml-5 hover:bg-gray-50 transition-colors duration-200 border border-gray-200"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={20} className="text-gray-600" />
           </button>
-
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -mr-6 sm:hidden md:flex xs:hidden"
-            style={{
-              background: "white",
-              border: "2px solid rgb(157 48 137)",
-              color: "rgb(157 48 137)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgb(157 48 137)";
-              e.currentTarget.style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "white";
-              e.currentTarget.style.color = "rgb(157 48 137)";
-            }}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center -mr-5 hover:bg-gray-50 transition-colors duration-200 border border-gray-200"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={20} className="text-gray-600" />
           </button>
 
           {/* Slider Container */}
-          <div className="overflow-hidden rounded-2xl">
+          <div className="overflow-hidden rounded-3xl">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-700 ease-out"
               style={{
                 transform: `translateX(-${currentSlide * 100}%)`,
               }}
@@ -316,161 +256,97 @@ const TrendingProducts = ({
               {Array.from({ length: maxSlides }).map((_, slideIndex) => (
                 <div key={slideIndex} className="w-full flex-shrink-0">
                   <div
-                    className="grid gap-6"
+                    className="grid gap-8"
                     style={{
                       gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
                     }}
                   >
                     {products
-                      .slice(
-                        slideIndex * itemsPerSlide,
-                        (slideIndex + 1) * itemsPerSlide
-                      )
-                      .map((product) => (
+                      .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
+                      .map((product, index) => (
                         <div
                           key={product._id}
                           onMouseEnter={() => setHoveredProduct(product._id)}
                           onMouseLeave={() => setHoveredProduct(null)}
-                          className="group relative rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
+                          className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 group"
+                          style={{ animationDelay: `${index * 100}ms` }}
                         >
-                          {/* Product Image */}
-                          <div className="relative aspect-square overflow-hidden">
+                          {/* Product Image Container */}
+                          <div className="relative aspect-square overflow-hidden bg-gray-50">
                             <img
-                              className="absolute inset-0 w-full h-full object-cover"
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                               src={`http://api.jajamblockprints.com${product.images}`}
                               alt={product.productName}
                             />
 
                             {/* Discount Badge */}
                             {product.discount && (
-                              <div
-                                className="absolute top-4 left-4 text-white text-xs font-bold px-3 py-2 rounded-full z-10"
-                                style={{ background: "rgb(157 48 137)" }}
-                              >
-                                {product.discount}% OFF
+                              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                -{product.discount}%
                               </div>
                             )}
 
-                            {/* Action Buttons */}
-                            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                              <button
-                                onClick={() => handleAddToCart(product)}
-                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
-                                style={{
-                                  color: "rgb(157 48 137)",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background =
-                                    "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "white";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = "white";
-                                  e.currentTarget.style.color =
-                                    "rgb(157 48 137)";
-                                }}
-                              >
-                                <ShoppingCart size={18} />
-                              </button>
-                              <button
-                                onClick={() => openProductModal(product)}
-                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
-                                style={{
-                                  color: "rgb(157 48 137)",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background =
-                                    "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "white";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = "white";
-                                  e.currentTarget.style.color =
-                                    "rgb(157 48 137)";
-                                }}
-                              >
-                                <Eye size={18} />
-                              </button>
-                              <button
-                                onClick={() => handleAddToWishlist(product)}
-                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
-                                style={{
-                                  color:
-                                    hoveredProduct === product._id
-                                      ? "#ef4444"
-                                      : "rgb(157 48 137)",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background =
-                                    "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "white";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = "white";
-                                  e.currentTarget.style.color =
-                                    "rgb(157 48 137)";
-                                }}
-                              >
-                                <Heart size={18} />
-                              </button>
-                            </div>
-
-                            {/* Add to Cart Overlay */}
+                            {/* Wishlist Button */}
                             <button
-                              onClick={() => handleAddToCart(product)}
-                              className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 z-20 ${
-                                hoveredProduct === product._id
-                                  ? "translate-y-0 opacity-100"
-                                  : "translate-y-full opacity-0"
-                              }`}
-                              style={{ background: "rgb(157 48 137)" }}
+                              onClick={() => handleAddToWishlist(product)}
+                              className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors duration-200"
                             >
-                              ADD TO CART
+                              <Heart size={16} className="text-gray-600 hover:text-red-500" />
+                            </button>
+
+                            {/* Quick View Button */}
+                            <button
+                              onClick={() => openProductModal(product)}
+                              className={`absolute bottom-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transition-all duration-200 ${
+                                hoveredProduct === product._id ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                              }`}
+                            >
+                              <Eye size={16} className="text-gray-600" />
                             </button>
                           </div>
 
                           {/* Product Info */}
-                          <div className="p-5">
-                            <div className="mb-3">
-                              <Link
-                                to={`/product/${product._id}`}
-                                className="text-lg font-bold mb-1 line-clamp-1"
-                                style={{ color: "#1B2E4F" }}
-                              >
-                                {product.productName}
-                              </Link>
-                              <p className="text-sm text-gray-500">
-                                {product.category?.name || "Traditional Wear"}
-                              </p>
-                            </div>
-
-                            {/* Rating */}
-                            <div className="flex items-center mb-3">
-                              <div className="flex mr-2">
-                                {renderStars(product.rating || 4)}
-                              </div>
-                              <span className="text-xs text-gray-500">
-                                (Reviews)
+                          <div className="p-4">
+                            {/* Category */}
+                            <div className="flex items-center mb-2">
+                              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                {product.category?.name || "Electronics"}
                               </span>
                             </div>
 
-                            {/* Price */}
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-2">
-                                <span
-                                  className="text-xl font-bold"
-                                  style={{ color: "rgb(157 48 137)" }}
-                                >
-                                  ₹{product.actualPrice}
-                                </span>
-                                {product.price &&
-                                  product.price !== product.actualPrice && (
-                                    <span className="text-sm text-gray-400 line-through">
-                                      ₹{product.price}
-                                    </span>
-                                  )}
-                              </div>
+                            {/* Product Name */}
+                            <Link
+                              to={`/product/${product._id}`}
+                              className="block text-gray-900 font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors duration-200"
+                            >
+                              {product.productName}
+                            </Link>
+
+                            {/* Rating */}
+                            <div className="flex items-center mb-3">
+                              <div className="flex items-center mr-2">{renderStars(product.rating || 4)}</div>
+                              <span className="text-xs text-gray-500">(4.5)</span>
                             </div>
+
+                            {/* Price */}
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-lg font-bold text-gray-900">₹{product.actualPrice}</span>
+                                {product.price && product.price !== product.actualPrice && (
+                                  <span className="text-sm text-gray-500 line-through">₹{product.price}</span>
+                                )}
+                              </div>
+                              <div className="text-xs text-green-600 font-medium">In Stock</div>
+                            </div>
+
+                            {/* Add to Cart Button */}
+                            <button
+                              onClick={() => handleAddToCart(product)}
+                              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2"
+                            >
+                              <ShoppingCart size={16} />
+                              <span>Add to Cart</span>
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -480,181 +356,163 @@ const TrendingProducts = ({
             </div>
           </div>
 
-          {/* Slider Dots */}
+          {/* Enhanced Slider Dots */}
           <div className="flex justify-center mt-8 space-x-2">
             {Array.from({ length: maxSlides }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  currentSlide === index ? "w-8" : ""
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  currentSlide === index ? "bg-blue-600 w-6" : "bg-gray-300"
                 }`}
-                style={{
-                  background:
-                    currentSlide === index
-                      ? "rgb(157 48 137)"
-                      : "rgba(157, 48, 137, 0.3)",
-                }}
               />
             ))}
           </div>
         </div>
 
-        {/* View All Button */}
+        {/* Enhanced View All Button */}
         <div className="text-center mt-12">
           <Link
             to="/products"
-            className="inline-flex items-center px-8 py-4 rounded-full font-semibold transition-all duration-300 border-2 hover:shadow-lg"
-            style={{
-              color: "rgb(157 48 137)",
-              borderColor: "rgb(157 48 137)",
-            }}
+            className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-md transition-colors duration-200"
           >
-            View All Products
+            <span>View All Products</span>
+            <ChevronRight size={16} />
           </Link>
         </div>
       </div>
 
-      {/* Product Added Popup */}
+      {/* Enhanced Product Added Popup */}
       {isPopupVisible && addedProduct && (
-        <div
-          className="fixed top-4 right-4 bg-green-100 text-green-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
-          style={{
-            transition: "transform 0.5s ease, opacity 0.5s ease",
-          }}
-        >
+        <div className="fixed top-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform translate-x-0 opacity-100 border border-white/20 backdrop-blur-sm">
           <div className="flex justify-between items-center">
-            <span className="text-[12px]">Product Added to Cart</span>
-            <button onClick={() => setIsPopupVisible(false)}>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <ShoppingCart size={18} />
+              </div>
+              <div>
+                <span className="font-bold">Added to Cart!</span>
+                <p className="text-sm opacity-90">{addedProduct.productName}</p>
+              </div>
+            </div>
+            <button onClick={() => setIsPopupVisible(false)} className="ml-4 hover:scale-110 transition-transform">
               <X size={20} />
             </button>
           </div>
-          <p className="mt-2 text-[12px]">{addedProduct.productName}</p>
         </div>
       )}
+
       {isWishlistPopupVisible && wishlistProduct && (
-        <div
-          className="fixed top-4 right-4 bg-yellow-100 text-yellow-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
-          style={{
-            transition: "transform 0.5s ease, opacity 0.5s ease",
-          }}
-        >
+        <div className="fixed top-6 right-6 bg-gradient-to-r from-pink-500 to-red-600 text-white p-6 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform translate-x-0 opacity-100 border border-white/20 backdrop-blur-sm">
           <div className="flex justify-between items-center">
-            <span className="text-[12px]">Product Added to Wishlist</span>
-            <button onClick={() => setIsWishlistPopupVisible(false)}>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <Heart size={18} />
+              </div>
+              <div>
+                <span className="font-bold">Added to Wishlist!</span>
+                <p className="text-sm opacity-90">{wishlistProduct.productName}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsWishlistPopupVisible(false)}
+              className="ml-4 hover:scale-110 transition-transform"
+            >
               <X size={20} />
             </button>
           </div>
-          <p className="mt-2 text-[12px]">{wishlistProduct.productName}</p>
         </div>
       )}
-      {/* Product Modal */}
+
+      {/* Enhanced Product Modal */}
       {isModalOpen && selectedProduct && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
           onClick={closeModal}
         >
           <div
-            className={`relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
+            className={`relative bg-white/95 backdrop-blur-xl rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-500 border border-gray-200/50 ${
               isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="sticky top-0 z-10 bg-white p-6 border-b flex justify-between items-center">
-              <h3 className="text-2xl font-bold" style={{ color: "#1B2E4F" }}>
+            <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-xl p-8 border-b border-gray-200/50 flex justify-between items-center rounded-t-3xl">
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-cyan-900 bg-clip-text text-transparent">
                 {selectedProduct.productName}
               </h3>
               <button
                 onClick={closeModal}
-                className="text-gray-500 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-100"
+                className="text-gray-500 hover:text-gray-700 transition-colors p-3 rounded-2xl hover:bg-gray-100/50 hover:scale-110"
               >
-                <X size={24} />
+                <X size={28} />
               </button>
             </div>
-
-            <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
+            <div className="p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-3xl p-8 border border-gray-200/50">
                 <img
-                  className="rounded-xl object-contain max-h-[400px]"
+                  className="rounded-2xl object-contain max-h-[500px] shadow-2xl"
                   src={`http://api.jajamblockprints.com${selectedProduct.images}`}
                   alt={selectedProduct.productName}
                 />
               </div>
-
-              <div>
-                <div className="mb-6">
-                  <div className="flex items-center mb-4">
-                    <div className="flex mr-2">
-                      {renderStars(selectedProduct.rating || 4)}
-                    </div>
-                    <span className="text-sm text-gray-500">(Reviews)</span>
-                  </div>
+              <div className="space-y-8">
+                <div>
                   <div className="flex items-center mb-6">
-                    <span
-                      className="text-3xl font-bold mr-3"
-                      style={{ color: "rgb(157 48 137)" }}
-                    >
+                    <div className="flex mr-3">{renderStars(selectedProduct.rating || 4)}</div>
+                    <span className="text-sm text-gray-500 font-medium">(4.5 Reviews)</span>
+                  </div>
+                  <div className="flex items-center mb-8">
+                    <span className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mr-4">
                       ₹{selectedProduct.actualPrice}
                     </span>
-                    {selectedProduct.price &&
-                      selectedProduct.price !== selectedProduct.actualPrice && (
-                        <span className="text-lg text-gray-400 line-through">
-                          ₹{selectedProduct.price}
-                        </span>
-                      )}
+                    {selectedProduct.price && selectedProduct.price !== selectedProduct.actualPrice && (
+                      <span className="text-xl text-gray-400 line-through">₹{selectedProduct.price}</span>
+                    )}
                   </div>
-                  <p className="text-gray-600 mb-8 leading-relaxed">
+                  <p className="text-gray-600 mb-8 leading-relaxed text-lg">
                     {selectedProduct.description ||
-                      "Premium quality traditional wear crafted with authentic techniques and finest materials. Perfect for special occasions and cultural celebrations."}
+                      "Experience cutting-edge technology with this premium electronic device. Featuring advanced specifications and innovative design for the modern tech enthusiast."}
                   </p>
                 </div>
-
-                <div className="mb-8">
-                  <h4
-                    className="text-lg font-semibold mb-4 border-b pb-2"
-                    style={{ color: "#1B2E4F" }}
-                  >
-                    Product Details
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-2xl p-6 border border-gray-200/50">
+                  <h4 className="text-xl font-bold mb-6 text-gray-900">Tech Specifications</h4>
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="flex flex-col">
-                      <span className="text-gray-600 text-sm">Category</span>
-                      <span className="font-medium">
-                        {selectedProduct.category?.name || "Traditional Wear"}
+                      <span className="text-gray-600 text-sm mb-1">Category</span>
+                      <span className="font-semibold text-gray-900">
+                        {selectedProduct.category?.name || "Electronics"}
                       </span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-gray-600 text-sm">Material</span>
-                      <span className="font-medium">Premium Fabric</span>
+                      <span className="text-gray-600 text-sm mb-1">Brand</span>
+                      <span className="font-semibold text-gray-900">Premium Tech</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-gray-600 text-sm">Occasion</span>
-                      <span className="font-medium">Festive & Wedding</span>
+                      <span className="text-gray-600 text-sm mb-1">Warranty</span>
+                      <span className="font-semibold text-green-600">2 Years</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-gray-600 text-sm">
-                        Availability
-                      </span>
-                      <span className="font-medium text-green-600">
+                      <span className="text-gray-600 text-sm mb-1">Availability</span>
+                      <span className="font-semibold text-green-600 flex items-center">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
                         In Stock
                       </span>
                     </div>
                   </div>
                 </div>
-
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-lg"
-                    style={{ background: "rgb(157 48 137)" }}
+                    className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
                   >
-                    <ShoppingCart size={18} />
+                    <ShoppingCart size={20} />
                     <span>Add to Cart</span>
                   </button>
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-2xl hover:scale-105"
                   >
+                    <Zap size={20} />
                     <span>Buy Now</span>
                   </button>
                 </div>
@@ -663,16 +521,14 @@ const TrendingProducts = ({
           </div>
         </div>
       )}
+
       {showLoginModal && (
-        <LoginModal
-          isOpen={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-        >
+        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
           <Login1 />
         </LoginModal>
       )}
     </section>
-  );
-};
+  )
+}
 
-export default TrendingProducts;
+export default TrendingProducts
