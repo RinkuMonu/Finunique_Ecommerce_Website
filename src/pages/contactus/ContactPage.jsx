@@ -213,7 +213,7 @@ const ContactPage = () => {
                 Feel free to contact us? submit your queries here and we will
                 get back to you as soon as possible.
               </p>
-              <div className="space-y-4 mt-8 sm:mt-12 lg:mt-44 text-gray-500">
+              <div className="space-y-4 sm:mt-12 lg:mt-56  text-gray-500">
                 <div className="flex items-center gap-4">
                   <div className="bg-white/10 p-2 rounded-full">
                     <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
