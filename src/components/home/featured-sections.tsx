@@ -124,7 +124,7 @@ const FeaturedSections = () => {
                         //     {category.name}
                         //   </span>
                         // </Link>
-                        <Link
+                        <Link 
                           key={category.name}
                           to={`/category/${category.name}`}
                           className="group block py-2"
