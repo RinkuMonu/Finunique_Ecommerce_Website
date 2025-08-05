@@ -1,120 +1,178 @@
-"use client"
-import { useEffect, useState, useRef, useCallback, memo } from "react"
-import { Search, Heart, ShoppingCart, Menu, X, ChevronDown, Smartphone, Cpu, User } from "lucide-react"
-import { Link } from "react-router-dom"
-import logo from "../../assest/logo.jpg"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice"
-import { FaHeart, FaUser } from "react-icons/fa"
-import { CiLogin } from "react-icons/ci"
+"use client";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
+import {
+  Search,
+  Heart,
+  ShoppingCart,
+  Menu,
+  X,
+  ChevronDown,
+  Smartphone,
+  Cpu,
+  User,
+  ChevronRight,
+  ImageIcon,
+  Zap,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import logo from "../../assest/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
+import { FaHeart, FaUser } from "react-icons/fa";
+import { CiLogin } from "react-icons/ci";
 
 const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
-  const dispatch = useDispatch()
-  const wishlistCount = useSelector((state: any) => state.wishlist.items.length)
-  const navigate = useNavigate()
-  const isLoggedIn = !!localStorage.getItem("token")
+  const dispatch = useDispatch();
+  const wishlistCount = useSelector(
+    (state: any) => state.wishlist.items.length
+  );
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
 
-  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem("addtocart") || "[]")
-  const totalCart = isLoggedIn ? cartItemCount : cartItemsFromLocalStorage.length
+  const cartItemsFromLocalStorage = JSON.parse(
+    localStorage.getItem("addtocart") || "[]"
+  );
+  const totalCart = isLoggedIn
+    ? cartItemCount
+    : cartItemsFromLocalStorage.length;
 
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [categories, setCategories] = useState<string[]>([])
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
-  const [isSticky, setIsSticky] = useState(false)
-  const [user, setUser] = useState<UserData | null>(null)
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const textColor = "#1B2E4F";
+  const primaryColor = "rgb(157 48 137)";
 
-  const searchRef = useRef<HTMLDivElement>(null)
-  const userMenuRef = useRef<HTMLDivElement>(null)
-  const moreMenuRef = useRef<HTMLDivElement>(null)
+  // Memoized styles
+  const gradientStyle = {
+    background: `linear-gradient(135deg, ${primaryColor}, #2A4172)`,
+  };
+  const buttonHoverStyle = {
+    background: `linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))`,
+    color: primaryColor,
+  };
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  const searchRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
   const handleLogout = useCallback(() => {
-    localStorage.removeItem("userData")
-    localStorage.removeItem("token")
-    setUser(null)
-    window.dispatchEvent(new Event("storage"))
-    dispatch(clearWishlist())
-    navigate("/login")
-    window.location.reload()
-    setUserMenuOpen(false)
-  }, [dispatch, navigate])
+    localStorage.removeItem("userData");
+    localStorage.removeItem("token");
+    setUser(null);
+    window.dispatchEvent(new Event("storage"));
+    dispatch(clearWishlist());
+    navigate("/login");
+    window.location.reload();
+    setUserMenuOpen(false);
+  }, [dispatch, navigate]);
 
-  const handleSearchSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery) {
-      navigate(`/search?query=${encodeURIComponent(searchQuery)}`)
-      setSearchQuery("")
-      setSearchOpen(false)
-    }
-  }, [searchQuery, navigate])
+  const handleSearchSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (searchQuery) {
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setSearchQuery("");
+        setSearchOpen(false);
+      }
+    },
+    [searchQuery, navigate]
+  );
 
-  const handleCategorySelect = useCallback((category: string) => {
-    navigate(`/category/${category.toLowerCase()}`)
-    setSearchQuery("")
-    setMoreMenuOpen(false)
-    setMenuOpen(false)
-  }, [navigate])
+  const handleCategorySelect = useCallback(
+    (category: string) => {
+      navigate(`/category/${category.toLowerCase()}`);
+      setSearchQuery("");
+      setMoreMenuOpen(false);
+      setMenuOpen(false);
+    },
+    [navigate]
+  );
+
+  const [groupedCategories, setGroupedCategories] = useState({});
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [hoveredSubcategory, setHoveredSubcategory] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
-        const data = await res.json()
-        if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name))
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
+        const data = await res.json();
+
+        const grouped = {};
+        if (Array.isArray(data?.website?.categories)) {
+          data.website.categories.forEach((item) => {
+            const sub = item?.subcategory;
+            if (!grouped[sub]) grouped[sub] = [];
+            grouped[sub].push(item);
+          });
         }
+
+        setGroupedCategories(grouped);
       } catch (error) {
-        console.error("Failed to fetch categories:", error)
+        console.error("Failed to fetch categories:", error);
       }
-    }
-    fetchCategories()
-  }, [baseUrl, referenceWebsite])
+    };
+
+    fetchCategories();
+  }, [baseUrl, referenceWebsite]);
 
   useEffect(() => {
     const loadUser = () => {
       try {
-        const storedUser = localStorage.getItem("userData")
-        setUser(storedUser ? JSON.parse(storedUser) : null)
+        const storedUser = localStorage.getItem("userData");
+        setUser(storedUser ? JSON.parse(storedUser) : null);
       } catch (error) {
-        console.error("Failed to parse user from localStorage:", error)
-        setUser(null)
+        console.error("Failed to parse user from localStorage:", error);
+        setUser(null);
       }
-    }
-    loadUser()
-    const handleScroll = () => setIsSticky(window.scrollY > 100)
-    window.addEventListener("scroll", handleScroll)
-    window.addEventListener("storage", loadUser)
+    };
+    loadUser();
+    const handleScroll = () => setIsSticky(window.scrollY > 100);
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("storage", loadUser);
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("storage", loadUser)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("storage", loadUser);
+    };
+  }, []);
 
   useEffect(() => {
-    dispatch(fetchWishlist())
-  }, [dispatch])
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setSearchQuery("")
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setSearchQuery("");
       }
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setUserMenuOpen(false)
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setUserMenuOpen(false);
       }
-      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
-        setMoreMenuOpen(false)
+      if (
+        moreMenuRef.current &&
+        !moreMenuRef.current.contains(event.target as Node)
+      ) {
+        setMoreMenuOpen(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
@@ -137,7 +195,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           </div>
         ))}
     </div>
-  )
+  );
 
   const renderUserMenu = () => (
     <div className="absolute right-0 mt-3 w-72 bg-white shadow-lg rounded-2xl overflow-hidden z-30 border border-gray-100">
@@ -169,7 +227,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
               <div>
                 <span className="block">Your Wishlist</span>
-                <span className="text-xs text-gray-500">{wishlistCount} items saved</span>
+                <span className="text-xs text-gray-500">
+                  {wishlistCount} items saved
+                </span>
               </div>
             </Link>
           </div>
@@ -181,7 +241,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CiLogin color="white" size={18} />
               </div>
-              <span className="group-hover:text-red-600 transition-colors">Sign out</span>
+              <span className="group-hover:text-red-600 transition-colors">
+                Sign out
+              </span>
             </button>
           </div>
         </>
@@ -192,7 +254,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <User size={24} className="text-white" />
             </div>
             <h3 className="font-bold text-lg text-gray-800">Welcome!</h3>
-            <p className="text-sm text-gray-500">Sign in for the best experience</p>
+            <p className="text-sm text-gray-500">
+              Sign in for the best experience
+            </p>
           </div>
           <Link
             to="/login"
@@ -201,11 +265,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           >
             Login / Register
           </Link>
-          <p className="text-xs text-center text-gray-400 mt-4">Join us for exclusive tech deals and faster checkout</p>
+          <p className="text-xs text-center text-gray-400 mt-4">
+            Join us for exclusive tech deals and faster checkout
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 
   const renderMobileMenu = () => (
     <div className="fixed inset-0 z-40 lg:hidden bg-black bg-opacity-60 backdrop-blur-sm">
@@ -282,7 +348,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             </div>
             <div className="py-6 border-t border-gray-100">
-              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">Account</h3>
+              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                Account
+              </h3>
               <div className="mt-4">
                 <Link
                   to="/wishlist"
@@ -317,7 +385,122 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </div>
     </div>
-  )
+  );
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  // const [activeCategory, setActiveCategory] = useState(null);
+
+  const categoriess = [
+    {
+      name: "Electronics",
+      items: [
+        {
+          name: "Smartphones",
+          price: "From $299",
+          icon: "/placeholder.svg?height=48&width=48&text=Phone",
+        },
+        {
+          name: "Laptops",
+          price: "From $599",
+          icon: "/placeholder.svg?height=48&width=48&text=Laptop",
+        },
+        {
+          name: "Headphones",
+          price: "From $49",
+          icon: "/placeholder.svg?height=48&width=48&text=Headphones",
+        },
+        {
+          name: "Tablets",
+          price: "From $199",
+          icon: "/placeholder.svg?height=48&width=48&text=Tablet",
+        },
+        {
+          name: "Smart Watches",
+          price: "From $129",
+          icon: "/placeholder.svg?height=48&width=48&text=Watch",
+        },
+      ],
+    },
+    {
+      name: "Fashion",
+      items: [
+        {
+          name: "Men's Clothing",
+          price: "From $29",
+          icon: "/placeholder.svg?height=48&width=48&text=Shirt",
+        },
+        {
+          name: "Women's Clothing",
+          price: "From $39",
+          icon: "/placeholder.svg?height=48&width=48&text=Dress",
+        },
+        {
+          name: "Shoes",
+          price: "From $59",
+          icon: "/placeholder.svg?height=48&width=48&text=Shoes",
+        },
+        {
+          name: "Bags",
+          price: "From $49",
+          icon: "/placeholder.svg?height=48&width=48&text=Bag",
+        },
+        {
+          name: "Accessories",
+          price: "From $19",
+          icon: "/placeholder.svg?height=48&width=48&text=Accessory",
+        },
+      ],
+    },
+    {
+      name: "Home & Garden",
+      items: [
+        {
+          name: "Furniture",
+          price: "From $199",
+          icon: "/placeholder.svg?height=48&width=48&text=Chair",
+        },
+        {
+          name: "Decor",
+          price: "From $19",
+          icon: "/placeholder.svg?height=48&width=48&text=Vase",
+        },
+        {
+          name: "Kitchenware",
+          price: "From $29",
+          icon: "/placeholder.svg?height=48&width=48&text=Kitchen",
+        },
+        {
+          name: "Bedding",
+          price: "From $39",
+          icon: "/placeholder.svg?height=48&width=48&text=Bed",
+        },
+        {
+          name: "Lighting",
+          price: "From $25",
+          icon: "/placeholder.svg?height=48&width=48&text=Light",
+        },
+      ],
+    },
+    {
+      name: "Sports",
+      items: [
+        {
+          name: "Fitness Equipment",
+          price: "From $99",
+          icon: "/placeholder.svg?height=48&width=48&text=Dumbbell",
+        },
+        {
+          name: "Team Sports",
+          price: "From $29",
+          icon: "/placeholder.svg?height=48&width=48&text=Ball",
+        },
+        {
+          name: "Cycling",
+          price: "From $199",
+          icon: "/placeholder.svg?height=48&width=48&text=Bike",
+        },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -325,7 +508,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         <div className="container mx-auto px-10">
           <div className="flex items-center justify-between h-18">
             <Link to="/" className="flex items-center space-x-3">
-              <img src={logo || "/placeholder.svg"} alt="Logo" className="h-20 w-25 rounded" />
+              <img
+                src={logo || "/placeholder.svg"}
+                alt="Logo"
+                className="h-20 w-25 rounded"
+              />
             </Link>
 
             {/* Desktop Search Bar */}
@@ -362,7 +549,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <User size={16} className="text-white" />
                   </div>
-                  <span className="text-sm font-semibold">{user ? user.firstName : "Account"}</span>
+                  <span className="text-sm font-semibold">
+                    {user ? user.firstName : "Account"}
+                  </span>
                 </button>
                 {userMenuOpen && renderUserMenu()}
               </div>
@@ -455,69 +644,174 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="hidden lg:block bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+      <div className="header-bottom bg-gradient-to-r from-[#A13C78] to-[#da77b2] py-4">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center space-x-3 py-4">
-          {categories.length > 4 && (
-              <div className="relative" ref={moreMenuRef}>
-                <button
-                  onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-black hover:font-bold hover:bg-white hover:rounded-sm transition-all group"
-                >
-                  <span className="font-bold">Browse All Collection</span>
+          <div className="flex flex-wrap items-center">
+            {/* Browse All Collection */}
+            <div
+              className="w-full md:w-auto lg:w-3/12 xl:w-3/12 relative"
+              onMouseEnter={() => {
+                setIsCollectionOpen(true);
+                setActiveCategory(0); // Auto-select first category on hover
+              }}
+              onMouseLeave={() => setIsCollectionOpen(false)}
+            >
+              <div className=" bg-opacity-90 backdrop-blur-sm rounded-lg p-4 cursor-pointer hover:bg-opacity-100 transition-all duration-200">
+                <div className="uppercase font-bold inline-flex items-center text-gray-800">
+                  <span className="text-gray-200">Browse All Collection</span>
+                  <ChevronDown className="w-4 h-4 ml-2" />
+                </div>
+              </div>
 
-                  <div className=" flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <ChevronDown
-                      size={12}
-                      className={`text-black transition-transform ${moreMenuOpen ? "rotate-180" : ""}`}
-                    />
-                  </div>
-                </button>
-                <div
-                  className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-80 bg-white shadow-lg rounded-2xl border border-gray-100 z-50 ${moreMenuOpen ? 'block' : 'hidden'}`}
-                  onMouseLeave={() => setMoreMenuOpen(false)}
-                >
+              {/* Collection Dropdown */}
+              {isCollectionOpen && (
+                <div className="absolute left-0 top-[45px] mt-2 w-full min-w-[800px] bg-white rounded-md shadow-xl z-50 border">
                   <div className="p-6">
-                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">More Categories</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {categories.slice(6).map((item) => (
-                        <Link
-                          key={item}
-                          to={`/category/${item.toLowerCase()}`}
-                          className="flex items-center space-x-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all group"
-                          onClick={() => handleCategorySelect(item)}
-                        >
-                          {item}
-                        </Link>
-                      ))}
+                    <div className="flex">
+                      {/* Category List - Left Panel */}
+                      <div className="w-1/4 border-r border-gray-200 pr-4">
+                        {Object.entries(groupedCategories).map(
+                          ([subcategory, items], index) => (
+                            <div
+                              key={index}
+                              className="mb-4"
+                              onMouseEnter={() => setActiveCategory(index)}
+                            >
+                              <div className="border-b border-gray-200 pb-3">
+                                <a
+                                  href="#"
+                                  className={`flex items-center font-semibold text-gray-800 hover:text-[#A13C78] transition-colors duration-200 ${
+                                    activeCategory === index
+                                      ? "text-[#A13C78]"
+                                      : ""
+                                  }`}
+                                >
+                                  <span className="text-lg">{subcategory}</span>
+                                  {items?.length > 0 && (
+                                    <ChevronRight className="w-4 h-4 ml-2" />
+                                  )}
+                                </a>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+
+                      {/* Subcategory Panel - Right Panel */}
+                      <div className="w-3/4 pl-6">
+                        {activeCategory !== null && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {Object.values(groupedCategories)[
+                              activeCategory
+                            ]?.map((item, itemIndex) => (
+                              <Link to={`/category/${item.name}`}
+                                key={itemIndex}
+                                className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
+                              >
+                                <div className="mr-4 bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                  {item.image ? (
+                                    <img
+                                      src={item?.image}
+                                      alt={item?.name}
+                                      className="w-12 h-12 object-contain"
+                                    />
+                                  ) : (
+                                    <div className="w-12 h-12 flex items-center justify-center text-gray-400">
+                                      <ImageIcon className="w-8 h-8" />
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
+                                    {item?.name}
+                                  </div>
+                                 
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-            <Link
-              to="/"
-              className="flex items-center space-x-2 px-4 py-2  text-sm font-semibold text-gray-700 hover:font-blod hover:bg-[#c56b9a] hover:text-[white] rounded-sm transition-all group"
-            >
-              Home
-            </Link>
-            {categories.slice(0, 4).map((item) => (
-              <Link
-                key={item}
-                to={`/category/${item.toLowerCase()}`}
-                className="flex items-center space-x-2 px-4 py-2 rounded-sm gap-2 text-[12px] font-semibold hover:bg-[#c56b9a] hover:text-[white]  transition-all group"
-              >
-                {item}
-              </Link>
-            ))}
-            
+              )}
+            </div>
+
+            {/* Navigation Menu */}
+            <div className="hidden xl:block xl:flex-1 ml-8">
+              <nav>
+                <ul className="flex space-x-8 justify-center">
+                  <li>
+                    <Link
+                      to={"/"}
+                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
+                    >
+                      HOME
+                    </Link>
+                  </li>
+                  {Object.entries(groupedCategories).map(
+                    ([subcategory, items], index) => (
+                      <li
+                        key={index}
+                        className="relative group"
+                        onMouseEnter={() => setHoveredSubcategory(subcategory)}
+                        onMouseLeave={() => setHoveredSubcategory(null)}
+                      >
+                        <span className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide cursor-pointer">
+                          {subcategory}
+                        </span>
+
+                        {/* Dropdown Panel */}
+                        {hoveredSubcategory === subcategory && (
+                          <div className="absolute left-0 top-[20px] mt-2 w-auto bg-white shadow-xl rounded-md z-50 p-6">
+                            <div className="grid grid-cols-2 gap-4">
+                              {items.map((item, itemIndex) => (
+                               <Link to={`/category/${item.name}`}
+                                  key={itemIndex}
+                                  className=" p-2 hover:bg-gray-100 rounded cursor-pointer"
+                                >
+                                  <div className=" flex flex-col font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
+                                   {item.name}
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </nav>
+            </div>
+
+            {/* Mobile Menu Button (for responsive design) */}
+            <div className="xl:hidden ml-auto">
+              <button className="text-white p-2">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
 
       {menuOpen && renderMobileMenu()}
     </>
-  )
-}
+  );
+};
 
-export default memo(Navbar)
+export default memo(Navbar);

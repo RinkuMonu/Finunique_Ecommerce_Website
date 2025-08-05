@@ -121,7 +121,7 @@ export default function TopCategories() {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-6">
           {categories.map((name, index) => {
             const styles = styleMap[name] || {
               count: "100+ Products",
@@ -185,20 +185,20 @@ export default function TopCategories() {
                       <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
                         {name}
                       </h3>
-                      <div
+                      {/* <div
                         className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
                         style={{ backgroundColor: styles.bgColor }}
                       >
                         {index + 1}
-                      </div>
+                      </div> */}
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {/* <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                       Premium collection of {name.toLowerCase()} with authentic craftsmanship
-                    </p>
+                    </p> */}
 
                     {/* Stats */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    {/* <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                       <div className="flex items-center space-x-1">
                         <Package size={14} />
                         <span>{styles.count.split("+")[0]}+ items</span>
@@ -207,10 +207,10 @@ export default function TopCategories() {
                         <Star size={14} className="fill-yellow-400 stroke-yellow-400" />
                         <span>4.8</span>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Shop Now Button */}
-                    <div className="flex items-center justify-between">
+                    {/* <div className="flex items-center justify-between">
                       <span
                         className="font-medium group-hover:underline transition-all"
                         style={{ color: styles.bgColor }}
@@ -222,7 +222,7 @@ export default function TopCategories() {
                         className="group-hover:translate-x-1 transition-transform"
                         style={{ color: styles.bgColor }}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </Link>
