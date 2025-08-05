@@ -20,14 +20,15 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const dispatch = useDispatch()
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
-
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const [addedProduct, setAddedProduct] = useState<any>(null)
   const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false)
   const [wishlistProduct, setWishlistProduct] = useState<any>(null)
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE
 
   // Responsive items per slide
   useEffect(() => {
@@ -73,19 +74,19 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
       try {
         const res = await fetch(
           `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
+        )
+        const data = await res.json()
         if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, 12)); // Get 12 products for slider
+          setProducts(data.products.slice(5, 17)) // Get 12 products for slider
         } else {
-          console.error("Unexpected products format:", data);
+          console.error("Unexpected products format:", data)
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error)
       }
-    };
-    fetchProducts();
-  }, [baseUrl, referenceWebsite]);
+    }
+    fetchProducts()
+  }, [baseUrl, referenceWebsite])
 
   const openProductModal = (product: any) => {
     setSelectedProduct(product)
@@ -151,12 +152,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     ))
   }
 
-//   setTimeout(() => {
-//     setIsPopupVisible(false);
-//   }, 3000);
-
-//   closeModal();
-// };
   const handleAddToWishlist = (product: any) => {
     const isUserLoggedIn = !!localStorage.getItem("token")
     if (!isUserLoggedIn) {
@@ -171,26 +166,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     }, 3000)
   }
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
-        const data = await res.json()
-        if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(5, 17))
-        } else {
-          console.error("Unexpected products format:", data)
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error)
-      }
-    }
-    fetchProducts()
-  }, [baseUrl, referenceWebsite])
-
   const maxSlides = Math.ceil(products.length / itemsPerSlide)
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % maxSlides)
@@ -203,11 +178,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
   }
-
-
-  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
-
-
 
   return (
     <section className="py-16 px-4 bg-white">
@@ -267,7 +237,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                         <div className="relative aspect-square overflow-hidden bg-gray-50">
                           <img
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            src={`http://api.jajamblockprints.com${product.images}`}
+                            src={`${Image_BaseURL}${product.images}`}
                             alt={product.productName}
                           />
 
@@ -445,7 +415,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px] shadow-lg"
-                  src={`http://api.jajamblockprints.com${selectedProduct.images}`}
+                  src={`${Image_BaseURL}${selectedProduct.images}`}
                   alt={selectedProduct.productName}
                 />
               </div>
