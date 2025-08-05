@@ -8,15 +8,16 @@ import ProductCard from "../components/products/ProductCard"
 
 const initialMinPrice = 0
 const initialMaxPrice =50000
-const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+const BrandOptions = ['Brand1','Brand1','Brand1','Brand1' ]
 export default function Products() {
   const { category } = useParams()
    const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
-const [selectedSizes, setSelectedSizes] = useState<string[]>([])
+const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("newest")
   const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [openSections, setOpenSections] = useState({
     price: true,
     brands: true,
@@ -45,13 +46,13 @@ const [selectedSizes, setSelectedSizes] = useState<string[]>([])
   useEffect(() => {
     const filtered = products.filter((product) => {
       const priceMatch = product.actualPrice >= priceRange[0] && product.actualPrice <= priceRange[1]
-     if (selectedSizes.length === 0) return priceMatch
+     if (selectedBrands.length === 0) return priceMatch
       
-      // If product has no size property, don't show it when sizes are selected
-      if (!product.size) return false
+      // If product has no Brand property, don't show it when Brands are selected
+      if (!product.Brand) return false
       
-      // Only show products that match selected sizes
-      return priceMatch && selectedSizes.includes(product.size.toUpperCase())
+      // Only show products that match selected Brands
+      return priceMatch && selectedBrands.includes(product.Brand.toUpperCase())
     
     })
 
@@ -63,19 +64,21 @@ const [selectedSizes, setSelectedSizes] = useState<string[]>([])
           return b.actualPrice - a.actualPrice
         case "oldest":
           return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+           case "popularity": 
+      return (b.popularity || 0) - (a.popularity || 0)
         default:
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       }
     })
 
     setFilteredProducts(sorted)
-  }, [products, priceRange, sortBy, selectedSizes])
+  }, [products, priceRange, sortBy, selectedBrands])
 
-const handleSizeChange = (size: string) => {
-    setSelectedSizes(prev => 
-      prev.includes(size) 
-        ? prev.filter(s => s !== size) 
-        : [...prev, size]
+const handleBrandChange = (Brand: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(Brand) 
+        ? prev.filter(s => s !== Brand) 
+        : [...prev, Brand]
     )
   }
 
@@ -85,7 +88,7 @@ const handleSizeChange = (size: string) => {
 
   const resetFilters = () => {
     setPriceRange([initialMinPrice, initialMaxPrice])
-    setSelectedSizes([])
+    setSelectedBrands([])
     setSortBy("newest")
   }
 
@@ -120,6 +123,7 @@ const handleSizeChange = (size: string) => {
               <option value="oldest">Oldest First</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
+                <option value="popularity">Most Popular</option>
             </select>
           </div>
 
@@ -131,6 +135,35 @@ const handleSizeChange = (size: string) => {
               <X className="h-4 w-4" />
               <span>Reset</span>
             </button> */}
+            <div className="flex items-center gap-3">
+  <button
+    onClick={() => setViewMode("grid")}
+    className={`p-2 rounded-md border ${
+      viewMode === "grid"
+        ? "bg-[#9D3089] text-white border-[#9D3089]"
+        : "bg-white text-gray-600 border-gray-300"
+    }`}
+    title="Grid View"
+  >
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
+    </svg>
+  </button>
+  <button
+    onClick={() => setViewMode("list")}
+    className={`p-2 rounded-md border ${
+      viewMode === "list"
+        ? "bg-[#9D3089] text-white border-[#9D3089]"
+        : "bg-white text-gray-600 border-gray-300"
+    }`}
+    title="List View"
+  >
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  </button>
+</div>
+
             <button
               onClick={() => {}}
               className="flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
@@ -255,24 +288,24 @@ const handleSizeChange = (size: string) => {
 
                   
       
-          {/* <div className="space-y-3">
-            {sizeOptions.map((size) => (
-              <label key={size} className="flex items-center space-x-3 cursor-pointer group">
+          <div className="space-y-3">
+            {BrandOptions.map((Brand) => (
+              <label key={Brand} className="flex items-center space-x-3 cursor-pointer group">
                 <div className="relative">
                   <input
                     type="checkbox"
-                    checked={selectedSizes.includes(size)}
-                    onChange={() => handleSizeChange(size)}
+                    checked={selectedBrands.includes(Brand)}
+                    onChange={() => handleBrandChange(Brand)}
                     className="sr-only"
                   />
                   <div
                     className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                      selectedSizes.includes(size)
+                      selectedBrands.includes(Brand)
                         ? "border-purple-600 bg-purple-600"
                         : "border-gray-300 group-hover:border-purple-400"
                     }`}
                   >
-                    {selectedSizes.includes(size) && (
+                    {selectedBrands.includes(Brand) && (
                       <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fillRule="evenodd"
@@ -283,10 +316,10 @@ const handleSizeChange = (size: string) => {
                     )}
                   </div>
                 </div>
-                <span className="text-sm text-gray-700 group-hover:text-gray-900">{size}</span>
+                <span className="text-sm text-gray-700 group-hover:text-gray-900">{Brand}</span>
               </label>
             ))}
-          </div> */}
+          </div> 
         
 
             <button
@@ -299,8 +332,8 @@ const handleSizeChange = (size: string) => {
 
           {/* Products Grid */}
           <div className="flex-1">
-            {filteredProducts.length === 0 ? (
-              <div className="bg-gray-50 rounded-xl p-12 text-center">
+       {filteredProducts.length === 0 ? (
+  <div className="bg-gray-50 rounded-xl p-12 text-center">
                 <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200">
                   <Sliders className="w-10 h-10 text-gray-400" />
                 </div>
@@ -316,13 +349,24 @@ const handleSizeChange = (size: string) => {
                   Reset All Filters
                 </button> */}
               </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
-              </div>
-            )}
+) : viewMode === "grid" ? (
+  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {filteredProducts.map((product) => (
+      <ProductCard key={product._id} product={product} />
+    ))}
+  </div>
+) : (
+  <div className="space-y-6">
+    {filteredProducts.map((product) => (
+      <div key={product._id} className="border rounded-xl p-4 shadow-sm">
+        <ProductCard product={product} listView={true} />
+      </div>
+    ))}
+  </div>
+)}
+
+
+          )
           </div>
         </div>
       </div>

@@ -166,6 +166,26 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     }, 3000)
   }
 
+  // const baseUrl = import.meta.env.VITE_API_BASE_URL
+  // const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
+        const data = await res.json()
+        if (Array.isArray(data.products)) {
+          setProducts(data.products.slice(5, 17))
+        } else {
+          console.error("Unexpected products format:", data)
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error)
+      }
+    }
+    fetchProducts()
+  }, [baseUrl, referenceWebsite])
+
   const maxSlides = Math.ceil(products.length / itemsPerSlide)
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % maxSlides)
