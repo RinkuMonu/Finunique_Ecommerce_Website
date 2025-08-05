@@ -790,7 +790,7 @@ function AddressShipping({ cartItems }) {
         {cartItems.map((item) => (
           <div key={item.id} className="flex gap-4 justify-between border-b pb-3">
             <img
-              src={`http://api.jajamblockprints.com/${item?.image}`}
+              src={item?.image}
               alt={item?.name}
               className="w-16 h-16 object-cover rounded-lg"
             />
