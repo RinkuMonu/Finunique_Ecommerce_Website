@@ -37,10 +37,8 @@ const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${refer
           setProducts(data.products);
           console.log(data);
         } else {
-
-          console.error("Unexpected products format:", data)
-        }    
-
+          console.error("Unexpected products format:", data);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -244,16 +242,18 @@ const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${refer
                   <div className="relative pt-2">
                     <div className="relative h-1 bg-gray-200 rounded-full">
                       <div
-
-                          className="absolute h-1 rounded-full"
-                          style={{
-                            background: "rgb(157 48 137)",
-                            left:`${(priceRange[0] / initialMaxPrice) * 100}%`,
-                            width: `${((priceRange[1] - priceRange[0]) / initialMaxPrice) * 100}%`,
-                          }}
-                        />
-                    </div>  
-
+                        className="absolute h-1 rounded-full"
+                        style={{
+                          background: "rgb(157 48 137)",
+                          left: `${(priceRange[0] / initialMaxPrice) * 100}%`,
+                          width: ` ${
+                            ((priceRange[1] - priceRange[0]) /
+                              initialMaxPrice) *
+                            100
+                          }%`,
+                        }}
+                      />
+                    </div>
                     <input
                       type="range"
                       min={initialMinPrice}
