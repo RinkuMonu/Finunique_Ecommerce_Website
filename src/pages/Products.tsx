@@ -28,7 +28,7 @@ export default function Products() {
     useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
+        const res = await fetch(${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite})
         const data = await res.json()
         if (Array.isArray(data.products)) {
           setProducts(data.products)
@@ -216,8 +216,8 @@ const handleBrandChange = (Brand: string) => {
                         className="absolute h-1 rounded-full"
                         style={{
                           background: "rgb(157 48 137)",
-                          left: `${(priceRange[0] / initialMaxPrice) * 100}%`,
-                          width: `${((priceRange[1] - priceRange[0]) / initialMaxPrice) * 100}%`,
+                          left: ${(priceRange[0] / initialMaxPrice) * 100}%,
+                          width: ${((priceRange[1] - priceRange[0]) / initialMaxPrice) * 100}%,
                         }}
                       />
                     </div>
