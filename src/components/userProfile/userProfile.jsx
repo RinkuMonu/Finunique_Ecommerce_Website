@@ -1,30 +1,41 @@
-import { useEffect, useState } from "react";
-import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaMapMarkerAlt,
-  FaEdit,
-  FaSave,
-  FaTimes,
-  FaUserCircle,
-  FaBox,
-} from "react-icons/fa";
-import { OrderPage } from "../userOrder/userOrder";
+"use client"
 
-export const ProfilePage = () => {
-  const [activeTab, setActiveTab] = useState("profile"); // 'profile' or 'orders'
-  const [isEditing, setIsEditing] = useState(false);
+import { useEffect, useState } from "react"
+import { User, Mail, Phone, MapPin, FilePenLine, Package, Loader2 } from "lucide-react"
+import OrderPage from "../userOrder/OrderPage"
+
+const colors = {
+  primary: '#384D89',
+  primaryDark: '#2A4172',
+  primaryDarker: '#1B2E4F',
+  primaryDarkest: '#14263F',
+  secondary: '#A13C78',
+  secondaryDark: '#872D67',
+  secondaryDarker: '#681853',
+  accent: '#C1467F'
+}
+
+export default function ProfilePage() {
+  const [activeTab, setActiveTab] = useState('profile'); 
+  const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState({
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
     address: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  })
+  const [initialProfile, setInitialProfile] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    address: "",
+  })
+  const [errors, setErrors] = useState({})
+  const [successMessage, setSuccessMessage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleChange = (e) => {
@@ -67,34 +78,6 @@ export const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/auth/userInfo`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        setProfile(
-          data?.user || {
-            firstName: "",
-            lastName: "",
-            email: "",
-            mobile: "",
-            address: "",
-          }
-        );
-      } catch (err) {
-        console.error("Error fetching user info:", err);
-      }
-    };
-    fetchProfile();
-  }, [baseUrl]);
-
   const handleMobileChange = (e) => {
     const { value } = e.target;
     if (!/^\d*$/.test(value)) return;
@@ -127,6 +110,38 @@ export const ProfilePage = () => {
       }));
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const fetchProfile = async () => {
+      setIsFetching(true)
+      try {
+        const response = await fetch(`${baseUrl}/auth/userInfo`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        const userProfile = data?.user || {
+          firstName: "",
+          lastName: "",
+          email: "",
+          mobile: "",
+          address: "",
+        }
+        setProfile(userProfile)
+        setInitialProfile(userProfile)
+      } catch (err) {
+        console.error("Error fetching user info:", err)
+        setErrors({ submit: "Failed to load profile data." })
+      } finally {
+        setIsFetching(false)
+      }
+    }
+    fetchProfile()
+  }, [baseUrl])
 
   const validateForm = () => {
     const newErrors = {};
@@ -165,6 +180,8 @@ export const ProfilePage = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setSuccessMessage("");
+    setErrors({});
 
     try {
       const response = await fetch(`${baseUrl}/auth/update`, {
@@ -189,6 +206,7 @@ export const ProfilePage = () => {
       }
 
       setSuccessMessage("Profile updated successfully!");
+      setInitialProfile(profile);
       setIsEditing(false);
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
@@ -202,286 +220,238 @@ export const ProfilePage = () => {
   };
 
   const handleCancel = () => {
+    setProfile(initialProfile);
     setIsEditing(false);
     setErrors({});
   };
 
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Profile Header */}
-        <div className="text-center mb-12">
-          <div className="mx-auto h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mb-4 overflow-hidden">
-            <FaUserCircle className="text-6xl text-gray-400" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {profile.firstName} {profile.lastName}
+  <div className="w-full mx-auto p-4 md:p-8">
+      <header className="flex items-center gap-4 mb-8">
+        <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+          <img
+            src={`/placeholder.svg?height=80&width=80&query=${profile.firstName}+${profile.lastName}`}
+            alt={`${profile.firstName} ${profile.lastName}`}
+            className="h-full w-full object-cover"
+          />
+          {(!profile.firstName && !profile.lastName) && (
+            <span className="text-xl font-medium text-gray-600">
+              {profile.firstName?.[0]}
+              {profile.lastName?.[0]}
+            </span>
+          )}
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold" style={{ color: colors.primaryDarker }}>
+            {profile.firstName} {profile.lastName}
           </h1>
-          <p className="mt-2 text-lg text-gray-600">
-            Manage your account information and orders
-          </p>
+          <p className="text-gray-500">Manage your account information and view your order history.</p>
         </div>
+      </header>
 
-        {/* Tabs Navigation */}
-        <div className="flex border-b border-gray-200 mb-8">
+      <div className="w-full">
+        <div className="flex border-b border-gray-200 mb-6">
           <button
-            onClick={() => setActiveTab("profile")}
-            className={`py-4 px-6 font-medium text-md flex items-center space-x-2 ${
-              activeTab === "profile"
-                ? "border-b-2 border-[#971D89] text-[#971D89]"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            onClick={() => setActiveTab('profile')}
+            className={`flex items-center py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'profile' ? `border-[${colors.primary}] text-[${colors.primary}]` : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            style={activeTab === 'profile' ? { borderColor: colors.primary, color: colors.primary } : {}}
           >
-            <FaUser className="h-6 w-6" />
-            <span>Profile</span>
+            <User className="mr-2 h-4 w-4" />
+            Profile
           </button>
           <button
-            onClick={() => setActiveTab("orders")}
-            className={`py-4 px-6 font-medium text-md flex items-center space-x-2 ${
-              activeTab === "orders"
-                ? "border-b-2 border-[#971D89] text-[#971D89]"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            onClick={() => setActiveTab('orders')}
+            className={`flex items-center py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'orders' ? `border-[${colors.primary}] text-[${colors.primary}]` : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            style={activeTab === 'orders' ? { borderColor: colors.primary, color: colors.primary } : {}}
           >
-            <FaBox className="h-6 w-6" />
-            <span>Orders</span>
+            <Package className="mr-2 h-4 w-4" />
+            Orders
           </button>
         </div>
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          {activeTab === "profile" ? (
-            <div className="p-6">
-              {successMessage && (
-                <div className="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6">
-                  <p>{successMessage}</p>
-                </div>
-              )}
-
-              {errors.submit && (
-                <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6">
-                  <p>{errors.submit}</p>
-                </div>
-              )}
-
-              {isEditing ? (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={profile.firstName}
-                        onChange={handleChange}
-                        className={`w-full rounded-lg border ${
-                          errors.firstName
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#971D89]`}
-                      />
-                      {errors.firstName && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.firstName}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={profile.lastName}
-                        onChange={handleChange}
-                        className={`w-full rounded-lg border ${
-                          errors.lastName ? "border-red-500" : "border-gray-300"
-                        } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#971D89]`}
-                      />
-                      {errors.lastName && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.lastName}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaEnvelope className="text-gray-400" />
-                        </div>
-                        <input
-                          type="email"
-                          name="email"
-                          value={profile.email}
-                          onChange={handleChange}
-                          className={`pl-10 w-full rounded-lg border ${
-                            errors.email ? "border-red-500" : "border-gray-300"
-                          } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#971D89]`}
-                        />
-                      </div>
-                      {errors.email && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Mobile
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <FaPhone className="text-gray-400" />
-                          </div>
-                          <input
-                            type="tel"
-                            name="mobile"
-                            value={profile.mobile}
-                            onChange={handleMobileChange}
-                            maxLength="10"
-                            inputMode="numeric"
-                            className={`pl-10 w-full rounded-lg border ${
-                              errors.mobile
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#971D89]`}
-                            placeholder="e.g. 9876543210"
-                          />
-                        </div>
-                        {errors.mobile && (
-                          <p className="mt-1 text-xs text-red-600 animate-pulse">
-                            {errors.mobile}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
+        
+        <div className={activeTab === 'profile' ? 'block' : 'hidden'}>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <form onSubmit={handleSubmit}>
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex justify-between items-center">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Address
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 pt-3 pointer-events-none">
-                        <FaMapMarkerAlt className="text-gray-400" />
-                      </div>
-                      <textarea
-                        name="address"
-                        value={profile.address}
-                        onChange={handleChange}
-                        rows="3"
-                        className={`pl-10 w-full rounded-lg border ${
-                          errors.address ? "border-red-500" : "border-gray-300"
-                        } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#971D89]`}
-                      />
-                    </div>
-                    {errors.address && (
-                      <p className="mt-1 text-xs text-red-600">
-                        {errors.address}
-                      </p>
-                    )}
+                    <h2 className="text-xl font-semibold" style={{ color: colors.primaryDarker }}>Personal Information</h2>
+                    <p className="text-gray-500">
+                      {isEditing ? "Update your profile details below." : "View your profile details."}
+                    </p>
                   </div>
-
-                  <div className="flex justify-end space-x-3 pt-4">
+                  {!isEditing && (
                     <button
                       type="button"
+                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{ backgroundColor: colors.primary }}
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <FilePenLine className="mr-2 h-4 w-4" />
+                      Edit Profile
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="p-6 space-y-6">
+                {successMessage && (
+                  <div className="rounded-md p-4 border" style={{ backgroundColor: '#F0FAF0', borderColor: '#C6F6D5' }}>
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="#38A169">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium" style={{ color: '#276749' }}>Success</h3>
+                        <div className="mt-2 text-sm" style={{ color: '#276749' }}>
+                          <p>{successMessage}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {errors.submit && (
+                  <div className="rounded-md p-4 border" style={{ backgroundColor: '#FEF2F2', borderColor: '#FECACA' }}>
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="#E53E3E">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium" style={{ color: '#9B2C2C' }}>Error</h3>
+                        <div className="mt-2 text-sm" style={{ color: '#9B2C2C' }}>
+                          <p>{errors.submit}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {isEditing ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="firstName" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>First Name</label>
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        value={profile.firstName}
+                        onChange={handleChange}
+                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.firstName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
+                      />
+                      {errors.firstName && <p className="text-sm text-red-600">{errors.firstName}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="lastName" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Last Name</label>
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        value={profile.lastName}
+                        onChange={handleChange}
+                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.lastName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
+                      />
+                      {errors.lastName && <p className="text-sm text-red-600">{errors.lastName}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Email</label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={profile.email}
+                        onChange={handleChange}
+                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
+                      />
+                      {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="mobile" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Mobile</label>
+                      <input
+                        id="mobile"
+                        name="mobile"
+                        type="tel"
+                        value={profile.mobile}
+                        onChange={handleMobileChange}
+                        maxLength={10}
+                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.mobile ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
+                      />
+                      {errors.mobile && <p className="text-sm text-red-600">{errors.mobile}</p>}
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label htmlFor="address" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Address</label>
+                      <textarea
+                        id="address"
+                        name="address"
+                        rows={3}
+                        value={profile.address}
+                        onChange={handleChange}
+                        className={`block w-full h-20 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
+                      />
+                      {errors.address && <p className="text-sm text-red-600">{errors.address}</p>}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                    <InfoItem icon={User} label="Full Name" value={`${profile.firstName} ${profile.lastName}`} primaryColor={colors.primaryDarker} />
+                    <InfoItem icon={Mail} label="Email Address" value={profile.email} primaryColor={colors.primaryDarker} />
+                    <InfoItem icon={Phone} label="Mobile Number" value={profile.mobile} primaryColor={colors.primaryDarker} />
+                    <InfoItem icon={MapPin} label="Address" value={profile.address || "Not provided"} primaryColor={colors.primaryDarker} />
+                  </div>
+                )}
+              </div>
+              {isEditing && (
+                <div className="px-6 py-3 bg-gray-50 text-right border-t border-gray-200">
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{ borderColor: colors.primary, color: colors.primary, focusRingColor: colors.primary }}
                       onClick={handleCancel}
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="px-4 py-2 bg-[#971D89] text-white rounded-lg hover:bg-[#7e176f] transition disabled:opacity-70"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: colors.primary, hoverBackgroundColor: colors.primaryDark, focusRingColor: colors.primary }}
                     >
-                      {isLoading ? "Saving..." : "Save Changes"}
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex items-start space-x-4 border border-gray-300 p-3 rounded-md">
-                      <div className="flex-shrink-0">
-                        <FaUser className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <div className="">
-                        <p className="text-sm font-medium text-gray-500">
-                          Name
-                        </p>
-                        <p className="text-gray-900">
-                          {profile.firstName} {profile.lastName}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 border border-gray-300 p-3 rounded-md">
-                      <div className="flex-shrink-0">
-                        <FaEnvelope className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-500">
-                          Email
-                        </p>
-                        <p className="text-gray-900">{profile.email}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 border border-gray-300 p-3 rounded-md">
-                      <div className="flex-shrink-0">
-                        <FaPhone className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-500">
-                          Mobile
-                        </p>
-                        <p className="text-gray-900">{profile.mobile}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 border border-gray-300 p-3 rounded-md">
-                      <div className="flex-shrink-0">
-                        <FaMapMarkerAlt className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-500">
-                          Address
-                        </p>
-                        <p className="text-gray-900">
-                          {profile.address || "Not provided"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4">
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="px-4 py-2 bg-[#971D89] text-white rounded-lg hover:bg-[#7e176f] transition flex items-center justify-center space-x-2"
-                    >
-                      <FaEdit className="h-4 w-4" />
-                      <span>Edit Profile</span>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Save Changes
                     </button>
                   </div>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="p-6">
-              <OrderPage />
-            </div>
-          )}
+            </form>
+          </div>
+        </div>
+        
+        <div className={activeTab === 'orders' ? 'block' : 'hidden'}>
+          <OrderPage />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
+function InfoItem({ icon: Icon, label, value, primaryColor }) {
+  return (
+    <div className="flex items-start gap-3">
+      <Icon className="h-5 w-5 mt-0.5" style={{ color: primaryColor }} />
+      <div>
+        <p className="font-medium" style={{ color: primaryColor }}>{label}</p>
+        <p className="text-gray-500">{value}</p>
+      </div>
+    </div>
+  )
+}

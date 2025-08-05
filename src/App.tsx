@@ -40,7 +40,8 @@ import Products from "./pages/Products";
 import WhatsAppButton from "./pages/WhatsAppButton";
 import LoginModal from "./components/loginModal/LoginModal";
 import AboutUs from "./pages/AboutUs";
-import {ProfilePage} from "./components/userProfile/userProfile";
+import ContactPage from "./pages/contactus/ContactPage";
+import ProfilePage from "./components/userProfile/userProfile";
 
 function App() {
   const location = useLocation();
@@ -138,11 +139,13 @@ function App() {
           {/* <Route path="/policy" element={<Policy />} />  */}
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/profile" element={<ProfilePage />} />
+          {/* <Route path="/profile-page" element={<ProfilePage />} /> */}
           <Route path="/refund" element={<Refund />} />
           <Route path="/cancellation_policy" element={<CancellationPolicy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/Privacy" element={<Privacy />} />
+          <Route path="/contact-us" element={<ContactPage />} />
           <Route
             path="/address"
             element={
