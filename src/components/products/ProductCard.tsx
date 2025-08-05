@@ -31,6 +31,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, listView }: ProductCardProps) => {
+  console.log("product images = ",product);
   const [isPopupVisible, setIsPopupVisible] = useState(false)  
     const [addedProduct, setAddedProduct] = useState<any>(null)
   
