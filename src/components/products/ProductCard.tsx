@@ -232,7 +232,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           </div>
         </div>
       )}
-      <div
+     <Link to={`/product/${product?._id}`} 
         className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-200 hover:border-[#9D3089]/50 overflow-hidden hover:-translate-y-1 "
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -349,7 +349,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
             <span className="text-sm font-medium">Added to wishlist!</span>
           </div>
         )}
-      </div>
+      </Link>
        {showLoginModal && (
           <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
             <Login1 />

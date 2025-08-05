@@ -359,7 +359,7 @@ if (cartItems.length === 0) {
                     <div className="flex-shrink-0">
                       <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden bg-gradient-to-br from-[#f8f9ff] to-[#f0f2ff] border border-gray-200 shadow-sm">
                         <img
-                          src={`http://api.jajamblockprints.com/${item?.image}`}
+                          src={item?.image}
                           alt={item.name}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         />
