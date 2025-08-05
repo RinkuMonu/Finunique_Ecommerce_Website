@@ -35,7 +35,7 @@ const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${refer
           console.log(data)
         } else {
           console.error("Unexpected products format:", data)
-        }
+        }    
       } catch (error) {
         console.error("Error fetching products:", error)
       }
