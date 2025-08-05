@@ -3,7 +3,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import QRCode from "react-qr-code"
 import { ChevronLeft, Wallet, Check, CreditCard, Clock, Shield } from "lucide-react"
-import logo from "../assest/logo.jpg"
+import logo from "/DigiLogo.jpg"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
@@ -790,7 +790,7 @@ function AddressShipping({ cartItems }) {
         {cartItems.map((item) => (
           <div key={item.id} className="flex gap-4 justify-between border-b pb-3">
             <img
-              src={`http://api.jajamblockprints.com/${item?.image}`}
+              src={item?.image}
               alt={item?.name}
               className="w-16 h-16 object-cover rounded-lg"
             />

@@ -483,7 +483,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       {categories.slice(6).map((item) => (
                         <Link
                           key={item}
-                          to={`/category/${item.toLowerCase()}`}
+                          to={`/category/${item.toLowerCase().split(" ").join("-")}`}
                           className="flex items-center space-x-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all group"
                           onClick={() => handleCategorySelect(item)}
                         >
@@ -504,7 +504,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             {categories.slice(0, 4).map((item) => (
               <Link
                 key={item}
-                to={`/category/${item.toLowerCase()}`}
+                to={`/category/${item.toLowerCase().split(" ").join("-")}`}
                 className="flex items-center space-x-2 px-4 py-2 rounded-sm gap-2 text-[12px] font-semibold hover:bg-[#c56b9a] hover:text-[white]  transition-all group"
               >
                 {item}
