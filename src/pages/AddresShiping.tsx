@@ -9,6 +9,8 @@ import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import LoginModal from "../components/loginModal/loginModal";
 import Login1 from "../pages/Login1";
+import Swal from 'sweetalert2';
+
 interface Address {
   id: string
   name: string
@@ -249,7 +251,13 @@ function AddressShipping({ cartItems }) {
       }
 
       if (!selectedPayment) {
-        alert("Please select a payment method.")
+        Swal.fire({
+  title: 'Failed!',
+  text: 'Please select a payment method.',
+  icon: 'error',
+  confirmButtonText: 'Retry',
+});
+
         setIsLoading(false)
         return
       }
@@ -269,7 +277,14 @@ function AddressShipping({ cartItems }) {
       setStartTimer(true)
     } catch (error) {
       console.error("Payment Error:", error)
-      alert("Payment initiation failed. Please try again.")
+      Swal.fire({
+  title: 'Failed!',
+  text: 'Payment initiation failed. Please try again.',
+  icon: 'error',
+  confirmButtonText: 'Retry',
+});
+
+      // Swal.fire("Payment initiation failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -389,439 +404,470 @@ function AddressShipping({ cartItems }) {
 
   return (
     <>
-     <div className="min-h-screen bg-[#F8FAFC]">
-  <div className="container mx-auto px-4 py-8 max-w-7xl">
-    {/* Progress Indicator */}
-    <div className="flex justify-center mb-12">
-      <div className="flex items-center w-full max-w-2xl">
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${selectedAddress ? 'bg-[#A13C78] text-white' : 'bg-white border-2 border-[#A13C78] text-[#A13C78]'}`}>
-            {selectedAddress ? <Check className="w-5 h-5" /> : <span>1</span>}
-          </div>
-          <span className={`text-sm mt-2 ${selectedAddress ? 'text-[#A13C78] font-medium' : 'text-gray-500'}`}>Shipping</span>
-        </div>
-        <div className={`h-1 flex-1 mx-2 ${selectedAddress ? 'bg-[#A13C78]' : 'bg-gray-200'}`}></div>
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${selectedPayment ? 'bg-[#A13C78] text-white' : selectedAddress ? 'bg-white border-2 border-[#A13C78] text-[#A13C78]' : 'bg-gray-100 border-2 border-gray-300 text-gray-400'}`}>
-            {selectedPayment ? <Check className="w-5 h-5" /> : <span>2</span>}
-          </div>
-          <span className={`text-sm mt-2 ${selectedPayment ? 'text-[#A13C78] font-medium' : selectedAddress ? 'text-gray-600' : 'text-gray-400'}`}>Payment</span>
-        </div>
-        <div className={`h-1 flex-1 mx-2 ${selectedPayment ? 'bg-[#A13C78]' : 'bg-gray-200'}`}></div>
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${upiIntent ? 'bg-[#A13C78] text-white' : selectedPayment ? 'bg-white border-2 border-[#A13C78] text-[#A13C78]' : 'bg-gray-100 border-2 border-gray-300 text-gray-400'}`}>
-            {upiIntent ? <Check className="w-5 h-5" /> : <span>3</span>}
-          </div>
-          <span className={`text-sm mt-2 ${upiIntent ? 'text-[#A13C78] font-medium' : selectedPayment ? 'text-gray-600' : 'text-gray-400'}`}>Complete</span>
-        </div>
-      </div>
-    </div>
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-12">
+          {/* Header Section */}
+          <nav className="flex px-5 mb-4 text-sm text-gray-500 space-x-2">
+            <Link to="/" className="hover:text-purple-700 transition-colors cursor-pointer">Home</Link>
+            <span>/</span>
+            <Link to="/cart" className="hover:text-purple-700 transition-colors cursor-pointer">Cart</Link>
+           <span>/</span>
+            <Link to="/checkout" className="text-purple-700 font-semibold">Checkout</Link>
+          </nav>
 
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Left Column - Order Details */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Shipping Information Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E5E9F0] p-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-[#1B2E4F]">Shipping Information</h2>
-            {selectedAddress && selectedAddress !== "new" && (
-              <button 
-                onClick={() => setSelectedAddress("new")}
-                className="text-sm font-medium text-[#A13C78] hover:text-[#872D67] flex items-center gap-1"
-              >
-                <Edit className="w-4 h-4" />
-                Change
-              </button>
-            )}
-          </div>
-          
-          {/* Address Selection */}
-          {!selectedAddress && (
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-[#2A4172] mb-3">
-                Select Address
-              </label>
-              <div className="relative">
-                <select
-                  className="w-full appearance-none rounded-xl border border-[#E5E9F0] bg-white px-5 py-3.5 text-[#2A4172] shadow-sm transition focus:border-[#A13C78] focus:outline-none focus:ring-2 focus:ring-[#A13C78]/30"
-                  value={selectedAddress}
-                  onChange={handleAddressChange}
-                >
-                  <option value="">Select Address</option>
-                  <option value="new">Add new address...</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-[#A13C78]">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M19 9l-7 7-7-7" />
-                  </svg>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Order Details */}
+            <div className="lg:col-span-2 px-4">
+              <div className="bg-white rounded-lg shadow-sm border-2 border-gray-100 p-6 mb-6">
+                {/* Logo */}
+                <div className="mb-6">
+                  <img src={logo || "/placeholder.svg"} alt="logo" className="w-32 h-auto" />
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* New Address Form */}
-          {isNewAddress && (
-            <div className="space-y-6">
-              {/* Error summary */}
-              {Object.values(errors).some(error => error) && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-800">Please fix the following errors:</h3>
-                      <div className="mt-2 text-sm text-red-700">
-                        <ul className="list-disc pl-5 space-y-1">
-                          {errors.name && <li>{errors.name}</li>}
-                          {errors.email && <li>{errors.email}</li>}
-                          {errors.phone && <li>{errors.phone}</li>}
-                          {errors.pinCode && <li>{errors.pinCode}</li>}
-                          {errors.address && <li>{errors.address}</li>}
-                        </ul>
+                {/* Shipping Information */}
+                <div className="mb-8">
+                  {/* <h2 className="text-xl font-bold mb-4 text-gray-900">Shipping Information</h2> */}
+                  <div className="space-y-4">
+                    {/* Address Selection */}
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-800 mb-2">
+                        Select Address
+                      </label>
+                      <div className="relative">
+                        <select
+                          className="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm transition focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          value={selectedAddress}
+                          onChange={handleAddressChange}
+                        >
+                          <option value="">Select Address</option>
+                          <option value="new">Add new address...</option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
+
+
+                    {/* New Address Form */}
+                    {isNewAddress && (
+                      <div className="space-y-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
+                        {/* Error summary */}
+                        {Object.values(errors).some(error => error) && (
+                          <div className="bg-red-100/60 border border-red-300 rounded-lg p-4">
+                            <div className="flex">
+                              <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                              <div className="ml-3">
+                                <h3 className="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                                <div className="mt-2 text-sm text-red-700">
+                                  <ul className="list-disc pl-5 space-y-1">
+                                    {errors.name && <li>{errors.name}</li>}
+                                    {errors.email && <li>{errors.email}</li>}
+                                    {errors.phone && <li>{errors.phone}</li>}
+                                    {errors.pinCode && <li>{errors.pinCode}</li>}
+                                    {errors.address && <li>{errors.address}</li>}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-800 mb-1">Full Name *</label>
+                            <input
+                              type="text"
+                              name="name"
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.name ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              value={userdata.name}
+                              onChange={handleonChange}
+                              onBlur={() => handleBlur('name')}
+                              placeholder="Enter your name"
+                            />
+                            {errors.name && <p className="mt-1 text-xs text-red-500 italic">
+                              {errors.name}</p>}
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-800 mb-1">Phone *</label>
+                            <input
+                              type="tel"
+                              name="phone"
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.phone ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              value={userdata.phone}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, "").slice(0, 10)
+                                handleonChange({ target: { name: 'phone', value: val } })
+                                if (touchedFields.phone) validateField('phone', val)
+                              }}
+                              onBlur={() => handleBlur('phone')}
+                              placeholder="Enter phone number"
+                            />
+                            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-800 mb-1">Email *</label>
+                          <input
+                            type="email"
+                            name="email"
+                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.email ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                            value={userdata.email}
+                            onChange={handleonChange}
+                            onBlur={() => handleBlur('email')}
+                            placeholder="Enter email address"
+                          />
+                          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-800 mb-1">PIN Code *</label>
+                            <input
+                              type="text"
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.pinCode ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              value={pinCode}
+                              onChange={handlePinCodeChange}
+                              onBlur={() => handleBlur('pinCode')}
+                              placeholder="Enter PIN code"
+                            />
+                            {errors.pinCode && <p className="mt-1 text-sm text-red-600">{errors.pinCode}</p>}
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-800 mb-1">State</label>
+                            <input
+                              type="text"
+                              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 bg-gray-100"
+                              value={state}
+                              readOnly
+                              placeholder="Auto-filled"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-800 mb-1">City</label>
+                            <input
+                              type="text"
+                              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 bg-gray-100"
+                              value={city}
+                              readOnly
+                              placeholder="Auto-filled"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-800 mb-1">Address *</label>
+                          <textarea
+                            name="address"
+                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.address ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                            rows={3}
+                            value={userdata.address}
+                            onChange={handleonChange}
+                            onBlur={() => handleBlur('address')}
+                            placeholder="Enter complete address (House no, Building, Street, Area)"
+                          />
+                          {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Selected Address Display */}
+                    {selectedAddress && selectedAddress !== "new" && (
+                      <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                        {addresses
+                          .filter((addr) => addr.id === selectedAddress)
+                          .map((address) => (
+                            <div key={address.id}>
+                              <h3 className="font-semibold text-gray-900">{address.name}</h3>
+                              <p className="text-gray-600 mt-1">{address.address}</p>
+                              <p className="text-gray-600">
+                                <span className="font-medium">Phone:</span> {address.phone}
+                              </p>
+                              <p className="text-gray-600">
+                                <span className="font-medium">Email:</span> {address.email}
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-[#2A4172] mb-2">Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.name ? 'border-red-500' : 'border-[#E5E9F0]'} px-4 py-3 focus:ring-2 focus:ring-[#A13C78]/30 focus:border-[#A13C78]`}
-                    value={userdata.name}
-                    onChange={handleonChange}
-                    onBlur={() => handleBlur('name')}
-                    placeholder="Enter your name"
-                  />
-                  {errors.name && <p className="mt-2 text-xs text-red-500">{errors.name}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-[#2A4172] mb-2">Phone *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.phone ? 'border-red-500' : 'border-[#E5E9F0]'} px-4 py-3 focus:ring-2 focus:ring-[#A13C78]/30 focus:border-[#A13C78]`}
-                    value={userdata.phone}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, "").slice(0, 10)
-                      handleonChange({ target: { name: 'phone', value: val } })
-                      if (touchedFields.phone) validateField('phone', val)
-                    }}
-                    onBlur={() => handleBlur('phone')}
-                    placeholder="Enter phone number"
-                  />
-                  {errors.phone && <p className="mt-2 text-xs text-red-500">{errors.phone}</p>}
-                </div>
-              </div>
+                {/* Shipping Method */}
+                <div className="mb-10">
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900">Shipping Method</h2>
+                  <div className="space-y-4 ">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {shippingMethods.map((method) => (
 
-              <div>
-                <label className="block text-sm font-semibold text-[#2A4172] mb-2">Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.email ? 'border-red-500' : 'border-[#E5E9F0]'} px-4 py-3 focus:ring-2 focus:ring-[#A13C78]/30 focus:border-[#A13C78]`}
-                  value={userdata.email}
-                  onChange={handleonChange}
-                  onBlur={() => handleBlur('email')}
-                  placeholder="Enter email address"
-                />
-                {errors.email && <p className="mt-2 text-xs text-red-500">{errors.email}</p>}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-[#2A4172] mb-2">PIN Code *</label>
-                  <input
-                    type="text"
-                    className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.pinCode ? 'border-red-500' : 'border-[#E5E9F0]'} px-4 py-3 focus:ring-2 focus:ring-[#A13C78]/30 focus:border-[#A13C78]`}
-                    value={pinCode}
-                    onChange={handlePinCodeChange}
-                    onBlur={() => handleBlur('pinCode')}
-                    placeholder="Enter PIN code"
-                  />
-                  {errors.pinCode && <p className="mt-2 text-xs text-red-500">{errors.pinCode}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-[#2A4172] mb-2">State</label>
-                  <input
-                    type="text"
-                    className="w-full rounded-xl border border-[#E5E9F0] px-4 py-3 bg-[#F8FAFC] text-[#5E6E8C]"
-                    value={state}
-                    readOnly
-                    placeholder="Auto-filled"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-[#2A4172] mb-2">City</label>
-                  <input
-                    type="text"
-                    className="w-full rounded-xl border border-[#E5E9F0] px-4 py-3 bg-[#F8FAFC] text-[#5E6E8C]"
-                    value={city}
-                    readOnly
-                    placeholder="Auto-filled"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-[#2A4172] mb-2">Address *</label>
-                <textarea
-                  name="address"
-                  className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.address ? 'border-red-500' : 'border-[#E5E9F0]'} px-4 py-3 focus:ring-2 focus:ring-[#A13C78]/30 focus:border-[#A13C78]`}
-                  rows={3}
-                  value={userdata.address}
-                  onChange={handleonChange}
-                  onBlur={() => handleBlur('address')}
-                  placeholder="Enter complete address (House no, Building, Street, Area)"
-                />
-                {errors.address && <p className="mt-2 text-xs text-red-500">{errors.address}</p>}
-              </div>
-            </div>
-          )}
-
-          {/* Selected Address Display */}
-          {selectedAddress && selectedAddress !== "new" && (
-            <div className="p-6 border border-[#E5E9F0] rounded-xl bg-[#F8FAFC]">
-              {addresses
-                .filter((addr) => addr.id === selectedAddress)
-                .map((address) => (
-                  <div key={address.id} className="space-y-2">
-                    <h3 className="font-semibold text-lg text-[#1B2E4F]">{address.name}</h3>
-                    <p className="text-[#2A4172]">{address.address}</p>
-                    <p className="text-[#2A4172]">
-                      <span className="font-medium">Phone:</span> {address.phone}
-                    </p>
-                    <p className="text-[#2A4172]">
-                      <span className="font-medium">Email:</span> {address.email}
-                    </p>
+                        <label
+                          key={method.id}
+                          className={`flex items-start gap-4 p-2 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+          ${selectedShipping === method.id
+                              ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
+                              : "border-gray-200 hover:bg-gray-50"
+                            }`}
+                        >
+                          <input
+                            type="radio"
+                            name="shipping"
+                            value={method.id}
+                            checked={selectedShipping === method.id}
+                            onChange={(e) => setSelectedShipping(e.target.value)}
+                            className="mt-1 h-4 w-4 shrink-0 accent-purple-600"
+                          />
+                          <div className="flex-1">
+                            <span className="block text-base font-semibold text-gray-800">
+                              {method.name} {method.price > 0 && <span className="text-gray-600">– ₹{method.price}</span>}
+                            </span>
+                            <p className="text-sm text-gray-500 mt-1">{method.description}</p>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                ))}
-            </div>
-          )}
-        </div>
+                </div>
 
-        {/* Shipping Method Card */}
-        {selectedAddress && (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#E5E9F0] p-8">
-            <h2 className="text-2xl font-bold mb-6 text-[#1B2E4F]">Shipping Method</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {shippingMethods.map((method) => (
-                <label
-                  key={method.id}
-                  className={`flex items-start gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer 
-                    ${selectedShipping === method.id
-                      ? "border-[#A13C78] bg-[#FDF2F8]"
-                      : "border-[#E5E9F0] hover:border-[#A13C78]/50"
-                    }`}
-                >
-                  <input
-                    type="radio"
-                    name="shipping"
-                    value={method.id}
-                    checked={selectedShipping === method.id}
-                    onChange={(e) => setSelectedShipping(e.target.value)}
-                    className="h-5 w-5 shrink-0 mt-0.5 text-[#A13C78] focus:ring-[#A13C78]"
+
+                {/* Payment Method */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-4 text-gray-900">Payment Method</h2>
+                  <div className="space-y-3">
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <label
+                        className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+        ${selectedPayment === "upi1"
+                            ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
+                            : "border-gray-200 hover:bg-gray-50"
+                          }`}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="upi1"
+                          checked={selectedPayment === "upi1"}
+                          onChange={(e) => setSelectedPayment(e.target.value)}
+                          className="h-4 w-4 text-purple-600 focus:ring-purple-500"
+                          style={{ accentColor: "rgb(157 48 137)" }}
+                        />
+                        <div className="ml-3">
+                          <span className="block font-medium text-gray-900">UPI Gateway 1</span>
+                          <span className="text-gray-500 text-sm">Pay using UPI Gateway 1</span>
+                        </div>
+                      </label>
+                      <label
+                        className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+        ${selectedPayment === "upi2"
+                            ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
+                            : "border-gray-200 hover:bg-gray-50"
+                          }`}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="upi2"
+                          checked={selectedPayment === "upi2"}
+                          onChange={(e) => setSelectedPayment(e.target.value)}
+                          className="h-4 w-4 text-purple-600 focus:ring-purple-500"
+                          style={{ accentColor: "rgb(157 48 137)" }}
+                        />
+                        <div className="ml-3">
+                          <span className="block font-medium text-gray-900">UPI Gateway 2</span>
+                          <span className="text-gray-500 text-sm">Pay using UPI Gateway 2</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Notes */}
+                <div className="mb-8">
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Order Notes <span className="text-gray-400">(Optional)</span>
+                  </label>
+                  <textarea
+                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm transition-all duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-400"
+                    rows={4}
+                    placeholder="Notes about your order, e.g. special instructions for delivery"
                   />
-                  <div className="flex-1">
-                    <span className="block text-lg font-semibold text-[#1B2E4F]">
-                      {method.name} {method.price > 0 && <span className="text-[#5E6E8C]">– ₹{method.price}</span>}
+                </div>
+
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 border-t pt-6">
+                  <Link
+                    to="/cart"
+                    className="flex items-center gap-2 text-sm text-gray-600 hover:text-purple-700 font-medium transition"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Back to Cart
+                  </Link>
+                  {total === 0 ? (
+                    <p className="text-sm text-gray-500 font-medium">Your Cart Is Empty - Please Add Something</p>
+                  ) : (
+                    <button
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold px-6 py-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                      style={{ background: "rgb(157 48 137)" }}
+                      onClick={handlePayment}
+                      disabled={isloading || (isNewAddress && Object.values(errors).some(error => error))}
+                    >
+                      {isloading ? (
+                        <DotLottieReact
+                          src="https://lottie.host/faaf7fb5-6078-4f3e-9f15-05b0964cdb4f/XCcsBA5RNq.lottie"
+                          loop
+                          autoplay
+                          style={{ width: 24, height: 24 }}
+                        />
+                      ) : (
+                        <>
+                          <CreditCard className="w-4 h-4" />
+                          Place Order
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* QR Code Section */}
+              {upiIntent && (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+                  <h3 className="text-xl font-bold mb-4 text-gray-900">Complete Your Payment</h3>
+                  <p className="text-gray-600 mb-6">Scan this QR code with any UPI app to complete your payment</p>
+                  <div className="flex justify-center mb-6">
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg">
+                      <QRCode value={upiIntent} size={200} />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Clock className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
+                    <span className="text-lg font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                      Time remaining: {formatTime(timeLeft)}
                     </span>
-                    <p className="text-sm text-[#5E6E8C] mt-1.5">{method.description}</p>
                   </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Payment Method Card */}
-        {selectedShipping && (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#E5E9F0] p-8">
-            <h2 className="text-2xl font-bold mb-6 text-[#1B2E4F]">Payment Method</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <label
-                className={`flex items-start gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer 
-                  ${selectedPayment === "upi1"
-                    ? "border-[#A13C78] bg-[#FDF2F8]"
-                    : "border-[#E5E9F0] hover:border-[#A13C78]/50"
-                  }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  value="upi1"
-                  checked={selectedPayment === "upi1"}
-                  onChange={(e) => setSelectedPayment(e.target.value)}
-                  className="h-5 w-5 shrink-0 mt-0.5 text-[#A13C78] focus:ring-[#A13C78]"
-                />
-                <div className="flex-1">
-                  <span className="block text-lg font-semibold text-[#1B2E4F]">UPI Gateway 1</span>
-                  <p className="text-sm text-[#5E6E8C] mt-1.5">Pay using UPI Gateway 1</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <Shield className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                      <p className="text-sm font-medium text-gray-900">Secure</p>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <CreditCard className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                      <p className="text-sm font-medium text-gray-900">UPI Payment</p>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <Check className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                      <p className="text-sm font-medium text-gray-900">Instant</p>
+                    </div>
+                  </div>
                 </div>
-              </label>
-              <label
-                className={`flex items-start gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer 
-                  ${selectedPayment === "upi2"
-                    ? "border-[#A13C78] bg-[#FDF2F8]"
-                    : "border-[#E5E9F0] hover:border-[#A13C78]/50"
-                  }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  value="upi2"
-                  checked={selectedPayment === "upi2"}
-                  onChange={(e) => setSelectedPayment(e.target.value)}
-                  className="h-5 w-5 shrink-0 mt-0.5 text-[#A13C78] focus:ring-[#A13C78]"
-                />
-                <div className="flex-1">
-                  <span className="block text-lg font-semibold text-[#1B2E4F]">UPI Gateway 2</span>
-                  <p className="text-sm text-[#5E6E8C] mt-1.5">Pay using UPI Gateway 2</p>
-                </div>
-              </label>
-            </div>
-          </div>
-        )}
-
-        {/* Order Notes Card */}
-        {selectedPayment && (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#E5E9F0] p-8">
-            <label className="block text-sm font-semibold text-[#2A4172] mb-3">
-              Order Notes <span className="text-[#5E6E8C]">(Optional)</span>
-            </label>
-            <textarea
-              className="w-full rounded-xl border border-[#E5E9F0] bg-white px-4 py-3 text-[#2A4172] shadow-sm transition-all duration-200 ease-in-out focus:border-[#A13C78] focus:outline-none focus:ring-2 focus:ring-[#A13C78]/30 placeholder:text-[#5E6E8C]"
-              rows={4}
-              placeholder="Notes about your order, e.g. special instructions for delivery"
-            />
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 pt-6 border-t border-[#E5E9F0]">
-          <Link
-            to="/cart"
-            className="flex items-center gap-2 text-sm font-medium text-[#2A4172] hover:text-[#A13C78] transition px-4 py-2.5 rounded-lg hover:bg-[#F8FAFC]"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Cart
-          </Link>
-          {total === 0 ? (
-            <p className="text-sm text-[#5E6E8C] font-medium">Your Cart Is Empty - Please Add Something</p>
-          ) : (
-            <button
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#A13C78] to-[#C1467F] text-white text-sm font-semibold px-8 py-3.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:from-[#872D67] hover:to-[#A13C78]"
-              onClick={handlePayment}
-              disabled={isloading || (isNewAddress && Object.values(errors).some(error => error))}
-            >
-              {isloading ? (
-                <DotLottieReact
-                  src="https://lottie.host/faaf7fb5-6078-4f3e-9f15-05b0964cdb4f/XCcsBA5RNq.lottie"
-                  loop
-                  autoplay
-                  style={{ width: 24, height: 24 }}
-                />
-              ) : (
-                <>
-                  <CreditCard className="w-5 h-5" />
-                  Place Order
-                </>
               )}
-            </button>
-          )}
-        </div>
+            </div>
 
-        {/* QR Code Section */}
-        {upiIntent && (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#E5E9F0] p-8 text-center mt-6">
-            <div className="max-w-md mx-auto">
-              <h3 className="text-2xl font-bold mb-3 text-[#1B2E4F]">Complete Your Payment</h3>
-              <p className="text-[#5E6E8C] mb-6">Scan this QR code with any UPI app to complete your payment</p>
-              <div className="flex justify-center mb-6">
-                <div className="p-4 bg-white border-2 border-[#E5E9F0] rounded-lg">
-                  <QRCode value={upiIntent} size={200} />
-                </div>
-              </div>
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <Clock className="w-5 h-5 text-[#A13C78]" />
-                <span className="text-lg font-semibold text-[#A13C78]">
-                  Time remaining: {formatTime(timeLeft)}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="text-center p-4 bg-[#F8FAFC] rounded-lg">
-                  <Shield className="w-6 h-6 mx-auto mb-2 text-[#A13C78]" />
-                  <p className="text-sm font-medium text-[#1B2E4F]">Secure</p>
-                </div>
-                <div className="text-center p-4 bg-[#F8FAFC] rounded-lg">
-                  <CreditCard className="w-6 h-6 mx-auto mb-2 text-[#A13C78]" />
-                  <p className="text-sm font-medium text-[#1B2E4F]">UPI Payment</p>
-                </div>
-                <div className="text-center p-4 bg-[#F8FAFC] rounded-lg">
-                  <Check className="w-6 h-6 mx-auto mb-2 text-[#A13C78]" />
-                  <p className="text-sm font-medium text-[#1B2E4F]">Instant</p>
-                </div>
-              </div>
+            {/* Right Column - Order Summary */}
+           <div className="lg:col-span-1">
+  <div className="bg-white rounded-3xl shadow border border-gray-100 sticky top-8 overflow-hidden">
+    <div className="bg-gradient-to-r from-[#384D89] to-[#2A4172] p-6 rounded-t-3xl">
+      <h2 className="text-xl font-bold text-white">Order Summary</h2>
+    </div>
+
+    <div className="p-6 space-y-6">
+
+      {/* Cart Items */}
+      <div className="space-y-5">
+        {cartItems.map((item) => (
+          <div key={item.id} className="flex gap-4 justify-between border-b pb-3">
+            <img
+              src={`http://api.jajamblockprints.com/${item?.image}`}
+              alt={item?.name}
+              className="w-16 h-16 object-cover rounded-lg"
+            />
+            <div className="flex-1 text-right">
+              <h4 className="font-medium text-[#14263F] text-sm">{item?.name}</h4>
+              <p className="text-xs text-gray-500">Qty: {item?.quantity}</p>
+              <p className="font-semibold text-[#384D89] text-sm">
+                ₹{Math.trunc(item.price * item.quantity).toLocaleString()}
+              </p>
             </div>
           </div>
-        )}
+        ))}
       </div>
 
-      {/* Right Column - Order Summary */}
-      <div className="lg:col-span-1">
-        <div className="bg-white rounded-2xl shadow-lg border border-[#E5E9F0] p-6 sticky top-6">
-          <h2 className="text-2xl font-semibold mb-6 text-[#A13C78]">Order Summary</h2>
+      {/* Price Summary */}
+      <div className="space-y-4">
+        <div className="flex justify-between text-sm">
+          <span className="text-[#2A4172]">Subtotal</span>
+          <span className="font-semibold text-[#14263F]">₹{Math.trunc(subtotal).toLocaleString()}</span>
+        </div>
 
-          {/* Order Items */}
-          <div className="space-y-5 mb-8 max-h-[300px] overflow-y-auto pr-2">
-            {cartItems.map((item) => (
-              <div key={item.id} className="flex gap-4 justify-between border-b border-[#E5E9F0] pb-4">
-                <div className="relative">
-                  <img
-                    src={`http://api.jajamblockprints.com/${item?.image}`}
-                    alt={item?.name}
-                    className="w-20 h-20 object-cover rounded-lg"
-                  />
-                  <span className="absolute -top-2 -right-2 bg-[#A13C78] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                    {item?.quantity}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-[#1B2E4F] text-base">{item?.name}</h4>
-                  <p className="font-semibold text-[#A13C78] text-sm text-end">
-                    ₹{(item.price * item.quantity).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            ))}
+        {/* {discount > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-[#2A4172]">Discount</span>
+            <span className="text-[#A13C78] font-semibold">-₹{Math.trunc(discount).toLocaleString()}</span>
           </div>
+        )} */}
 
-          {/* Price Summary */}
-          <div className="pt-4 space-y-4">
-            <div className="flex justify-between text-sm text-[#2A4172]">
-              <span>Subtotal</span>
-              <span>₹{subtotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-sm text-[#2A4172]">
-              <span>Shipping</span>
-              <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
-            </div>
-            <div className="flex justify-between text-base font-bold text-[#1B2E4F] pt-4 border-t border-[#E5E9F0]">
-              <span>Total</span>
-              <span>₹{total.toLocaleString()}</span>
-            </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-[#2A4172]">Shipping</span>
+          <span className="font-semibold text-[#14263F]">{shipping === 0 ? 'Free' : `₹${Math.trunc(shipping)}`}</span>
+        </div>
+
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex justify-between text-lg font-bold">
+            <span className="text-[#14263F]">Total</span>
+            <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
+              ₹{Math.trunc(total).toLocaleString()}
+            </span>
           </div>
         </div>
+      </div>
+
+      {/* Shipping Note */}
+      <div className="bg-gradient-to-r from-[#A13C78]/10 to-[#C1467F]/10 p-4 rounded-xl border border-[#A13C78]/20">
+        <p className="text-sm text-[#872D67] italic">Shipping fees will be calculated at checkout</p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="space-y-4">
+        <Link
+          to="/address"
+          className="block w-full py-4 px-6 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white text-center font-semibold rounded-lg hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
+        >
+          Proceed to Checkout
+        </Link>
+
+        <Link
+          to="/products"
+          className="block w-full py-4 px-6 border border-gray-300 text-[#384D89] text-center font-semibold rounded-lg hover:bg-[#384D89] hover:text-white transition-all duration-300"
+        >
+          Continue Shopping
+        </Link>
+      </div>
+
+      {/* Footer Note */}
+      <div className="text-xs text-[#2A4172] flex items-center justify-center gap-2 pt-2">
+        <div className="w-2 h-2 bg-white border border-[#2A4172] rounded-full"></div>
+        Secure checkout guaranteed
       </div>
     </div>
   </div>
 </div>
+
+          </div>
+        </div>
+      </div>
       {showLoginModal && (
         <LoginModal
           isOpen={showLoginModal}
