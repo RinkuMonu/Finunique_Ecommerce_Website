@@ -136,7 +136,7 @@ const FeaturedSections = () => {
                     className="grid gap-4"
                     style={{
                       gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
-                    }} 
+                    }}
                   >
                     {categories
                       .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
@@ -223,7 +223,7 @@ const FeaturedSections = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Smart Speaker */}
               <div className="bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 rounded-2xl p-8 text-center">
-                {/* <div className="w-32 h-32 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center mb-6">
+                <div className="w-32 h-32 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center mb-6">
                   <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center">
                     <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center">
                       <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
@@ -231,23 +231,22 @@ const FeaturedSections = () => {
                   </div>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Smart Speaker</h3>
-                <p className="text-sm text-gray-600">Voice Assistant</p> */}
-                <img src="./Digiimage/banner-3_580x.jpg" />
+                <p className="text-sm text-gray-600">Voice Assistant</p>
               </div>
 
               {/* Projector */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 text-center text-white relative overflow-hidden">
+              <div className=" relative overflow-hidden rounded-md flex justify-center" style={{backgroundImage:"url(./Digiimage/banner-3_580x.jpg)", alignItems:"center"}}>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-                <div className="relative z-10">
-                  <div className="w-20 h-20 mx-auto bg-gray-700 rounded-lg shadow-lg flex items-center justify-center mb-6">
+                <div className="relative z-10 text-center">
+                  {/* <div className="w-20 h-20 mx-auto bg-gray-700 rounded-lg shadow-lg flex items-center justify-center mb-6">
                     <div className="w-12 h-8 bg-gray-600 rounded flex items-center justify-center">
                       <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     </div>
-                  </div>
-                  <h3 className="text-lg font-semibold mb-4">4K Projector</h3>
+                  </div> */}
+                  <h3 className="text-2xl text-white font-semibold mb-4">4K Projector</h3>
                   <Link
                     to="/"
-                    className="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium text-sm"
+                    className="inline-flex items-center text-black hover:text-blue-300 font-bold text-sm"
                   >
                     Learn More
                     <ArrowRight size={16} className="ml-1" />
