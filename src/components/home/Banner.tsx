@@ -106,14 +106,14 @@ const Banner: React.FC = () => {
       {/* Tech Grid Background */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20"></div>
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        {/* <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
             <pattern id="tech-grid" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
               <path d="M0 5h10M5 0v10" stroke="currentColor" strokeWidth="0.5" fill="none" opacity="0.3" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#tech-grid)" />
-        </svg>
+        </svg> */}
       </div>
 
       {/* Floating Tech Elements */}
