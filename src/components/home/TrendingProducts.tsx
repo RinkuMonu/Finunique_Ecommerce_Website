@@ -320,7 +320,7 @@ const TrendingProducts = ({
                             >
                               <Heart
                                 size={16}
-                                className="text-gray-600 hover:text-red-500"
+                                className="text-gray-600 hover:text-red-500" 
                               />
                             </button> 
 
