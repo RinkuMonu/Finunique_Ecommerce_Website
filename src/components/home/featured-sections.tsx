@@ -106,7 +106,7 @@ const FeaturedSections = () => {
                     className="grid gap-4"
                     style={{
                       gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
-                    }}
+                    }} 
                   >
                     {categories
                       .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
