@@ -464,7 +464,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                   className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-black hover:font-bold hover:bg-white hover:rounded-sm transition-all group"
                 >
-                  <span>Browse All Collection</span>
+                  <span className="font-bold">Browse All Collection</span>
 
                   <div className=" flex items-center justify-center group-hover:scale-110 transition-transform">
                     <ChevronDown
@@ -497,7 +497,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             )}
             <Link
               to="/"
-              className="flex items-center space-x-2 px-4 py-2 rounded-sm text-sm font-semibold text-gray-700 hover:font-blod hover:bg-white transition-all group"
+              className="flex items-center space-x-2 px-4 py-2  text-sm font-semibold text-gray-700 hover:font-blod hover:bg-[#c56b9a] hover:text-[white] rounded-sm transition-all group"
             >
               Home
             </Link>
@@ -505,7 +505,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <Link
                 key={item}
                 to={`/category/${item.toLowerCase()}`}
-                className="flex items-center space-x-2 px-4 py-2 rounded-sm gap-2 text-[12px] font-semibold text-gray-700 hover:font-bold hover:bg-white transition-all group"
+                className="flex items-center space-x-2 px-4 py-2 rounded-sm gap-2 text-[12px] font-semibold hover:bg-[#c56b9a] hover:text-[white]  transition-all group"
               >
                 {item}
               </Link>
