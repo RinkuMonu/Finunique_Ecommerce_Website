@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-
+import { Link } from "react-router-dom"
 interface Product {
   _id: string
   productName: string
@@ -139,12 +139,36 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
             )}
-            <img
-              src={`${product.images}`}
-              alt={product.productName}
-              className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-              onLoad={() => setImageLoaded(true)}
-            />
+            <div className="group">
+              <Swiper
+                modules={[Pagination, Autoplay]}
+                pagination={{ clickable: true }}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                spaceBetween={10}
+                slidesPerView={1}
+                loop={true}
+                className="rounded-2xl w-full h-[350px] sm:h-[400px] lg:h-[450px]"
+              >
+                {product.images?.map((img, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                      {!imageLoaded && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse rounded-2xl" />
+                      )}
+                      <img
+                        src={img}
+                        alt={`${product.productName} ${index}`}
+                        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                        onLoad={() => setImageLoaded(true)}
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
             {discountPercentage > 0 && (
               <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-red-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full shadow-sm backdrop-blur-sm">
                 -{discountPercentage}%
