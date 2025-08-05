@@ -97,6 +97,10 @@ const Banner: React.FC = () => {
 
   if (banners.length === 0) return null
 
+
+  const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
+
   return (
     <section className="relative w-full overflow-hidden">
       {/* Tech Grid Background */}
@@ -156,7 +160,8 @@ const Banner: React.FC = () => {
                 {/* Image with overlay effects */}
                 <div className="relative overflow-hidden">
                   <img
-                    src={`https://api.jajamblockprints.com${item.images[0]}`}
+                    // src={`https://api.jajamblockprints.com${item.images[0]}`}
+                              src={`${Image_BaseURL}${item.images[0]}`}
                     alt={item.bannerName}
                     className="w-full h-auto object-cover transition-transform duration-[6000ms] ease-out group-hover:scale-105"
                     loading="eager"
