@@ -275,13 +275,13 @@ const ContactPage = () => {
             </div>
             <div className="lg:pt-16">
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl border-0 p-4 sm:p-6">
-                <div className="mb-4 sm:mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#384D89]">
+                <div className="mb-3 sm:mb-3">
+                  <h2 className="text-[20px] sm:text-[20px] font-bold text-[#384D89]">
                     Send Us Message
                   </h2>
                 </div>
                 <div>
-                  <form className="space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
+                  <form className="space-y-6 sm:space-y-4" onSubmit={handleSubmit}>
                     <div>
                       <input
                         type="text"
