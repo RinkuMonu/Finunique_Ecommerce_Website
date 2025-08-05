@@ -49,30 +49,38 @@ const Wishlist = () => {
     ))
   }
 
-  return (
-    <div className="min-h-screen">
-      <div className="container mx-auto py-12 px-4">
+ return (
+    <div className="min-h-screen bg-gray-50 pb-12 relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div
+        className="absolute inset-0 z-0 opacity-10"
+        style={{
+          backgroundImage: 'url("/abstract-pattern.png")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      ></div>
+
+      <div className="container mx-auto py-12 px-4 max-w-7xl relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-gray-200">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-[#384D89]/20">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight flex items-center gap-3 text-gray-900">
-              <Heart className="fill-current" style={{ color: "rgb(157 48 137)" }} size={32} />
+            <h1 className="text-3xl font-bold mb-2 leading-tight flex items-center gap-3 bg-gradient-to-r from-[#A13C78] to-[#872D67] bg-clip-text text-transparent">
+              <Heart className="fill-current text-[#A13C78]" size={28} />
               Your Wishlist
             </h1>
-            <p className="text-gray-600">
-              <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
-                {wishlistItems?.length || 0}
-              </span>{" "}
+            <p className="text-[#2A4172] text-base">
+              <span className="font-semibold text-[#A13C78]">{wishlistItems?.length || 0}</span>{" "}
               {wishlistItems?.length === 1 ? "item" : "items"} saved for later
             </p>
           </div>
-          {wishlistItems?.length > 0 && (
+          {wishlistItems && wishlistItems.length > 0 && (
             <div className="mt-4 md:mt-0">
               <button
                 onClick={handleClear}
-                className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-red-300 hover:bg-red-50"
+                className="inline-flex items-center space-x-2 text-[#2A4172] hover:text-[#681853] transition-colors font-medium px-4 py-2 rounded-xl border-2 border-[#384D89]/20 hover:border-[#A13C78]/50 hover:bg-[#A13C78]/10 shadow-sm hover:shadow-md text-sm group"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Clear All</span>
               </button>
             </div>
@@ -81,29 +89,28 @@ const Wishlist = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="bg-gray-50 rounded-lg p-12 text-center">
-            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 text-center shadow-lg border border-white/50">
+            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-[#384D89] to-[#2A4172] text-white animate-pulse">
               <Heart className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Loading your wishlist...</h3>
-            <p className="text-gray-600">Please wait while we gather your saved items</p>
+            <h3 className="text-xl font-bold text-[#14263F] mb-2">Loading your wishlist...</h3>
+            <p className="text-[#2A4172]">Please wait while we gather your saved items</p>
           </div>
         )}
 
-       
+        {/* Empty State */}
         {!loading && (!wishlistItems || wishlistItems.length === 0) && (
-          <div className="bg-gray-50 rounded-lg p-12 text-center">
-            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 text-center shadow-lg border border-white/50">
+            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-[#384D89]/20 to-[#2A4172]/20 text-[#384D89]">
               <Heart className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Your wishlist is empty</h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <h3 className="text-xl font-bold text-[#14263F] mb-2">Your wishlist is empty</h3>
+            <p className="text-[#2A4172] mb-6 max-w-md mx-auto text-sm">
               Start adding items you love! Click the heart icon on any product to save it here for later.
             </p>
             <Link
               to="/"
-              className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
-              style={{ background: "rgb(157 48 137)" }}
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white font-medium rounded-xl hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-base"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Continue Shopping</span>
@@ -115,92 +122,82 @@ const Wishlist = () => {
         {!loading && wishlistItems && wishlistItems.length > 0 && (
           <div className="space-y-6">
             {wishlistItems
-              .filter((item: any) => item?.product) 
-              .map((item: any) => (
+              .filter((item: any) => item?.product)
+              .map((item: any, index: number) => (
                 <div
                   key={item?.product?._id}
-                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 p-6"
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-white/50 p-6 transform hover:-translate-y-1"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex flex-col lg:flex-row gap-6">
                     {/* Product Image */}
                     <div className="flex-shrink-0">
-                      <div className="relative w-full lg:w-48 h-48 rounded-lg overflow-hidden bg-gray-50 p-3">
+                      <div className="relative w-full lg:w-56 h-56 rounded-xl overflow-hidden bg-gray-50 p-4 border-2 border-[#384D89]/20 shadow-inner">
                         <img
                           src={
                             item?.product?.images?.[0]
                               ? `http://api.jajamblockprints.com${item.product.images[0]}`
-                              : "/placeholder.svg"
+                              : "/diverse-products-still-life.png"
                           }
                           alt={item?.product?.productName || "No image"}
-                          className="w-full h-full object-contain rounded-md"
+                          className="w-full h-full object-contain rounded-md hover:scale-105 transition-transform duration-300"
                         />
                         {item?.product?.discount && (
                           <div
-                            className="absolute top-3 left-3 text-white text-xs font-medium px-2 py-1 rounded-md"
-                            style={{ background: "rgb(157 48 137)" }}
+                            className="absolute top-4 left-4 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-md"
+                            style={{ background: "#A13C78" }}
                           >
                             {item.product.discount}% OFF
                           </div>
                         )}
                       </div>
                     </div>
-
                     {/* Product Details */}
                     <div className="flex-grow">
                       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
                         <div className="flex-grow">
-                          <h3 className="text-xl font-bold mb-2 text-gray-900">
+                          <h3 className="text-xl font-bold mb-2 text-[#14263F]">
                             {item?.product?.productName || "Unnamed Product"}
                           </h3>
-
-                          <p className="text-gray-600 mb-3 line-clamp-2">
+                          <p className="text-[#2A4172] mb-3 line-clamp-2 text-sm">
                             {item?.product?.description ||
                               "Premium quality traditional wear crafted with authentic techniques and finest materials."}
                           </p>
-
                           {/* Rating */}
                           <div className="flex items-center mb-3">
-                            <div className="flex mr-2">
-                              {renderStars(item?.product?.rating || 4)}
-                            </div>
-                            <span className="text-sm text-gray-500">(Reviews)</span>
+                            <div className="flex mr-2">{renderStars(item?.product?.rating || 4)}</div>
+                            <span className="text-sm text-[#2A4172]/70">(Reviews)</span>
                           </div>
-
                           {/* Price */}
                           <div className="flex items-center mb-4">
-                            <span className="text-2xl font-bold mr-2" style={{ color: "rgb(157 48 137)" }}>
+                            <span className="text-2xl font-bold mr-2 bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
                               ₹{item?.product?.actualPrice || "N/A"}
                             </span>
                             {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
-                              <span className="text-base text-gray-400 line-through">
-                                ₹{item.product.price}
-                              </span>
+                              <span className="text-base text-[#2A4172]/60 line-through">₹{item.product.price}</span>
                             )}
                           </div>
-
                           {/* Category */}
                           <div className="mb-4">
-                            <span className="text-sm text-gray-600">Category: </span>
-                            <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                            <span className="text-sm text-[#2A4172]">Category: </span>
+                            <span className="font-medium text-[#A13C78]">
                               {item?.product?.category?.name || "Traditional Wear"}
                             </span>
                           </div>
-
                           {/* Action Buttons */}
                           <div className="flex flex-col sm:flex-row gap-3">
                             <Link
                               to={`/product/${item?.product?._id}`}
-                              className="flex-1 flex items-center justify-center gap-2 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
-                              style={{ background: "rgb(157 48 137)" }}
+                              className="flex-1 flex items-center justify-center gap-2 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#A13C78] to-[#872D67] hover:from-[#872D67] hover:to-[#681853] shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm"
                             >
                               <Eye size={16} />
                               <span>View Product</span>
                             </Link>
                             <button
                               onClick={() => handleRemove(item?.product?._id)}
-                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-300 rounded-lg font-medium transition-colors text-red-600 hover:bg-red-50"
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-[#384D89]/20 rounded-xl font-semibold transition-all duration-300 text-[#384D89] hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md text-sm group"
                             >
-                              <Trash2 size={16} />
+                              <Trash2 size={16} className="group-hover:scale-110 transition-transform" />
                               <span>Remove</span>
                             </button>
                           </div>
@@ -212,24 +209,21 @@ const Wishlist = () => {
               ))}
           </div>
         )}
-
         {/* Bottom Navigation */}
         {!loading && wishlistItems && wishlistItems.length > 0 && (
-          <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 p-6 rounded-lg">
+          <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-6 bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/50">
             <Link
               to="/"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-white"
+              className="inline-flex items-center space-x-2 text-[#2A4172] hover:text-[#14263F] transition-colors font-medium px-5 py-2.5 rounded-xl border-2 border-[#384D89]/20 hover:border-[#384D89] hover:bg-[#384D89]/5 shadow-sm hover:shadow-md text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Continue Shopping</span>
             </Link>
-
             <div className="text-center">
-              <p className="text-gray-600 mb-2 text-sm">Found something you love?</p>
+              <p className="text-[#2A4172] mb-3 text-sm">Found something you love?</p>
               <Link
                 to="/products"
-                className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
-                style={{ background: "rgb(157 48 137)" }}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white font-semibold rounded-xl hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-base"
               >
                 <ShoppingBag className="h-4 w-4" />
                 <span>Explore More</span>
