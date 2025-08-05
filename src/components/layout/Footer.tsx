@@ -17,7 +17,7 @@ import {
   Package,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import footerLogo from "/DigiLogo.jpg";
+import footerLogo from "/digihub_footer.png";
 import { useEffect, useState } from "react";
 
 export default function Footer() {
@@ -110,7 +110,7 @@ export default function Footer() {
               <img
                 src={footerLogo || "/placeholder.svg"}
                 alt="Company Logo"
-                className="h-36 w-auto"
+                className="h-16 w-auto"
               />
             </Link>
 
