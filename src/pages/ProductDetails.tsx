@@ -892,6 +892,19 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         {/* Product Details */}
         <div className="space-y-6">
           {/* Product Header */}
+          <div className="mb-6 flex items-center">
+            <ul className="space-y-2">
+              <li className="flex items-center ">
+                <span className="text-gray-800 font-medium text-[15px]">
+                  Category{" "}
+                </span>
+                <FaChevronRight className="w-3 h-3 text-[#616664] mt-1 mx-2 flex-shrink-0" />
+                <span className="text-[#2A4172] text-[13px]">
+                  {product.category?.name}
+                </span>
+              </li>
+            </ul>
+          </div>
           <div>
             <div className="flex justify-between items-start">
               <h1 className="text-3xl font-bold text-[#1B2E4F] mb-2">
@@ -925,7 +938,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="bg-[#F5F7FA] rounded-xl p-5 mb-4">
             <div className="flex flex-wrap items-baseline gap-3">
               <span className="text-3xl font-bold text-[#A13C78]">
-                ₹{product.actualPrice}
+                ₹ {product.actualPrice.toFixed()}
               </span>
               {product.price !== product.actualPrice && (
                 <span className="text-xl text-[#2A4172] line-through">
@@ -946,11 +959,6 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           </div>
 
           {/* Highlights */}
-          <div className="mb-6 flex items-center">
-            <span className=" text-[#1B2E4F] mb-3">Category</span>
-            <FaChevronRight className="w-4 h-4 text-[#3ae698] mt-1 mr-2 flex-shrink-0" />
-            <span className="text-[#2A4172]">{product.category?.name}</span>
-          </div>
 
           {/* Variants */}
           {product.variants && (

@@ -46,7 +46,6 @@ import ProfilePage from "./components/userProfile/userProfile";
 import Stories from "./pages/Stories";
 import StoriesDetails from "./pages/Stories-details";
 import ContactPage from "./pages/contactus/ContactPage";
-import ProfilePage from "./components/userProfile/userProfile";
 
 function App() {
   const location = useLocation();
