@@ -7,6 +7,11 @@ import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
 import { addItemToCart } from "../../reduxslice/CartSlice"
 import LoginModal from "../loginModal/LoginModal"
 import Login1 from "../../pages/Login1"
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 interface Product {
   _id: string
@@ -74,7 +79,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
     setIsPopupVisible(true)
     setTimeout(() => {
       setIsPopupVisible(false)
-    }, 3000)
+    }, 2000)
   }
 
   const handleAddToWishlist = (e: React.MouseEvent) => {
@@ -111,78 +116,100 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
 
   if (listView) {
     return (
-      <div className="group flex gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#9D3089]/40">
-        {/* Image Section */}
-        <div className="relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
-          )}
-          <img
-            src={`${product.images}`}
-            alt={product.productName}
-            className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-            onLoad={() => setImageLoaded(true)}
-          />
-          {discountPercentage > 0 && (
-            <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-semibold px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">
-              -{discountPercentage}%
+      <>
+        {isPopupVisible && addedProduct && (
+          <div className="fixed top-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform translate-x-0 opacity-100 border border-white/20 backdrop-blur-sm">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <ShoppingCart size={18} />
+                </div>
+                <div>
+                  <span className="font-bold">Added to Cart!</span>
+                  <p className="text-sm opacity-90">{addedProduct.productName}</p>
+                </div>
+              </div>
+              
             </div>
-          )}
-          <button
-            onClick={handleAddToWishlist}
-            className="absolute top-2 right-2 w-8 h-8 bg-white/90  rounded-full flex items-center justify-center shadow hover:scale-110 transition-all duration-300"
-          >
-            <Heart size={16} className="text-gray-600 hover:text-red-500 transition-colors" />
-          </button>
-        </div>
-
-        {/* Info Section */}
-        <div className="flex flex-col justify-between flex-grow min-w-0">
-          <div className="space-y-1.5">
-            <h3 className="font-semibold text-sm text-gray-800 leading-snug line-clamp-2 group-hover:text-[#9D3089] transition-colors duration-200">
-              {product.productName}
-            </h3>
-            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-              {product.category?.name || "Traditional Wear"}
-            </p>
-            <div className="flex items-center gap-1">
-              {renderStars(product.rating || 4)}
-              <span className="text-xs text-gray-500 ml-1">({product.rating || 4.0})</span>
-            </div>
-          </div>
-
-          {/* Price + Cart Button */}
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#9D3089] text-base">₹{product.actualPrice.toLocaleString()}</span>
-              {product.price && product.price > product.actualPrice && (
-                <span className="text-xs text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
-              )}
-            </div>
-            <button
-              onClick={handleAddToCart}
-              className="group/btn relative overflow-hidden bg-gradient-to-r from-[#9D3089] to-[#7c226b] text-white px-4 py-2 rounded-xl font-medium text-xs lg:text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95"
-
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <ShoppingCart size={14} />
-                Add to Cart
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#7c226b] to-[#9D3089] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-            </button>
-          </div>
-        </div>
-
-        {/* Wishlist Popup */}
-        {isWishlistPopupVisible && (
-          <div className="fixed top-5 right-5 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-slide-in">
-            <Heart size={16} className="fill-current" />
-            <span className="text-sm font-medium">Added to wishlist!</span>
           </div>
         )}
-      </div>
-     )
+        <div className="group flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#9D3089]/40">
+          {/* Image Section - Responsive sizing */}
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
+            )}
+            <img
+              src={`${product.images}`}
+              alt={product.productName}
+              className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {discountPercentage > 0 && (
+              <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-red-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full shadow-sm backdrop-blur-sm">
+                -{discountPercentage}%
+              </div>
+            )}
+            <button
+              onClick={handleAddToWishlist}
+              className="absolute top-1 right-1 sm:top-2 sm:right-2 w-6 h-6 sm:w-8 sm:h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:scale-110 transition-all duration-300"
+            >
+              <Heart size={12} className="sm:w-4 sm:h-4 text-gray-600 hover:text-red-500 transition-colors" />
+            </button>
+          </div>
 
+          {/* Info Section */}
+          <div className="flex flex-col justify-between flex-grow min-w-0">
+            <div className="space-y-1 sm:space-y-1.5">
+              <h3 className="font-semibold text-xs sm:text-sm md:text-sm text-gray-800 leading-snug line-clamp-2 group-hover:text-[#9D3089] transition-colors duration-200">
+                {product.productName}
+              </h3>
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wide">
+                {product.category?.name || "Traditional Wear"}
+              </p>
+              <div className="flex items-center gap-1">
+                {renderStars(product.rating || 4)}
+                <span className="text-[10px] sm:text-xs text-gray-500 ml-1">({product.rating || 4.0})</span>
+              </div>
+            </div>
+
+            {/* Price + Cart Button */}
+            <div className="flex items-center justify-between mt-2 sm:mt-3 gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <span className="font-bold text-[#9D3089] text-sm sm:text-base">₹{Math.floor(product?.actualPrice)}</span>
+                {product.price && product.price > product.actualPrice && (
+                  <span className="text-[10px] sm:text-xs text-gray-400 line-through">₹{Math.floor(product?.price)}</span>
+                )}
+              </div>
+              <button
+                onClick={handleAddToCart}
+                className="group/btn relative overflow-hidden bg-gradient-to-r from-[#9D3089] to-[#7c226b] text-white px-2 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl font-medium text-[10px] sm:text-xs lg:text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 flex-shrink-0"
+              >
+                <span className="relative z-10 flex items-center gap-1 sm:gap-2">
+                  <ShoppingCart size={12} className="sm:w-3.5 sm:h-3.5" />
+                  <span className="hidden xs:inline sm:inline">Add to Cart</span>
+                  <span className="xs:hidden sm:hidden">Add</span>
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#7c226b] to-[#9D3089] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+              </button>
+            </div>
+          </div>
+
+          {/* Wishlist Popup */}
+          {isWishlistPopupVisible && (
+            <div className="fixed top-5 right-5 bg-green-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-slide-in">
+              <Heart size={14} className="sm:w-4 sm:h-4 fill-current" />
+              <span className="text-xs sm:text-sm font-medium">Added to wishlist!</span>
+            </div>
+          )}
+        </div>
+         {showLoginModal && (
+          <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+            <Login1 />
+          </LoginModal>
+        )}
+      </>
+    )
   }
 
   // Default Grid View
@@ -211,18 +238,41 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Image Container */}
-        <div className="relative rounded-2xl overflow-hidden bg-gray-100 w-full h-[100px] sm:h-[350px] lg:h-[280px]">
+        <div className="relative rounded-2xl overflow-hidden bg-gray-100 w-full h-[200px] sm:h-[350px] lg:h-[280px]">
 
           {!imageLoaded && (
             <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse rounded-2xl" />
           )}
-          <img
-            src={`${product.images}`}
-            alt={product.productName}
-            className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-            onLoad={() => setImageLoaded(true)}
-          />
-
+          <div className="group">
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              pagination={{ clickable: true }}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              spaceBetween={10}
+              slidesPerView={1}
+              loop={true}
+              className="rounded-2xl w-full h-[350px] sm:h-[400px] lg:h-[450px]"
+            >
+              {product.images?.map((img, index) => (
+                <SwiperSlide key={index}>
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse rounded-2xl" />
+                    )}
+                    <img
+                      src={img}
+                      alt={`${product.productName} ${index}`}
+                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                      onLoad={() => setImageLoaded(true)}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
           {/* Discount Badge */}
           {discountPercentage > 0 && (
             <div className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1 backdrop-blur-md">
@@ -235,19 +285,17 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           <button
             onClick={handleAddToWishlist}
             className="absolute top-3 right-3 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-300 z-50"
-          >
-
-          
+          >          
             <Heart size={18} className="text-gray-600 hover:text-red-500 transition-colors" />
           </button>
 
           {/* Quick Action (for Grid Hover) */}
-          <div className={`absolute inset-0 bg-black/10 transition-all duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}>
+          <div className={`absolute inset-0 bg-black/10 transition-all duration-300 ${isHovered ? "opacity-100" : "opacity-100"}`}>
             <div className="absolute bottom-4 left-4 right-4">
               <button
                 onClick={handleAddToCart}
                 className={`w-full bg-white text-gray-800 py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:bg-white flex items-center justify-center gap-2 ${
-                  isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                  isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-100"
                 }`}
               >
                 <ShoppingCart size={16} />
@@ -275,9 +323,9 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
 
           <div className="flex items-center justify-between pt-2">
             <div className="flex flex-col">
-              <span className="font-bold text-[#9D3089] text-lg">₹{product.actualPrice.toLocaleString()}</span>
+              <span className="font-bold text-[#9D3089] text-lg">₹{Math.floor(Number(product?.actualPrice))}</span>
               {product.price && product.price > product.actualPrice && (
-                <span className="text-xs text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
+                <span className="text-xs text-gray-400 line-through">₹{Math.floor(product.price)}</span>
               )}
             </div>
               <button
