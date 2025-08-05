@@ -8,13 +8,13 @@ import ProductCard from "../components/products/ProductCard"
 
 const initialMinPrice = 0
 const initialMaxPrice =50000
-const BrandOptions = ['Brand1','Brand1','Brand1','Brand1' ]
+const BrandOptions = []
 export default function Products() {
   const { category } = useParams()
-   const [products, setProducts] = useState<any[]>([])
+  const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
-const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("newest")
   const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
