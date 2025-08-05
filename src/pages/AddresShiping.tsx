@@ -9,6 +9,8 @@ import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import LoginModal from "../components/loginModal/loginModal";
 import Login1 from "../pages/Login1";
+import Swal from 'sweetalert2';
+
 interface Address {
   id: string
   name: string
@@ -249,7 +251,13 @@ function AddressShipping({ cartItems }) {
       }
 
       if (!selectedPayment) {
-        alert("Please select a payment method.")
+        Swal.fire({
+  title: 'Failed!',
+  text: 'Please select a payment method.',
+  icon: 'error',
+  confirmButtonText: 'Retry',
+});
+
         setIsLoading(false)
         return
       }
@@ -269,7 +277,14 @@ function AddressShipping({ cartItems }) {
       setStartTimer(true)
     } catch (error) {
       console.error("Payment Error:", error)
-      alert("Payment initiation failed. Please try again.")
+      Swal.fire({
+  title: 'Failed!',
+  text: 'Payment initiation failed. Please try again.',
+  icon: 'error',
+  confirmButtonText: 'Retry',
+});
+
+      // Swal.fire("Payment initiation failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -393,11 +408,11 @@ function AddressShipping({ cartItems }) {
         <div className="container mx-auto px-4 py-12">
           {/* Header Section */}
           <nav className="flex px-5 mb-4 text-sm text-gray-500 space-x-2">
-            <span className="hover:text-purple-700 transition-colors cursor-pointer">Home</span>
+            <Link to="/" className="hover:text-purple-700 transition-colors cursor-pointer">Home</Link>
             <span>/</span>
-            <span className="hover:text-purple-700 transition-colors cursor-pointer">Cart</span>
-            <span>/</span>
-            <span className="text-purple-700 font-semibold">Checkout</span>
+            <Link to="/cart" className="hover:text-purple-700 transition-colors cursor-pointer">Cart</Link>
+           <span>/</span>
+            <Link to="/checkout" className="text-purple-700 font-semibold">Checkout</Link>
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -762,104 +777,94 @@ function AddressShipping({ cartItems }) {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sticky top-6 transition-all duration-300">
-                <h2 className="text-2xl font-semibold mb-6 text-purple-800">Order Summary</h2>
+           <div className="lg:col-span-1">
+  <div className="bg-white rounded-3xl shadow border border-gray-100 sticky top-8 overflow-hidden">
+    <div className="bg-gradient-to-r from-[#384D89] to-[#2A4172] p-6 rounded-t-3xl">
+      <h2 className="text-xl font-bold text-white">Order Summary</h2>
+    </div>
 
-                {/* Order Items */}
-                <div className="space-y-5 mb-8">
-                  {cartItems.map((item) => (
-                    <div key={item.id} className="flex gap-4 justify-between border-b-2  pb-2">
-                      <img
-                        src={`http://api.jajamblockprints.com/${item?.image}`}
-                        alt={item?.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
-                      <div className="">
-                        <h4 className="font-semibold text-gray-800 text-base">{item?.name}</h4>
-                        <p className="text-gray-500 text-xs text-end">Qty: {item?.quantity}</p>
-                        <p className="font-semibold text-purple-700 text-sm text-end">
-                          ₹{(item.price * item.quantity).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+    <div className="p-6 space-y-6">
 
-                {/* Price Summary */}
-                <div className="pt-4 space-y-3">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Subtotal</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Shipping</span>
-                    <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
-                  </div>
-                  <div className="flex justify-between text-base font-bold text-gray-900 pt-4 ">
-                    <span className="text-gray-500">Total :</span>
-                    <span>₹{total.toLocaleString()}</span>
-                  </div>
-                </div>
-
-                {/* Coupon Section */}
-                {/* <div className="mt-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <Wallet className="w-4 h-4 text-gray-500" />
-                  <span className="font-medium text-gray-900">Available Coupons</span>
-                </div>
-                <div className="space-y-3">
-                  {coupons.map((coupon) => (
-                    <div key={coupon.code} className="border border-gray-200 rounded-lg p-3">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
-                            {coupon.discount} OFF
-                          </span>
-                          <p className="text-sm text-gray-500">{coupon.description}</p>
-                        </div>
-                        <button
-                          className="text-sm font-medium px-3 py-1 rounded-md border transition-colors"
-                          style={{
-                            color: "rgb(157 48 137)",
-                            borderColor: "rgb(157 48 137)",
-                          }}
-                        >
-                          Apply
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-2 bg-gray-50 p-2 rounded text-sm">
-                        <code className="font-mono">{coupon.code}</code>
-                        <button className="text-gray-500 ml-auto">Copy</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowCouponInput(!showCouponInput)}
-                  className="text-sm font-medium mt-3"
-                  style={{ color: "rgb(157 48 137)" }}
-                >
-                  {showCouponInput ? "Hide coupon input" : "Have a coupon code?"}
-                </button>
-                {showCouponInput && (
-                  <div className="mt-3 flex gap-2">
-                    <input
-                      type="text"
-                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                      placeholder="Enter coupon code"
-                    />
-                    <button
-                      className="px-4 py-2 text-white rounded-lg text-sm font-medium"
-                      style={{ background: "rgb(157 48 137)" }}
-                    >
-                      Apply
-                    </button>
-                  </div>
-                )}
-              </div> */}
-              </div>
+      {/* Cart Items */}
+      <div className="space-y-5">
+        {cartItems.map((item) => (
+          <div key={item.id} className="flex gap-4 justify-between border-b pb-3">
+            <img
+              src={`http://api.jajamblockprints.com/${item?.image}`}
+              alt={item?.name}
+              className="w-16 h-16 object-cover rounded-lg"
+            />
+            <div className="flex-1 text-right">
+              <h4 className="font-medium text-[#14263F] text-sm">{item?.name}</h4>
+              <p className="text-xs text-gray-500">Qty: {item?.quantity}</p>
+              <p className="font-semibold text-[#384D89] text-sm">
+                ₹{Math.trunc(item.price * item.quantity).toLocaleString()}
+              </p>
             </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Price Summary */}
+      <div className="space-y-4">
+        <div className="flex justify-between text-sm">
+          <span className="text-[#2A4172]">Subtotal</span>
+          <span className="font-semibold text-[#14263F]">₹{Math.trunc(subtotal).toLocaleString()}</span>
+        </div>
+
+        {/* {discount > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-[#2A4172]">Discount</span>
+            <span className="text-[#A13C78] font-semibold">-₹{Math.trunc(discount).toLocaleString()}</span>
+          </div>
+        )} */}
+
+        <div className="flex justify-between text-sm">
+          <span className="text-[#2A4172]">Shipping</span>
+          <span className="font-semibold text-[#14263F]">{shipping === 0 ? 'Free' : `₹${Math.trunc(shipping)}`}</span>
+        </div>
+
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex justify-between text-lg font-bold">
+            <span className="text-[#14263F]">Total</span>
+            <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
+              ₹{Math.trunc(total).toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Shipping Note */}
+      <div className="bg-gradient-to-r from-[#A13C78]/10 to-[#C1467F]/10 p-4 rounded-xl border border-[#A13C78]/20">
+        <p className="text-sm text-[#872D67] italic">Shipping fees will be calculated at checkout</p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="space-y-4">
+        <Link
+          to="/address"
+          className="block w-full py-4 px-6 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white text-center font-semibold rounded-lg hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
+        >
+          Proceed to Checkout
+        </Link>
+
+        <Link
+          to="/products"
+          className="block w-full py-4 px-6 border border-gray-300 text-[#384D89] text-center font-semibold rounded-lg hover:bg-[#384D89] hover:text-white transition-all duration-300"
+        >
+          Continue Shopping
+        </Link>
+      </div>
+
+      {/* Footer Note */}
+      <div className="text-xs text-[#2A4172] flex items-center justify-center gap-2 pt-2">
+        <div className="w-2 h-2 bg-white border border-[#2A4172] rounded-full"></div>
+        Secure checkout guaranteed
+      </div>
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
