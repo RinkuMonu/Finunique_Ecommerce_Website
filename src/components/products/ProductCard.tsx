@@ -134,7 +134,9 @@ if (listView) {
       <div className="flex gap-4">
         <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
           <img
-            src={`http://api.jajamblockprints.com${product.images}`}
+            // src={`http://api.jajamblockprints.com${product.images}`}
+                    src={`${Image_BaseURL}${product.images[0]}`}
+
             alt={product.productName}
             className="w-full h-full object-cover"
           />

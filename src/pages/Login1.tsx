@@ -45,8 +45,8 @@ export default function Login1() {
     confirmNewPassword: "",
   });
   const navigate = useNavigate();
-    const location = useLocation();
-console.log(location.state,"loca")
+  const location = useLocation();
+  console.log(location.state, "loca");
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
@@ -351,12 +351,10 @@ console.log(location.state,"loca")
         Swal.fire("Login Successful", "", "success");
         // navigate("/");
         let intended = location.state;
-        if(intended){
-          navigate(intended.from)
-     
-        }else{
-          navigate("/")
-          
+        if (intended) {
+          navigate(intended.from);
+        } else {
+          navigate("/");
         }
         window.location.reload(); // Refresh to load Redux cart from server
       } else {
@@ -493,512 +491,136 @@ console.log(location.state,"loca")
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#e6f0ff] p-2">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
-        <div className="w-full md:w-1/2 bg-gradient-to-br from-purple-950 to-purple-400 p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
-          <motion.div className="max-w-md">
-            <h2 className="text-4xl font-bold text-white mb-4">
-              {isLogin ? "Welcome back!" : "Create your account"}
-            </h2>
-            <p className="text-indigo-100 text-lg">
-              {isLogin
-                ? "Sign in to access your personalized dashboard."
-                : "Join our community to unlock exclusive features."}
-            </p>
-          </motion.div>
-          <img
-            src="https://img.freepik.com/free-vector/secure-login-concept-illustration_114360-4585.jpg"
-            alt="Security"
-            className="w-full max-w-md object-contain mt-10 hidden md:block"
-          />
-        </div>
+    <>
+      <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] p-2">
+        <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
+          {/* Left Panel - Updated with new colors */}
+          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#2A4172] to-[#384D89] p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
+            <motion.div className="max-w-md">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                {isLogin ? "Welcome back!" : "Create your account"}
+              </h2>
+              <p className="text-[#A13C78] text-lg">
+                {isLogin
+                  ? "Sign in to access your personalized dashboard."
+                  : "Join our community to unlock exclusive features."}
+              </p>
+            </motion.div>
+            <img
+              src="https://img.freepik.com/free-vector/secure-login-concept-illustration_114360-4585.jpg"
+              alt="Security"
+              className="w-full max-w-md object-contain mt-10 hidden md:block"
+            />
+          </div>
 
-        <div
-          className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto"
-          style={{ height: "calc(100vh - 30px)" }}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          {/* Right Panel - Updated with new colors */}
+          <div
+            className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto"
+            style={{ height: "calc(100vh - 30px)" }}
           >
-            <AnimatePresence mode="wait">
-              {showResetPassword ? (
-                <motion.div
-                  key="reset-password"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
-                    Reset Password
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Please enter your new password.
-                  </p>
-
-                  <form onSubmit={handleResetPassword}>
-                    <div className="mb-6">
-                      <label className="text-sm font-medium text-gray-700">
-                        New Password
-                      </label>
-                      <div className="relative">
-                        <Lock
-                          className="absolute left-3 top-3.5 text-gray-400"
-                          size={18}
-                        />
-                        <input
-                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
-                            resetErrors.newPassword
-                              ? "border-red-500"
-                              : "border-gray-200"
-                          }`}
-                          type={showNewPassword ? "text" : "password"}
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          onBlur={() => handleResetPasswordBlur("newPassword")}
-                          placeholder="New password"
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                          onClick={() => setShowNewPassword(!showNewPassword)}
-                        >
-                          {showNewPassword ? (
-                            <Eye size={20} />
-                          ) : (
-                            <EyeOff size={20} />
-                          )}
-                        </button>
-                      </div>
-                      {resetErrors.newPassword && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {resetErrors.newPassword}
-                        </p>
-                      )}
-                      <div className="text-xs text-gray-500 mt-1">
-                        Password must contain:
-                        <ul className="list-disc pl-5">
-                          <li
-                            className={
-                              newPassword.length >= 8 ? "text-green-500" : ""
-                            }
-                          >
-                            At least 8 characters
-                          </li>
-                          <li
-                            className={
-                              /[A-Z]/.test(newPassword) ? "text-green-500" : ""
-                            }
-                          >
-                            One uppercase letter
-                          </li>
-                          <li
-                            className={
-                              /[a-z]/.test(newPassword) ? "text-green-500" : ""
-                            }
-                          >
-                            One lowercase letter
-                          </li>
-                          <li
-                            className={
-                              /[0-9]/.test(newPassword) ? "text-green-500" : ""
-                            }
-                          >
-                            One number
-                          </li>
-                          <li
-                            className={
-                              /[!@#$%^&*(),.?":{}|<>]/.test(newPassword)
-                                ? "text-green-500"
-                                : ""
-                            }
-                          >
-                            One special character
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="mb-6">
-                      <label className="text-sm font-medium text-gray-700">
-                        Confirm New Password
-                      </label>
-                      <div className="relative">
-                        <Lock
-                          className="absolute left-3 top-3.5 text-gray-400"
-                          size={18}
-                        />
-                        <input
-                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
-                            resetErrors.confirmNewPassword
-                              ? "border-red-500"
-                              : "border-gray-200"
-                          }`}
-                          type={showConfirmNewPassword ? "text" : "password"}
-                          value={confirmNewPassword}
-                          onChange={(e) =>
-                            setConfirmNewPassword(e.target.value)
-                          }
-                          onBlur={() =>
-                            handleResetPasswordBlur("confirmNewPassword")
-                          }
-                          placeholder="Confirm new password"
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                          onClick={() =>
-                            setShowConfirmNewPassword(!showConfirmNewPassword)
-                          }
-                        >
-                          {showConfirmNewPassword ? (
-                            <Eye size={20} />
-                          ) : (
-                            <EyeOff size={20} />
-                          )}
-                        </button>
-                      </div>
-                      {resetErrors.confirmNewPassword && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {resetErrors.confirmNewPassword}
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={
-                        resetPasswordLoading ||
-                        resetErrors.newPassword ||
-                        resetErrors.confirmNewPassword
-                      }
-                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
-                        resetPasswordLoading
-                          ? "bg-indigo-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
-                      }`}
-                    >
-                      {resetPasswordLoading ? "Resetting..." : "Reset Password"}
-                    </button>
-                  </form>
-
-                  <div className="mt-6 text-center">
-                    <button
-                      onClick={() => {
-                        setShowResetPassword(false);
-                        setShowForgotPassword(true);
-                      }}
-                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
-                    >
-                      ← Back to Forgot Password
-                    </button>
-                  </div>
-                </motion.div>
-              ) : showForgotPassword ? (
-                <motion.div
-                  key="forgot-password"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
-                    Reset Password
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Enter your email address to reset your password.
-                  </p>
-
-                  <form onSubmit={handleRequestReset}>
-                    <div className="mb-6">
-                      <label className="text-sm font-medium text-gray-700">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail
-                          className="absolute left-3 top-3.5 text-gray-400"
-                          size={18}
-                        />
-                        <input
-                          className="w-full p-3 pl-10 rounded-xl border border-gray-200"
-                          type="email"
-                          value={forgotPasswordEmail}
-                          onChange={(e) =>
-                            setForgotPasswordEmail(e.target.value)
-                          }
-                          placeholder="your@email.com"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={forgotPasswordLoading}
-                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
-                        forgotPasswordLoading
-                          ? "bg-indigo-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
-                      }`}
-                    >
-                      {forgotPasswordLoading ? "Sending..." : "Submit"}
-                    </button>
-                  </form>
-
-                  <div className="mt-6 text-center">
-                    <button
-                      onClick={() => setShowForgotPassword(false)}
-                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
-                    >
-                      ← Back to {isLogin ? "Sign In" : "Sign Up"}
-                    </button>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={isLogin ? "login" : "register"}
-                  initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
-                >
-                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
-                    {isLogin ? "Sign in to your account" : "Create new account"}
-                  </h3>
-
-                  <form
-                    onSubmit={isLogin ? handleLogin : handleRegister}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <AnimatePresence mode="wait">
+                {showResetPassword ? (
+                  <motion.div
+                    key="reset-password"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
                     className="space-y-6"
                   >
-                    {!isLogin && (
-                      <>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">
-                            First Name
-                          </label>
-                          <div className="relative">
-                            <User
-                              className="absolute left-3 top-3.5 text-gray-400"
-                              size={18}
-                            />
-                            <input
-                              className={`w-full p-3 pl-10 rounded-xl border ${
-                                errors.firstName
-                                  ? "border-red-500"
-                                  : "border-gray-200"
-                              }`}
-                              value={firstName}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === "" || /^[A-Za-z]+$/.test(value)) {
-                                  setFirstName(value);
-                                  if (errors.firstName) {
-                                    setErrors({ ...errors, firstName: "" });
-                                  }
-                                }
-                              }}
-                              onBlur={() => handleBlur("firstName")}
-                              required
-                            />
-                          </div>
-                          {errors.firstName && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {errors.firstName}
-                            </p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">
-                            Last Name
-                          </label>
-                          <div className="relative">
-                            <User
-                              className="absolute left-3 top-3.5 text-gray-400"
-                              size={18}
-                            />
-                            <input
-                              className={`w-full p-3 pl-10 rounded-xl border ${
-                                errors.lastName
-                                  ? "border-red-500"
-                                  : "border-gray-200"
-                              }`}
-                              value={lastName}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === "" || /^[A-Za-z]+$/.test(value)) {
-                                  setLastName(value);
-                                  if (errors.lastName) {
-                                    setErrors({ ...errors, lastName: "" });
-                                  }
-                                }
-                              }}
-                              onBlur={() => handleBlur("lastName")}
-                              required
-                            />
-                          </div>
-                          {errors.lastName && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {errors.lastName}
-                            </p>
-                          )}
-                        </div>
-                      </>
-                    )}
+                    <h3 className="text-3xl font-bold text-[#1B2E4F] mb-6">
+                      Reset Password
+                    </h3>
+                    <p className="text-[#681853] mb-6">
+                      Please enter your new password.
+                    </p>
 
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail
-                          className="absolute left-3 top-3.5 text-gray-400"
-                          size={18}
-                        />
-                        <input
-                          className={`w-full p-3 pl-10 rounded-xl border ${
-                            errors.email ? "border-red-500" : "border-gray-200"
-                          }`}
-                          type="email"
-                          value={email}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                            if (errors.email) {
-                              setErrors({ ...errors, email: "" });
-                            }
-                          }}
-                          onBlur={() => handleBlur("email")}
-                          placeholder="your@email.com"
-                          required
-                        />
-                      </div>
-                      {errors.email && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    {!isLogin && (
-                      <div>
-                        <label className="text-sm font-medium text-gray-700">
-                          Mobile
+                    <form onSubmit={handleResetPassword}>
+                      <div className="mb-6">
+                        <label className="text-sm font-medium text-[#14263F]">
+                          New Password
                         </label>
                         <div className="relative">
-                          <Phone
-                            className="absolute left-3 top-3.5 text-gray-400"
+                          <Lock
+                            className="absolute left-3 top-3.5 text-[#872D67]"
                             size={18}
                           />
                           <input
-                            className={`w-full p-3 pl-10 rounded-xl border ${
-                              errors.mobile
+                            className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                              resetErrors.newPassword
                                 ? "border-red-500"
-                                : "border-gray-200"
-                            }`}
-                            type="tel"
-                            value={mobile}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              if (value === "" || /^[0-9]*$/.test(value)) {
-                                setMobile(value);
-                                if (errors.mobile) {
-                                  setErrors({ ...errors, mobile: "" });
-                                }
-                              }
-                            }}
-                            onBlur={() => handleBlur("mobile")}
-                            placeholder="1234567890"
-                            maxLength="10"
+                                : "border-[#C1467F]"
+                            } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                            type={showNewPassword ? "text" : "password"}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            onBlur={() =>
+                              handleResetPasswordBlur("newPassword")
+                            }
+                            placeholder="New password"
+                            required
                           />
+                          <button
+                            type="button"
+                            className="absolute right-3 top-3 text-[#872D67] hover:text-[#A13C78]"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                          >
+                            {showNewPassword ? (
+                              <Eye size={20} />
+                            ) : (
+                              <EyeOff size={20} />
+                            )}
+                          </button>
                         </div>
-                        {errors.mobile && (
+                        {resetErrors.newPassword && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.mobile}
+                            {resetErrors.newPassword}
                           </p>
                         )}
-                      </div>
-                    )}
-
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Password
-                      </label>
-                      <div className="relative">
-                        <Lock
-                          className="absolute left-3 top-3.5 text-gray-400"
-                          size={18}
-                        />
-                        <input
-                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
-                            errors.password
-                              ? "border-red-500"
-                              : "border-gray-200"
-                          }`}
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            if (errors.password) {
-                              setErrors({ ...errors, password: "" });
-                            }
-                          }}
-                          onBlur={() => handleBlur("password")}
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <Eye size={20} />
-                          ) : (
-                            <EyeOff size={20} />
-                          )}
-                        </button>
-                      </div>
-                      {errors.password && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.password}
-                        </p>
-                      )}
-                      {!isLogin && (
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-[#681853] mt-1">
                           Password must contain:
                           <ul className="list-disc pl-5">
                             <li
                               className={
-                                password.length >= 8 ? "text-green-500" : ""
+                                newPassword.length >= 8 ? "text-[#384D89]" : ""
                               }
                             >
                               At least 8 characters
                             </li>
                             <li
                               className={
-                                /[A-Z]/.test(password) ? "text-green-500" : ""
+                                /[A-Z]/.test(newPassword)
+                                  ? "text-[#384D89]"
+                                  : ""
                               }
                             >
                               One uppercase letter
                             </li>
                             <li
                               className={
-                                /[a-z]/.test(password) ? "text-green-500" : ""
+                                /[a-z]/.test(newPassword)
+                                  ? "text-[#384D89]"
+                                  : ""
                               }
                             >
                               One lowercase letter
                             </li>
                             <li
                               className={
-                                /[0-9]/.test(password) ? "text-green-500" : ""
+                                /[0-9]/.test(newPassword)
+                                  ? "text-[#384D89]"
+                                  : ""
                               }
                             >
                               One number
                             </li>
                             <li
                               className={
-                                /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                                  ? "text-green-500"
+                                /[!@#$%^&*(),.?":{}|<>]/.test(newPassword)
+                                  ? "text-[#384D89]"
                                   : ""
                               }
                             >
@@ -1006,63 +628,463 @@ console.log(location.state,"loca")
                             </li>
                           </ul>
                         </div>
-                      )}
-                    </div>
-
-                    {isLogin && (
-                      <div className="flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => setShowForgotPassword(true)}
-                          className="text-sm text-indigo-600 hover:text-indigo-800"
-                        >
-                          Forgot password?
-                        </button>
                       </div>
-                    )}
 
-                    <button
-                      type="submit"
-                      disabled={
-                        isLoading ||
-                        Object.values(errors).some((error) => error) ||
-                        !email ||
-                        !password ||
-                        (!isLogin && (!firstName || !lastName))
-                      }
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
-                        isLoading
-                          ? "bg-indigo-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
-                      }`}
-                    >
-                      {isLoading
-                        ? "Processing..."
-                        : isLogin
-                        ? "Sign In"
-                        : "Create Account"}
-                    </button>
-                  </form>
+                      <div className="mb-6">
+                        <label className="text-sm font-medium text-[#14263F]">
+                          Confirm New Password
+                        </label>
+                        <div className="relative">
+                          <Lock
+                            className="absolute left-3 top-3.5 text-[#872D67]"
+                            size={18}
+                          />
+                          <input
+                            className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                              resetErrors.confirmNewPassword
+                                ? "border-red-500"
+                                : "border-[#C1467F]"
+                            } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                            type={showConfirmNewPassword ? "text" : "password"}
+                            value={confirmNewPassword}
+                            onChange={(e) =>
+                              setConfirmNewPassword(e.target.value)
+                            }
+                            onBlur={() =>
+                              handleResetPasswordBlur("confirmNewPassword")
+                            }
+                            placeholder="Confirm new password"
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-3 top-3 text-[#872D67] hover:text-[#A13C78]"
+                            onClick={() =>
+                              setShowConfirmNewPassword(!showConfirmNewPassword)
+                            }
+                          >
+                            {showConfirmNewPassword ? (
+                              <Eye size={20} />
+                            ) : (
+                              <EyeOff size={20} />
+                            )}
+                          </button>
+                        </div>
+                        {resetErrors.confirmNewPassword && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {resetErrors.confirmNewPassword}
+                          </p>
+                        )}
+                      </div>
 
-                  <div className="mt-6 text-center">
-                    <button
-                      onClick={() => setIsLogin(!isLogin)}
-                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
-                    >
+                      <button
+                        type="submit"
+                        disabled={
+                          resetPasswordLoading ||
+                          resetErrors.newPassword ||
+                          resetErrors.confirmNewPassword
+                        }
+                        className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                          resetPasswordLoading
+                            ? "bg-[#A13C78] cursor-not-allowed"
+                            : "bg-gradient-to-r from-[#2A4172] to-[#384D89] hover:shadow-lg hover:shadow-[#A13C78]/30"
+                        }`}
+                      >
+                        {resetPasswordLoading
+                          ? "Resetting..."
+                          : "Reset Password"}
+                      </button>
+                    </form>
+
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => {
+                          setShowResetPassword(false);
+                          setShowForgotPassword(true);
+                        }}
+                        className="text-[#2A4172] font-medium hover:text-[#384D89] inline-flex items-center"
+                      >
+                        ← Back to Forgot Password
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : showForgotPassword ? (
+                  <motion.div
+                    key="forgot-password"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
+                  >
+                    <h3 className="text-3xl font-bold text-[#1B2E4F] mb-6">
+                      Reset Password
+                    </h3>
+                    <p className="text-[#681853] mb-6">
+                      Enter your email address to reset your password.
+                    </p>
+
+                    <form onSubmit={handleRequestReset}>
+                      <div className="mb-6">
+                        <label className="text-sm font-medium text-[#14263F]">
+                          Email
+                        </label>
+                        <div className="relative">
+                          <Mail
+                            className="absolute left-3 top-3.5 text-[#872D67]"
+                            size={18}
+                          />
+                          <input
+                            className="w-full p-3 pl-10 rounded-xl border border-[#C1467F] focus:ring-2 focus:ring-[#2A4172] focus:border-transparent"
+                            type="email"
+                            value={forgotPasswordEmail}
+                            onChange={(e) =>
+                              setForgotPasswordEmail(e.target.value)
+                            }
+                            placeholder="your@email.com"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={forgotPasswordLoading}
+                        className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                          forgotPasswordLoading
+                            ? "bg-[#A13C78] cursor-not-allowed"
+                            : "bg-gradient-to-r from-[#2A4172] to-[#384D89] hover:shadow-lg hover:shadow-[#A13C78]/30"
+                        }`}
+                      >
+                        {forgotPasswordLoading ? "Sending..." : "Submit"}
+                      </button>
+                    </form>
+
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => setShowForgotPassword(false)}
+                        className="text-[#2A4172] font-medium hover:text-[#384D89] inline-flex items-center"
+                      >
+                        ← Back to {isLogin ? "Sign In" : "Sign Up"}
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key={isLogin ? "login" : "register"}
+                    initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
+                  >
+                    <h3 className="text-3xl font-bold text-[#1B2E4F] mb-6">
                       {isLogin
-                        ? "Don't have an account? Sign up"
-                        : "Already have an account? Sign in"}
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                        ? "Sign in to your account"
+                        : "Create new account"}
+                    </h3>
+
+                    <form
+                      onSubmit={isLogin ? handleLogin : handleRegister}
+                      className="space-y-6"
+                    >
+                      {!isLogin && (
+                        <>
+                          <div>
+                            <label className="text-sm font-medium text-[#14263F]">
+                              First Name
+                            </label>
+                            <div className="relative">
+                              <User
+                                className="absolute left-3 top-3.5 text-[#872D67]"
+                                size={18}
+                              />
+                              <input
+                                className={`w-full p-3 pl-10 rounded-xl border ${
+                                  errors.firstName
+                                    ? "border-red-500"
+                                    : "border-[#C1467F]"
+                                } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                                value={firstName}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (
+                                    value === "" ||
+                                    /^[A-Za-z]+$/.test(value)
+                                  ) {
+                                    setFirstName(value);
+                                    if (errors.firstName) {
+                                      setErrors({ ...errors, firstName: "" });
+                                    }
+                                  }
+                                }}
+                                onBlur={() => handleBlur("firstName")}
+                                required
+                              />
+                            </div>
+                            {errors.firstName && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {errors.firstName}
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-[#14263F]">
+                              Last Name
+                            </label>
+                            <div className="relative">
+                              <User
+                                className="absolute left-3 top-3.5 text-[#872D67]"
+                                size={18}
+                              />
+                              <input
+                                className={`w-full p-3 pl-10 rounded-xl border ${
+                                  errors.lastName
+                                    ? "border-red-500"
+                                    : "border-[#C1467F]"
+                                } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                                value={lastName}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (
+                                    value === "" ||
+                                    /^[A-Za-z]+$/.test(value)
+                                  ) {
+                                    setLastName(value);
+                                    if (errors.lastName) {
+                                      setErrors({ ...errors, lastName: "" });
+                                    }
+                                  }
+                                }}
+                                onBlur={() => handleBlur("lastName")}
+                                required
+                              />
+                            </div>
+                            {errors.lastName && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {errors.lastName}
+                              </p>
+                            )}
+                          </div>
+                        </>
+                      )}
+
+                      <div>
+                        <label className="text-sm font-medium text-[#14263F]">
+                          Email
+                        </label>
+                        <div className="relative">
+                          <Mail
+                            className="absolute left-3 top-3.5 text-[#872D67]"
+                            size={18}
+                          />
+                          <input
+                            className={`w-full p-3 pl-10 rounded-xl border ${
+                              errors.email
+                                ? "border-red-500"
+                                : "border-[#C1467F]"
+                            } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                            type="email"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                              if (errors.email) {
+                                setErrors({ ...errors, email: "" });
+                              }
+                            }}
+                            onBlur={() => handleBlur("email")}
+                            placeholder="your@email.com"
+                            required
+                          />
+                        </div>
+                        {errors.email && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      {!isLogin && (
+                        <div>
+                          <label className="text-sm font-medium text-[#14263F]">
+                            Mobile
+                          </label>
+                          <div className="relative">
+                            <Phone
+                              className="absolute left-3 top-3.5 text-[#872D67]"
+                              size={18}
+                            />
+                            <input
+                              className={`w-full p-3 pl-10 rounded-xl border ${
+                                errors.mobile
+                                  ? "border-red-500"
+                                  : "border-[#C1467F]"
+                              } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                              type="tel"
+                              value={mobile}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === "" || /^[0-9]*$/.test(value)) {
+                                  setMobile(value);
+                                  if (errors.mobile) {
+                                    setErrors({ ...errors, mobile: "" });
+                                  }
+                                }
+                              }}
+                              onBlur={() => handleBlur("mobile")}
+                              placeholder="1234567890"
+                              maxLength="10"
+                            />
+                          </div>
+                          {errors.mobile && (
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors.mobile}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="text-sm font-medium text-[#14263F]">
+                          Password
+                        </label>
+                        <div className="relative">
+                          <Lock
+                            className="absolute left-3 top-3.5 text-[#872D67]"
+                            size={18}
+                          />
+                          <input
+                            className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                              errors.password
+                                ? "border-red-500"
+                                : "border-[#C1467F]"
+                            } focus:ring-2 focus:ring-[#2A4172] focus:border-transparent`}
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => {
+                              setPassword(e.target.value);
+                              if (errors.password) {
+                                setErrors({ ...errors, password: "" });
+                              }
+                            }}
+                            onBlur={() => handleBlur("password")}
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-3 top-3 text-[#872D67] hover:text-[#A13C78]"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <Eye size={20} />
+                            ) : (
+                              <EyeOff size={20} />
+                            )}
+                          </button>
+                        </div>
+                        {errors.password && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.password}
+                          </p>
+                        )}
+                        {!isLogin && (
+                          <div className="text-xs text-[#681853] mt-1">
+                            Password must contain:
+                            <ul className="list-disc pl-5">
+                              <li
+                                className={
+                                  password.length >= 8 ? "text-[#384D89]" : ""
+                                }
+                              >
+                                At least 8 characters
+                              </li>
+                              <li
+                                className={
+                                  /[A-Z]/.test(password) ? "text-[#384D89]" : ""
+                                }
+                              >
+                                One uppercase letter
+                              </li>
+                              <li
+                                className={
+                                  /[a-z]/.test(password) ? "text-[#384D89]" : ""
+                                }
+                              >
+                                One lowercase letter
+                              </li>
+                              <li
+                                className={
+                                  /[0-9]/.test(password) ? "text-[#384D89]" : ""
+                                }
+                              >
+                                One number
+                              </li>
+                              <li
+                                className={
+                                  /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                                    ? "text-[#384D89]"
+                                    : ""
+                                }
+                              >
+                                One special character
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+
+                      {isLogin && (
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setShowForgotPassword(true)}
+                            className="text-sm text-[#2A4172] hover:text-[#384D89]"
+                          >
+                            Forgot password?
+                          </button>
+                        </div>
+                      )}
+
+                      <button
+                        type="submit"
+                        disabled={
+                          isLoading ||
+                          Object.values(errors).some((error) => error) ||
+                          !email ||
+                          !password ||
+                          (!isLogin && (!firstName || !lastName))
+                        }
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                          isLoading
+                            ? "bg-[#A13C78] cursor-not-allowed"
+                            : "bg-gradient-to-r from-[#2A4172] to-[#384D89] hover:shadow-lg hover:shadow-[#A13C78]/30"
+                        }`}
+                      >
+                        {isLoading
+                          ? "Processing..."
+                          : isLogin
+                          ? "Sign In"
+                          : "Create Account"}
+                      </button>
+                    </form>
+
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="text-[#2A4172] font-medium hover:text-[#384D89] inline-flex items-center"
+                      >
+                        {isLogin
+                          ? "Don't have an account? Sign up"
+                          : "Already have an account? Sign in"}
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

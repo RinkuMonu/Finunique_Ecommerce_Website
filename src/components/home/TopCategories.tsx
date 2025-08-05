@@ -1,80 +1,81 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight, Sparkles } from "lucide-react"
-// import Img from '../../assest/saree.webp'
+import { ArrowRight, Package, Star, ChevronRight, Sparkle } from "lucide-react"
 
 const styleMap: Record<string, any> = {
   "Kalmkari Print Fabric": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "320+ Products",
     image: "/saree1.webp",
+    trending: true,
+    bgColor: "#384D89",
   },
   "Cotton mal mal saree": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "450+ Products",
     image: "/saree2.webp",
+    trending: false,
+    bgColor: "#2A4172",
   },
   "Chanderi Silk saree": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "180+ Products",
     image: "/saree3.webp",
+    trending: true,
+    bgColor: "#1B2E4F",
   },
   "Maheswari Silk saree": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "210+ Products",
     image: "/saree4.webp",
+    trending: false,
+    bgColor: "#14263F",
   },
   "Kota Doriya Saree": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "380+ Products",
     image: "/saree5.webp",
+    trending: true,
+    bgColor: "#A13C78",
   },
   "Cotton Suit": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "150+ Products",
     image: "/saree6.webp",
+    trending: false,
+    bgColor: "#872D67",
   },
   "Sanganeri Print Fabric": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "160+ Products",
     image: "/saree7.webp",
+    trending: true,
+    bgColor: "#681853",
   },
   "Dabu Print Fabric": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "140+ Products",
     image: "/saree8.webp",
+    trending: false,
+    bgColor: "#C1467F",
   },
   "Bagru Print": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "130+ Products",
     image: "/saree9.webp",
+    trending: false,
+    bgColor: "#384D89",
   },
   "Cotton Suit In Kota": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "170+ Products",
     image: "/saree10.webp",
+    trending: true,
+    bgColor: "#2A4172",
   },
   "Chanderi Silk Suits": {
-    color: "rgb(157 48 137)",
-    lightColor: "rgba(157, 48, 137, 0.1)",
     count: "190+ Products",
     image: "/saree11.webp",
+    trending: false,
+    bgColor: "#1B2E4F",
   },
 }
 
 export default function TopCategories() {
   const [categories, setCategories] = useState<string[]>([])
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
@@ -99,130 +100,128 @@ export default function TopCategories() {
   }, [baseUrl, referenceWebsite])
 
   return (
-    <section className="pt-20 pb-12 border-b-2 px-4 bg-white">
+    <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center mb-6">
+        {/* Simple Header */}
+        <div className="text-center mb-12">
+          <div className="inline-block mb-4">
             <span
-              className="text-sm font-semibold px-6 py-3 underline inline-flex items-center gap-2 "
-              // style={{
-              //   color: "rgb(157 48 137)",
-              //   borderColor: "rgb(157 48 137)",
-              // }}
-            >
-              <Sparkles className="w-4 h-4" />
-              Heritage Collections
-               <Sparkles className="w-4 h-4" />
+              className="flex gap-2 align-center text-sm font-semibold px-4 py-2 rounded-full text-[#ff9f43]"
+              style={{ backgroundColor: "#fff0e1" }}
+            ><Sparkle className="w-5" />
+              Shop Categories
             </span>
           </div>
-
-          <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: "#1B2E4F" }}>
-            Our <span style={{ color: "rgb(157 48 137)" }}>Categories</span>
+          <h2 className="text-4xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
+            Browse Our Collections
           </h2>
-
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our curated collection of traditional wear, each piece crafted with authentic techniques
+            Discover our wide range of premium products across different categories
           </p>
         </div>
 
-        {/* Categories Grid with Images */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((name, index) => {
             const styles = styleMap[name] || {
-              color: "rgb(157 48 137)",
-              lightColor: "rgba(157, 48, 137, 0.1)",
               count: "100+ Products",
               image: "/saree12.webp",
+              trending: false,
+              bgColor: "#384D89",
             }
 
+            const isHovered = hoveredCard === name
+
             return (
-              <Link key={name} to={`/category/${name.toLowerCase()}`} className="group block">
-                <div
-                  className="bg-white rounded-xl border-2 overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
-                  style={{
-                    borderColor: "rgba(157, 48, 137, 0.1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "rgb(157 48 137)"
-                    e.currentTarget.style.boxShadow = "0 20px 40px rgba(157, 48, 137, 0.15)"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(157, 48, 137, 0.1)"
-                    e.currentTarget.style.boxShadow = "0 10px 25px rgba(0, 0, 0, 0.1)"
-                  }}
-                >
+              <Link
+                key={name}
+                to={`/category/${name.toLowerCase()}`}
+                className="group"
+                onMouseEnter={() => setHoveredCard(name)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 transform hover:-translate-y-1">
                   {/* Image Section */}
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={styles.image || "/placeholder.svg"}
-                      // src={`http://api.jajamblockprints.com${styles.image}`}
                       alt={name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
 
-                    {/* Image Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Overlay */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity duration-300"
+                      style={{ backgroundColor: styles.bgColor }}
+                    />
 
-                    {/* Category Number Badge */}
-                    <div className="absolute top-4 left-4">
+                    {/* Trending Badge */}
+                    {styles.trending && (
+                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                        Trending
+                      </div>
+                    )}
+
+                    {/* Product Count */}
+                    <div className="absolute top-3 right-3 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded">
+                      {styles.count}
+                    </div>
+
+                    {/* Hover Actions */}
+                    <div
+                      className={`absolute inset-0 flex items-center justify-center space-x-4 transition-all duration-300 ${
+                        isHovered ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-700 hover:scale-110 transition-transform">
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Content Section */}
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                        {name}
+                      </h3>
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg"
-                        style={{ background: "rgb(157 48 137)" }}
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                        style={{ backgroundColor: styles.bgColor }}
                       >
                         {index + 1}
                       </div>
                     </div>
 
-                    {/* Product Count Badge */}
-                    <div className="absolute top-4 right-4">
-                      <div
-                        className="px-3 py-1 rounded-full text-xs font-medium text-white backdrop-blur-sm"
-                        style={{
-                          background: "rgba(157, 48, 137, 0.9)",
-                        }}
-                      >
-                        {styles.count}
-                      </div>
-                    </div>
-
-                    {/* Hover Overlay with Arrow */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300"
-                        style={{ background: "rgb(157 48 137)" }}
-                      >
-                        <ArrowRight className="w-5 h-5" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Content Section */}
-                  <div className="p-6">
-                    {/* Category Name */}
-                    <h3
-                      className="text-xl font-bold mb-3 group-hover:text-purple-900 transition-colors"
-                      style={{ color: "#1B2E4F" }}
-                    >
-                      {name}
-                    </h3>
-
-                    {/* Simple Divider */}
-                    <div
-                      className="w-12 h-0.5 rounded-full mb-4 transition-all duration-300 group-hover:w-20"
-                      style={{ background: "rgb(157 48 137)" }}
-                    />
-
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      Explore our premium collection of {name.toLowerCase()} with authentic craftsmanship and quality
-                      materials.
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      Premium collection of {name.toLowerCase()} with authentic craftsmanship
                     </p>
 
-                    {/* Explore Link */}
-                    <div className="flex items-center text-sm font-medium group-hover:translate-x-1 transition-transform duration-300">
-                      <span style={{ color: "rgb(157 48 137)" }}>Explore Collection</span>
-                      <ArrowRight className="ml-2 h-4 w-4" style={{ color: "rgb(157 48 137)" }} />
+                    {/* Stats */}
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                      <div className="flex items-center space-x-1">
+                        <Package size={14} />
+                        <span>{styles.count.split("+")[0]}+ items</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Star size={14} className="fill-yellow-400 stroke-yellow-400" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+
+                    {/* Shop Now Button */}
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="font-medium group-hover:underline transition-all"
+                        style={{ color: styles.bgColor }}
+                      >
+                        Shop Now
+                      </span>
+                      <ArrowRight
+                        size={16}
+                        className="group-hover:translate-x-1 transition-transform"
+                        style={{ color: styles.bgColor }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -231,9 +230,21 @@ export default function TopCategories() {
           })}
         </div>
 
-        {/* Bottom Message */}
-        <div className="text-center mt-16">
-          <p className="text-gray-600 font-medium">✨ Handcrafted with Love • Delivered with Care ✨</p>
+        {/* Simple Stats */}
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {[
+            { label: "Categories", value: categories.length.toString(), color: "#384D89" },
+            { label: "Products", value: "2000+", color: "#A13C78" },
+            { label: "Rating", value: "4.8/5", color: "#2A4172" },
+            { label: "Customers", value: "10K+", color: "#C1467F" },
+          ].map((stat, index) => (
+            <div key={index} className="bg-white rounded-lg p-6 shadow-md">
+              <div className="text-2xl font-bold mb-1" style={{ color: stat.color }}>
+                {stat.value}
+              </div>
+              <div className="text-sm text-gray-600">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
