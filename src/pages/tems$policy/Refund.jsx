@@ -1,83 +1,128 @@
-// Full code for Exchange & Return page styled like Terms of Service
-"use client";
-
 import React from "react";
+import { ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function ExchangeReturn() {
+const Refund = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-extrabold text-[#9d3089] mb-4 text-center border-b-slate-200 border-b pb-2 border-gray-300">Exchange & Return Policy</h1>
+    <main>
+      {/* Breadcrumb Section */}
+      <section className="bg-[#1B2E4F] pt-[60px] pb-[60px] mb-[50px] text-start">
+        <div className="container max-w-[1200px] mx-auto px-5">
+          <div className="relative z-10">
+            <h3 className="text-white text-[28px] font-bold mb-[10px]">Refund Policy</h3>
+            <div className="text-[rgba(255,255,255,0.8)] text-[16px] flex items-center">
+              <span>
+                <Link to={"/"} className="text-[rgba(255,255,255,0.8)] hover:text-[#C1467F] transition-colors duration-300">
+                  Home
+                </Link>
+              </span>
+              <ChevronRight className="mx-2" color="rgba(255,255,255,0.8)" size={16} />
+              <span>Refund Policy</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-[#9d3089] space-y-4">
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Return will not be accepted if the customer does not like the material or color of the dress. We suggest that the customer read the product description before ordering.
-        </p>
+      {/* Main Content Section */}
+      <section className="pb-[80px]">
+        <div className="container max-w-[1200px] mx-auto px-5">
+          <div className="prose">
+            {/* Return and Refund Policy */}
+            {/* <h3 className="bg-[#2A4172] text-white font-bold text-[21px] py-3 px-5 my-8 border-l-[5px] border-l-[#C1467F] rounded-l">
+              <strong>Return And Refund Policy</strong>
+            </h3> */}
 
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Exchange is accepted if the customer wants to exchange the dress with a different dress of similar or higher value. (We do not give free shipping for exchanged dresses. The original product is sent by the customer at their own expense. If the customer pays shipping charges for exchanges, then we can arrange reverse pickup (₹80) and dispatch a new parcel (₹70). In total, ₹150 shipping charges must be paid by the customer.)
-        </p>
+            {/* Return Policy */}
+            <h3 className="bg-[#2A4172] text-white font-bold text-[21px] py-3 px-5 my-8 border-l-[5px] border-l-[#C1467F] rounded-l">
+              <strong>Return Policy</strong>
+            </h3>
+            <ul className="list-none pl-0 ml-4">
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                All Products purchased from the Website enjoy Ten (10) days
+                Return Policy.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Any Product purchased from the Website can be returned to the
+                Company within Ten (10) days of delivery by placing a Cancel
+                Order request by logging a call with the Company's Customer Care
+                Centre at 9660339514 (Mon to Sat-10AM to 6PM).
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Any Product purchased from the Website can be returned only if
+                the Product is damaged, defective, or different from what was
+                ordered.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                The User shall ensure not to accept delivery of any Product
+                whose original packaging is damaged or tampered in any manner.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                If the Product is damaged/defective/different from what was
+                ordered, the User must immediately inform the Company's Customer
+                Care Centre, and the Company will arrange for replacement or a
+                refund of the price, including shipping charges if applicable.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                In case of Cancellation (Return/Exchange) after delivery, the
+                Customer must cooperate fully to return the Product with all
+                original packaging, manuals, accessories, freebies, and other
+                materials received with the Product. Refund or exchange will
+                only be processed after receipt of the product.
+              </li>
+            </ul>
 
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Return will not be accepted if the customer does not like the color of the dress. We try our best to ensure exact colors as shown. However, 5–10% variation is unavoidable due to lighting effects.
-        </p>
+            <p className="text-[#777] font-sans text-[14px] leading-relaxed mb-5">
+              All free gifts, in original packing and unused condition, must be
+              returned along with the Product in case of cancellation of the
+              Product with which the free gift(s) were given.
+            </p>
 
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Return will not be accepted if the customer is not satisfied, as we commit to deliver what we have displayed and for the prices we have charged which is the best possible.
-        </p>
+            {/* Refund Policy */}
+            <h3 className="bg-[#2A4172] text-white font-bold text-[21px] py-3 px-5 my-8 border-l-[5px] border-l-[#C1467F] rounded-l">
+              <strong>Refund Policy</strong>
+            </h3>
+            <ul className="list-none pl-0 ml-4">
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Any cancellation/exchange in accordance with the above terms
+                qualifies for payment reversal or replacement of the Product
+                depending on availability and User preference.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Refunds for cancellations before delivery will be subject to a
+                2% deduction plus applicable taxes of the Product Price
+                (Transaction value) as banking and transaction charges. The
+                balance amount will be processed for refund.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Refunds will be initiated within Ten (10) working days of
+                receipt of the Request for Cancellation or after the Company's
+                logistics partner picks up the Product from the User's place.
+                The refund will be credited to the User's bank/credit card
+                account based on banking channels' processing time.
+                If approved, you'll be automatically refunded on your original
+                payment method within 10 business days.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Refunds will be credited to the account from which payment was
+                made.
+              </li>
+              <li className="text-[#14263F] font-sans text-[15px] leading-relaxed mb-3 pl-5 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-[#A13C78] before:rounded-full">
+                Interest Fee Reversal: If an EMI facility was availed for the
+                cancelled transaction, the interest fee debited to the User's
+                card will be reversed as per the bank's terms. The User should
+                contact the card-issuing bank for interest refund procedures.
+              </li>
+            </ul>
 
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Return will not be accepted if the product is washed or worn.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Any small issues like tassels pulled, which might happen during transit, can be easily fixed by the customer.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          One time exchange is only accepted.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Returns are accepted ONLY IF THERE IS A MANUFACTURING DEFECT. The customer must inform us within 2 days of delivery. The item should be dispatched back to us within 4 days after delivery. Only after receiving the garment, an email will be sent. Then we will dispatch the replacement item.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Every suit material at Jajam Block Print goes through 3–4 levels of stringent quality checks. Any mischievous act of damaging the product by the customer will result in forfeiting the claim for both exchange and return.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          If a product is wrongly delivered, we will arrange reverse pickup and send the correct product. A 6–10% color difference may occur due to screen resolution and lights, so please do not expect an exchange or return for the same.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Our policy lasts for 7 days. If 7 days have gone by since your purchase, unfortunately we can’t offer a refund or exchange. To be eligible for a return, your item must be unused, unwashed, and in the same condition that you received it. It must also be in the original packaging.
-        </p>
-
-        <h2 className="text-xl font-semibold text-[#9d3089] pt-4">Refunds</h2>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Refunds (if applicable): Once your return is received and inspected, we will send you an email or WhatsApp to notify you. We will also notify you of the approval or rejection of your refund. If approved, your refund will be processed and credited within 5–6 banking days. We request customers to share their bank details.
-        </p>
-
-        <p className="text-justify text-gray-700 leading-relaxed">
-          Late or missing refunds (if applicable): If you haven’t received a refund yet, please check with your bank or credit card provider. If you've done this and still haven’t received the refund, please contact us at <a href="mailto:jajamblockprint@gmail.com" className="text-blue-600">jajamblockprint@gmail.com</a>.
-        </p>
-      </div>
-
-      <div className="mt-12 text-sm text-gray-600 space-y-2 border-t border-gray-300 pt-6">
-        <p>
-          <strong>Shop by Craft:</strong>{" "}
-          <span className="text-gray-700">
-            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
-          </span>
-        </p>
-        <p>
-          <strong>Shop by Collection:</strong>{" "}
-          <span className="text-gray-700">
-            Cotton Suit Sets | Cotton Suit With Chiffon Dupatta | Cotton Suit With Cotton Dupatta | Cotton Suit With Kota Doria Dupatta | Maheshwari Silk Suit | Chanderi Silk Suit Sets
-          </span>
-        </p>
-      </div>
-    </div>
+            <p className="text-[#777] font-sans text-[14px] leading-relaxed mb-5">
+              The above terms and conditions in respect to refunds are referred
+              to as the "Refund Policy."
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default Refund;
