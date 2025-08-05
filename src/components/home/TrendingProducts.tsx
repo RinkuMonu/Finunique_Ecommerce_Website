@@ -286,107 +286,110 @@ const TrendingProducts = ({
                         (slideIndex + 1) * itemsPerSlide
                       )
                       .map((product, index) => (
-                        <div
-                          key={product._id}
-                          onMouseEnter={() => setHoveredProduct(product._id)}
-                          onMouseLeave={() => setHoveredProduct(null)}
-                          className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 group"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                          {/* Product Image Container */}
-                          <div className="relative aspect-square overflow-hidden bg-gray-50">
-                            <img
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              src={`${Image_BaseURL}${product.images[0]}`}
-                              alt={product.productName}
-                            />
+                       <div
+  key={product._id}
+  onMouseEnter={() => setHoveredProduct(product._id)}
+  onMouseLeave={() => setHoveredProduct(null)}
+  className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group relative"
+  style={{ 
+    animationDelay: `${index * 100}ms`,
+    boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+  }}
+>
+  {/* Product Image Container */}
+  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+    <img
+      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      src={`${Image_BaseURL}${product.images[0]}`}
+      alt={product.productName}
+    />
 
-                            {/* Discount Badge */}
-                            {product.discount && (
-                              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                                -{product.discount}%
-                              </div>
-                            )}
+    {/* Discount Badge */}
+    {product.discount && (
+      <div className="absolute top-4 left-4 bg-[#C1467F] text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">
+        -{product.discount}% OFF
+      </div>
+    )}
 
-                            {/* Wishlist Button */}
-                            <button
+    {/* Action Buttons */}
+    <div className="absolute top-4 right-4 flex flex-col gap-2">
+      {/* Wishlist Button */}
+         <button
                               onClick={() => handleAddToWishlist(product)}
                               className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors duration-200"
                             >
                               <Heart
                                 size={16}
-                                className="text-gray-600 hover:text-red-500"
+                                className="text-gray-600 hover:text-red-500"  
                               />
-                            </button>
+                            </button> 
 
-                            {/* Quick View Button */}
-                            <button
-                              onClick={() => openProductModal(product)}
-                              className={`absolute bottom-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transition-all duration-200 ${
-                                hoveredProduct === product._id
-                                  ? "opacity-100 translate-y-0"
-                                  : "opacity-0 translate-y-2"
-                              }`}
-                            >
-                              <Eye size={16} className="text-gray-600" />
-                            </button>
-                          </div>
+      {/* Quick View Button */}
+      <button
+        onClick={() => openProductModal(product)}
+        className={`w-10 h-10 bg-white/90 rounded-full shadow-md flex items-center justify-center transition-all duration-300 hover:bg-[#384D89] hover:scale-110 ${
+          hoveredProduct === product._id
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-2"
+        }`}
+      >
+        <Eye size={18} className="text-gray-600 group-hover:text-white" />
+      </button>
+    </div>
+  </div>
 
-                          {/* Product Info */}
-                          <div className="p-4">
-                            {/* Category */}
-                            <div className="flex items-center mb-2">
-                              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                                {product.category?.name || "Electronics"}
-                              </span>
-                            </div>
+  {/* Product Info */}
+  <div className="p-5">
+    {/* Category */}
+    <div className="mb-2">
+      <span className="inline-block text-xs font-semibold text-[#2A4172] bg-[#2A4172]/10 px-3 py-1 rounded-full">
+        {product.category?.name || "Electronics"}
+      </span>
+    </div>
 
-                            {/* Product Name */}
-                            <Link
-                              to={`/product/${product._id}`}
-                              className="block text-gray-900 font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors duration-200"
-                            >
-                              {product.productName}
-                            </Link>
+    {/* Product Name */}
+    <Link
+      to={`/product/${product._id}`}
+      className="block text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-[#384D89] transition-colors duration-200"
+    >
+      {product.productName}
+    </Link>
 
-                            {/* Rating */}
-                            <div className="flex items-center mb-3">
-                              <div className="flex items-center mr-2">
-                                {renderStars(product.rating || 4)}
-                              </div>
-                              <span className="text-xs text-gray-500">
-                                (4.5)
-                              </span>
-                            </div>
+    {/* Rating */}
+    <div className="flex items-center mb-3">
+      <div className="flex items-center mr-2">
+        {renderStars(product.rating || 4)}
+      </div>
+      <span className="text-sm text-gray-500">(4.5)</span>
+    </div>
 
-                            {/* Price */}
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="flex items-center space-x-2">
-                                <span className="text-lg font-bold text-gray-900">
-                                  ₹{product.actualPrice}
-                                </span>
-                                {product.price &&
-                                  product.price !== product.actualPrice && (
-                                    <span className="text-sm text-gray-500 line-through">
-                                      ₹{product.price}
-                                    </span>
-                                  )}
-                              </div>
-                              <div className="text-xs text-green-600 font-medium">
-                                In Stock
-                              </div>
-                            </div>
+    {/* Price */}
+    <div className="flex items-center justify-between mb-5">
+      <div className="flex items-baseline space-x-2">
+        <span className="text-xl font-bold text-[#1B2E4F]">
+          ₹{product.actualPrice}
+        </span>
+        {product.price && product.price !== product.actualPrice && (
+          <span className="text-sm text-gray-500 line-through">
+            ₹{product.price}
+          </span>
+        )}
+      </div>
+      <div className="text-xs font-medium bg-[#14263F]/10 text-[#14263F] px-2 py-1 rounded-full">
+        In Stock
+      </div>
+    </div>
 
-                            {/* Add to Cart Button */}
-                            <button
-                              onClick={() => handleAddToCart(product)}
-                              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2"
-                            >
-                              <ShoppingCart size={16} />
-                              <span>Add to Cart</span>
-                            </button>
-                          </div>
-                        </div>
+    {/* Add to Cart Button */}
+    <button
+      onClick={() => handleAddToCart(product)}
+      className="w-full bg-gradient-to-r from-[#A13C78] to-[#C1467F] hover:from-[#872D67] hover:to-[#A13C78] text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-[#C1467F]/30"
+    >
+      <ShoppingCart size={18} className="text-white" />
+      <span>Add to Cart</span>
+    </button>
+  </div>
+</div>
                       ))}
                   </div>
                 </div>

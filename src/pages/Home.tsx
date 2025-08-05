@@ -73,8 +73,8 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
       <FeaturedSections />
       <TrendingProducts addToCart={addToCart} /> 
       <DealsOfTheDay />
-      <Arrivals addToCart={addToCart} />
-      <TopCategories />
+      {/* <Arrivals addToCart={addToCart} />
+      <TopCategories /> */}
 
       <HowItWorks />
       <DeliveryFeatures />

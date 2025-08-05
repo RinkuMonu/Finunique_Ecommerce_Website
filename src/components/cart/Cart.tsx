@@ -194,15 +194,15 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                 </button>
               </div>
             ) : (
-             <div className="space-y-6">
+             <div className="space-y-6 scrollbar-hide overflow-y-scroll">
 {cartToDisplay.map((item) => (
   <div
     key={item.id}
-    className="flex flex-col sm:flex-row gap-4 p-5 rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-200"
+    className="flex flex-col sm:flex-row gap-4 p-5 rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-200 "
   >
     <div className="flex-shrink-0">
       <img
-        src={`http://api.jajamblockprints.com${item.image}`}
+        src={item.image}
         alt={item.name}
         className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl border"
       />
