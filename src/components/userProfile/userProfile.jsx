@@ -5,14 +5,15 @@ import { User, Mail, Phone, MapPin, FilePenLine, Package, Loader2 } from "lucide
 import OrderPage from "../userOrder/OrderPage"
 
 const colors = {
-  primary: '#384D89',
-  primaryDark: '#2A4172',
-  primaryDarker: '#1B2E4F',
-  primaryDarkest: '#14263F',
-  secondary: '#A13C78',
-  secondaryDark: '#872D67',
-  secondaryDarker: '#681853',
-  accent: '#C1467F'
+  primary: '#4f46e5',
+  primaryLight: '#6366f1',
+  primaryDark: '#4338ca',
+  secondary: '#ec4899',
+  secondaryDark: '#db2777',
+  accent: '#f43f5e',
+  gray: '#6b7280',
+  lightGray: '#f3f4f6',
+  darkGray: '#374151'
 }
 
 export default function ProfilePage() {
@@ -234,223 +235,240 @@ export default function ProfilePage() {
   }
 
   return (
-  <div className="w-full mx-auto p-4 md:p-8">
-      <header className="flex items-center gap-4 mb-8">
-        <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-          <img
-            src={`/placeholder.svg?height=80&width=80&query=${profile.firstName}+${profile.lastName}`}
-            alt={`${profile.firstName} ${profile.lastName}`}
-            className="h-full w-full object-cover"
-          />
-          {(!profile.firstName && !profile.lastName) && (
-            <span className="text-xl font-medium text-gray-600">
-              {profile.firstName?.[0]}
-              {profile.lastName?.[0]}
-            </span>
-          )}
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold" style={{ color: colors.primaryDarker }}>
-            {profile.firstName} {profile.lastName}
-          </h1>
-          <p className="text-gray-500">Manage your account information and view your order history.</p>
-        </div>
-      </header>
-
-      <div className="w-full">
-        <div className="flex border-b border-gray-200 mb-6">
-          <button
-            onClick={() => setActiveTab('profile')}
-            className={`flex items-center py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'profile' ? `border-[${colors.primary}] text-[${colors.primary}]` : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            style={activeTab === 'profile' ? { borderColor: colors.primary, color: colors.primary } : {}}
-          >
-            <User className="mr-2 h-4 w-4" />
-            Profile
-          </button>
-          <button
-            onClick={() => setActiveTab('orders')}
-            className={`flex items-center py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'orders' ? `border-[${colors.primary}] text-[${colors.primary}]` : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            style={activeTab === 'orders' ? { borderColor: colors.primary, color: colors.primary } : {}}
-          >
-            <Package className="mr-2 h-4 w-4" />
-            Orders
-          </button>
-        </div>
-        
-        <div className={activeTab === 'profile' ? 'block' : 'hidden'}>
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <form onSubmit={handleSubmit}>
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-xl font-semibold" style={{ color: colors.primaryDarker }}>Personal Information</h2>
-                    <p className="text-gray-500">
-                      {isEditing ? "Update your profile details below." : "View your profile details."}
-                    </p>
+    <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar */}
+        <div className="w-full md:w-64 flex-shrink-0">
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex flex-col items-center">
+              <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 mb-4 overflow-hidden">
+                {profile.firstName || profile.lastName ? (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <span className="text-3xl font-medium text-indigo-600">
+                      {profile.firstName?.[0]}
+                      {profile.lastName?.[0]}
+                    </span>
                   </div>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                      style={{ backgroundColor: colors.primary }}
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <FilePenLine className="mr-2 h-4 w-4" />
-                      Edit Profile
-                    </button>
-                  )}
-                </div>
+                ) : (
+                  <div className="h-full w-full bg-gray-200"></div>
+                )}
               </div>
-              <div className="p-6 space-y-6">
+              <h2 className="text-xl font-bold text-gray-900 text-center">
+                {profile.firstName} {profile.lastName}
+              </h2>
+              <p className="text-sm text-gray-500 text-center">{profile.email}</p>
+            </div>
+
+            <nav className="mt-8 space-y-1">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === 'profile' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50'}`}
+              >
+                <User className="w-5 h-5 mr-3" />
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('orders')}
+                className={`flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === 'orders' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50'}`}
+              >
+                <Package className="w-5 h-5 mr-3" />
+                Orders
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1">
+          {activeTab === 'profile' ? (
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {isEditing ? "Update your profile details" : "View your profile details"}
+                  </p>
+                </div>
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <FilePenLine className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </button>
+                )}
+              </div>
+
+              <div className="p-6">
                 {successMessage && (
-                  <div className="rounded-md p-4 border" style={{ backgroundColor: '#F0FAF0', borderColor: '#C6F6D5' }}>
+                  <div className="mb-6 rounded-md bg-green-50 p-4">
                     <div className="flex">
                       <div className="flex-shrink-0">
-                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="#38A169">
+                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium" style={{ color: '#276749' }}>Success</h3>
-                        <div className="mt-2 text-sm" style={{ color: '#276749' }}>
-                          <p>{successMessage}</p>
-                        </div>
+                        <p className="text-sm font-medium text-green-800">{successMessage}</p>
                       </div>
                     </div>
                   </div>
                 )}
+
                 {errors.submit && (
-                  <div className="rounded-md p-4 border" style={{ backgroundColor: '#FEF2F2', borderColor: '#FECACA' }}>
+                  <div className="mb-6 rounded-md bg-red-50 p-4">
                     <div className="flex">
                       <div className="flex-shrink-0">
-                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="#E53E3E">
+                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium" style={{ color: '#9B2C2C' }}>Error</h3>
-                        <div className="mt-2 text-sm" style={{ color: '#9B2C2C' }}>
-                          <p>{errors.submit}</p>
-                        </div>
+                        <p className="text-sm font-medium text-red-800">{errors.submit}</p>
                       </div>
                     </div>
                   </div>
                 )}
+
                 {isEditing ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label htmlFor="firstName" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>First Name</label>
-                      <input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        value={profile.firstName}
-                        onChange={handleChange}
-                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.firstName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
-                      />
-                      {errors.firstName && <p className="text-sm text-red-600">{errors.firstName}</p>}
+                  <form onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                      <div className="sm:col-span-3">
+                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                          First name
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="text"
+                            name="firstName"
+                            id="firstName"
+                            value={profile.firstName}
+                            onChange={handleChange}
+                            className={`block w-full p-2 rounded-md shadow-sm ${errors.firstName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} sm:text-sm`}
+                          />
+                          {errors.firstName && <p className="mt-2 text-sm text-red-600">{errors.firstName}</p>}
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                          Last name
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="text"
+                            name="lastName"
+                            id="lastName"
+                            value={profile.lastName}
+                            onChange={handleChange}
+                            className={`block w-full p-2 rounded-md shadow-sm ${errors.lastName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} sm:text-sm`}
+                          />
+                          {errors.lastName && <p className="mt-2 text-sm text-red-600">{errors.lastName}</p>}
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-4">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                          Email address
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={profile.email}
+                            onChange={handleChange}
+                            className={`block w-full p-2 rounded-md shadow-sm ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} sm:text-sm`}
+                          />
+                          {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-4">
+                        <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+                          Mobile number
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            id="mobile"
+                            name="mobile"
+                            type="tel"
+                            value={profile.mobile}
+                            onChange={handleMobileChange}
+                            maxLength={10}
+                            className={`block w-full p-2 rounded-md shadow-sm ${errors.mobile ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} sm:text-sm`}
+                          />
+                          {errors.mobile && <p className="mt-2 text-sm text-red-600">{errors.mobile}</p>}
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-6">
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                          Address
+                        </label>
+                        <div className="mt-1">
+                          <textarea
+                            id="address"
+                            name="address"
+                            rows={3}
+                            value={profile.address}
+                            onChange={handleChange}
+                            className={`block w-full p-2 rounded-md shadow-sm ${errors.address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} sm:text-sm`}
+                          />
+                          {errors.address && <p className="mt-2 text-sm text-red-600">{errors.address}</p>}
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label htmlFor="lastName" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Last Name</label>
-                      <input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        value={profile.lastName}
-                        onChange={handleChange}
-                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.lastName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
-                      />
-                      {errors.lastName && <p className="text-sm text-red-600">{errors.lastName}</p>}
+
+                    <div className="mt-8 flex justify-end space-x-3">
+                      <button
+                        type="button"
+                        onClick={handleCancel}
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-75"
+                      >
+                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Save
+                      </button>
                     </div>
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Email</label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={profile.email}
-                        onChange={handleChange}
-                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
-                      />
-                      {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="mobile" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Mobile</label>
-                      <input
-                        id="mobile"
-                        name="mobile"
-                        type="tel"
-                        value={profile.mobile}
-                        onChange={handleMobileChange}
-                        maxLength={10}
-                        className={`block w-full h-10 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.mobile ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
-                      />
-                      {errors.mobile && <p className="text-sm text-red-600">{errors.mobile}</p>}
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <label htmlFor="address" className="block text-sm font-medium" style={{ color: colors.primaryDarker }}>Address</label>
-                      <textarea
-                        id="address"
-                        name="address"
-                        rows={3}
-                        value={profile.address}
-                        onChange={handleChange}
-                        className={`block w-full h-20 px-2 rounded-md border shadow-sm focus:ring-2 focus:ring-offset-2 sm:text-sm ${errors.address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[#384D89] focus:ring-[#384D89]'}`}
-                      />
-                      {errors.address && <p className="text-sm text-red-600">{errors.address}</p>}
-                    </div>
-                  </div>
+                  </form>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                    <InfoItem icon={User} label="Full Name" value={`${profile.firstName} ${profile.lastName}`} primaryColor={colors.primaryDarker} />
-                    <InfoItem icon={Mail} label="Email Address" value={profile.email} primaryColor={colors.primaryDarker} />
-                    <InfoItem icon={Phone} label="Mobile Number" value={profile.mobile} primaryColor={colors.primaryDarker} />
-                    <InfoItem icon={MapPin} label="Address" value={profile.address || "Not provided"} primaryColor={colors.primaryDarker} />
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
+                      <InfoItem icon={User} label="Full Name" value={`${profile.firstName} ${profile.lastName}`} />
+                      <InfoItem icon={Mail} label="Email Address" value={profile.email} />
+                      <InfoItem icon={Phone} label="Mobile Number" value={profile.mobile} />
+                      <InfoItem icon={MapPin} label="Address" value={profile.address || "Not provided"} />
+                    </div>
                   </div>
                 )}
               </div>
-              {isEditing && (
-                <div className="px-6 py-3 bg-gray-50 text-right border-t border-gray-200">
-                  <div className="flex justify-end gap-2">
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                      style={{ borderColor: colors.primary, color: colors.primary, focusRingColor: colors.primary }}
-                      onClick={handleCancel}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-75 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: colors.primary, hoverBackgroundColor: colors.primaryDark, focusRingColor: colors.primary }}
-                    >
-                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
-        </div>
-        
-        <div className={activeTab === 'orders' ? 'block' : 'hidden'}>
-          <OrderPage />
+            </div>
+          ) : (
+            <OrderPage />
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-function InfoItem({ icon: Icon, label, value, primaryColor }) {
+function InfoItem({ icon: Icon, label, value }) {
   return (
-    <div className="flex items-start gap-3">
-      <Icon className="h-5 w-5 mt-0.5" style={{ color: primaryColor }} />
-      <div>
-        <p className="font-medium" style={{ color: primaryColor }}>{label}</p>
-        <p className="text-gray-500">{value}</p>
+    <div className="flex items-start">
+      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-50 flex items-center justify-center">
+        <Icon className="h-5 w-5 text-indigo-600" />
+      </div>
+      <div className="ml-4">
+        <dt className="text-sm font-medium text-gray-500">{label}</dt>
+        <dd className="mt-1 text-sm text-gray-900">{value}</dd>
       </div>
     </div>
   )

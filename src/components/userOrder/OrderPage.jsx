@@ -1,16 +1,28 @@
 import { useState, useEffect } from "react";
-import { FaSpinner, FaBox } from "react-icons/fa";
+import { FaSpinner, FaBox, FaChevronRight } from "react-icons/fa";
+import { FiPackage, FiCalendar, FiDollarSign, FiHash } from "react-icons/fi";
 
-// Color palette
-const colors = {
-  primary: '#384D89',
-  primaryDark: '#2A4172',
-  primaryDarker: '#1B2E4F',
-  primaryDarkest: '#14263F',
-  secondary: '#A13C78',
-  secondaryDark: '#872D67',
-  secondaryDarker: '#681853',
-  accent: '#C1467F'
+const statusColors = {
+  pending: {
+    bg: "bg-amber-100",
+    text: "text-amber-800",
+    icon: "bg-amber-500",
+  },
+  shipped: {
+    bg: "bg-blue-100",
+    text: "text-blue-800",
+    icon: "bg-blue-500",
+  },
+  delivered: {
+    bg: "bg-green-100",
+    text: "text-green-800",
+    icon: "bg-green-500",
+  },
+  cancelled: {
+    bg: "bg-red-100",
+    text: "text-red-800",
+    icon: "bg-red-500",
+  },
 };
 
 export default function OrdersPage() {
@@ -18,7 +30,8 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
- const baseUrliMAGE = import.meta.env.VITE_API_BASE_URL_IMAGE;
+  const baseUrliMAGE = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -48,39 +61,56 @@ export default function OrdersPage() {
   }, [baseUrl]);
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return { bg: 'bg-yellow-100', text: 'text-yellow-800' };
-      case "shipped":
-        return { bg: `bg-[${colors.primary}]/10`, text: `text-[${colors.primary}]` };
-      case "delivered":
-        return { bg: 'bg-green-100', text: 'text-green-800' };
-      case "cancelled":
-        return { bg: 'bg-red-100', text: 'text-red-800' };
-      default:
-        return { bg: 'bg-gray-100', text: 'text-gray-800' };
-    }
+  const formatOrderId = (id) => {
+    return `ORD${id?.slice(0, 4).toUpperCase()}${id?.slice(-4).toUpperCase()}`;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <FaSpinner className="animate-spin text-4xl" style={{ color: colors.primary }} />
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <div className="flex flex-col items-center">
+          <FaSpinner className="animate-spin text-4xl text-indigo-600 mb-4" />
+          <p className="text-gray-600">Loading your orders...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-          <p className="font-bold">Error</p>
-          <p>{error}</p>
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <div className="max-w-md p-6 bg-white rounded-lg shadow-md">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+              <svg
+                className="w-8 h-8 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Error loading orders
+            </h3>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -88,77 +118,150 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <FaBox className="mx-auto text-5xl text-gray-400 mb-4" />
-          <h2 className="text-2xl font-semibold" style={{ color: colors.primaryDarker }}>
-            No orders found
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <div className="max-w-md p-8 text-center">
+          <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FaBox className="text-3xl text-indigo-600" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            No orders yet
           </h2>
-          <p className="text-gray-500 mt-2">You haven't placed any orders yet.</p>
+          <p className="text-gray-500 mb-6">
+            You haven't placed any orders. Start shopping to see your orders here.
+          </p>
+          <button
+            onClick={() => (window.location.href = "/products")}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Browse Products
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold" style={{ color: colors.primaryDarker }}>Your Orders</h2>
-        <p className="text-gray-500">A list of your recent orders.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Your Orders</h1>
+        <p className="mt-2 text-gray-600">
+          View the status of your recent orders and manage returns
+        </p>
       </div>
-      <div className="p-6">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
+
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+        <div className="hidden md:grid grid-cols-12 bg-gray-50 px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider">
+          <div className="col-span-5">Products</div>
+          <div className="col-span-2 flex items-center">
+            <FiHash className="mr-2" /> Order ID
+          </div>
+          <div className="col-span-2 flex items-center">
+            <FiCalendar className="mr-2" /> Date
+          </div>
+          <div className="col-span-2 flex items-center">
+            <FiPackage className="mr-2" /> Status
+          </div>
+          <div className="col-span-1 flex items-center justify-end">
+            <FiDollarSign className="mr-2" /> Total
+          </div>
+        </div>
+
+        <div className="divide-y divide-gray-200">
+          {orders.map((order) => {
+            const status = order.status.toLowerCase();
+            const statusColor = statusColors[status] || statusColors.pending;
+
+            return (
+              <div
+                key={order._id}
+                className="grid grid-cols-1 md:grid-cols-12 px-6 py-4 hover:bg-gray-50 transition-colors"
+              >
+                <div className="col-span-5 mb-4 md:mb-0">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex -space-x-2">
                       {order.products?.slice(0, 3).map((item, index) => (
-                        <div key={index} className="relative">
+                        <div
+                          key={index}
+                          className="relative h-12 w-12 rounded-md border-2 border-white shadow-sm"
+                        >
                           <img
-                            src={`baseUrliMAGE${item.product?.images?.[0]}`}
-                            alt={item.product?.productName || 'Product'}
-                            className="h-12 w-12 rounded-md object-cover border border-gray-200"
+                            src={`${baseUrliMAGE}${item.product?.images?.[0]}`}
+                            alt={item.product?.productName || "Product"}
+                            className="h-full w-full object-cover rounded-md"
                           />
-                          {index === 2 && order.products.length > 3 && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md text-white text-xs font-bold">
-                              +{order.products.length - 3}
-                            </div>
-                          )}
                         </div>
                       ))}
+                      {order.products?.length > 3 && (
+                        <div className="relative h-12 w-12 rounded-md border-2 border-white bg-gray-100 shadow-sm flex items-center justify-center">
+                          <span className="text-xs font-medium text-gray-600">
+                            +{order.products.length - 3}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {`ORD${order._id?.slice(0, 4).toUpperCase()}`}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {order.products?.length} item
+                        {order.products?.length !== 1 ? "s" : ""}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {order.products?.[0]?.product?.productName}
+                        {order.products?.length > 1 && " and more"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-2 mb-3 md:mb-0">
+                  <div className="md:hidden text-xs font-medium text-gray-500 uppercase mb-1">
+                    Order ID
+                  </div>
+                  <div className="flex items-center text-sm text-gray-900">
+                    {formatOrderId(order._id)}
+                  </div>
+                </div>
+
+                <div className="col-span-2 mb-3 md:mb-0">
+                  <div className="md:hidden text-xs font-medium text-gray-500 uppercase mb-1">
+                    Date
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
                     {formatDate(order.createdAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status).bg} ${getStatusColor(order.status).text}`}
+                  </div>
+                </div>
+
+                <div className="col-span-2 mb-3 md:mb-0">
+                  <div className="md:hidden text-xs font-medium text-gray-500 uppercase mb-1">
+                    Status
+                  </div>
+                  <div className="flex items-center">
+                    <div
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColor.bg} ${statusColor.text}`}
                     >
+                      <span
+                        className={`w-2 h-2 rounded-full ${statusColor.icon} mr-2`}
+                      ></span>
                       {order.status}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-1">
+                  <div className="md:hidden text-xs font-medium text-gray-500 uppercase mb-1">
+                    Total
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <span className="text-sm font-medium text-gray-900">
+                      ₹{order.totalAmount?.toFixed(2)}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-                    ₹{order.totalAmount?.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <button className="ml-2 p-1 text-gray-400 hover:text-gray-600 md:hidden">
+                      <FaChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
