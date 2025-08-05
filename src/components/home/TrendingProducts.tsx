@@ -408,7 +408,7 @@ const TrendingProducts = ({
                             {/* Add to Cart Button */}
                             <button
                               onClick={() => handleAddToCart(product)}
-                              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                              className="w-full bg-[#9D3089]  text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
                             >
                               <ShoppingCart size={16} />
                               Add to Cart
@@ -440,7 +440,7 @@ const TrendingProducts = ({
         <div className="text-center mt-12">
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+            className="inline-flex items-center gap-2 bg-[#9D3089] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
           >
             View All Products
             <ArrowRight size={16} />
