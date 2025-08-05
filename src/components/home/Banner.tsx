@@ -161,15 +161,15 @@ const Banner: React.FC = () => {
                 <div className="relative overflow-hidden">
                   <img
                     // src={`https://api.jajamblockprints.com${item.images[0]}`}
-                              src={`${Image_BaseURL}${item.images[0]}`}
+                              src={item.images[0]}
                     alt={item.bannerName}
                     className="w-full h-auto object-cover transition-transform duration-[6000ms] ease-out group-hover:scale-105"
                     loading="eager"
                   />
 
                   {/* Tech Overlay Effects */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  {/* <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div> */}
 
                   {/* Animated Tech Lines */}
                   <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 animate-pulse"></div>
