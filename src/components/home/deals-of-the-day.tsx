@@ -4,11 +4,17 @@ import { useEffect, useState } from "react"
 import {
   ChevronLeft, ChevronRight, Grid3X3, Eye, Heart, ShoppingCart, Star, Check
 } from "lucide-react"
+import { addItemToCart } from "../../reduxslice/CartSlice"
+import { useDispatch } from "react-redux"
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
 const DealsOfTheDay = () => {
+    const dispatch = useDispatch()
+      const [addedProduct, setAddedProduct] = useState<any>(null)
+    const [isPopupVisible, setIsPopupVisible] = useState(false)  
+  
   const [currentSlide, setCurrentSlide] = useState(0)
   const [deals, setDeals] = useState([])
   const [dealTimers, setDealTimers] = useState({})
@@ -82,8 +88,65 @@ const DealsOfTheDay = () => {
       <Star key={i} size={14} className={`${i < rating ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}`} />
     ))
   }
+const handleAddToCart = (e: React.MouseEvent, deal: any) => {
+  console.log("Adding to cart:", deal)
+  e.preventDefault();
+  e.stopPropagation();
+
+  const token = localStorage.getItem("token");
+
+  const cartItem = {
+    id: deal._id,
+    name: deal.productName,
+    image: deal.images?.[0] || "",
+    category: deal.category?.name || "Uncategorized",
+    price: deal.actualPrice,
+    quantity: 1,
+  };
+
+  if (!token) {
+    // Guest user: Use localStorage
+    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+    const existingIndex = existingCart.findIndex((item: any) => item.id === deal._id);
+
+    if (existingIndex !== -1) {
+      existingCart[existingIndex].quantity += 1;
+    } else {
+      existingCart.push(cartItem);
+    }
+
+    localStorage.setItem("addtocart", JSON.stringify(existingCart));
+    window.dispatchEvent(new Event("guestCartUpdated"));
+  } else {
+    // Logged-in user: Use Redux
+    dispatch(addItemToCart(cartItem));
+  }
+
+  setAddedProduct(deal);
+  setIsPopupVisible(true);
+  setTimeout(() => {
+    setIsPopupVisible(false);
+  }, 2000);
+};
 
   return (
+    <>
+    {isPopupVisible && addedProduct && (
+              <div className="fixed top-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform translate-x-0 opacity-100 border border-white/20 backdrop-blur-sm">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <ShoppingCart size={18} />
+                    </div>
+                    <div>
+                      <span className="font-bold">Added to Cart!</span>
+                      <p className="text-sm opacity-90">{addedProduct.productName}</p>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            )}
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -207,10 +270,14 @@ const DealsOfTheDay = () => {
               </div>
 
               <div className="space-y-3">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+                <button
+                  onClick={(e) => handleAddToCart(e, deal)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                >
                   <ShoppingCart size={18} />
                   <span>QUICK ADD</span>
                 </button>
+
                 {/* <div className="flex space-x-3">
                   <button className="flex-1 border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                     <Eye size={16} />
@@ -227,6 +294,7 @@ const DealsOfTheDay = () => {
         </div>
       </div>
     </section>
+    </>
   )
 }
 
