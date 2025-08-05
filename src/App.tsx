@@ -44,7 +44,7 @@ import ProfilePage from "./components/userProfile/userProfile";
 import Stories from "./pages/Stories";
 import StoriesDetails from "./pages/Stories-details";
 import ContactPage from "./pages/contactus/ContactPage";
-// import ProfilePage from "./components/userProfile/userProfile";
+ import ProfilePage from "./components/userProfile/userProfile";
 
 function App() {
   const location = useLocation();
@@ -143,11 +143,11 @@ function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/profile" element={<ProfilePage />} />
           {/* <Route path="/profile-page" element={<ProfilePage />} /> */}
-          <Route path="/refund" element={<Refund />} />
-          <Route path="/cancellation_policy" element={<CancellationPolicy />} />
-          <Route path="/terms" element={<Terms />} />
+          <Route path="/return-and-exchanges" element={<Refund />} />
+          <Route path="/cancellation-policy" element={<CancellationPolicy />} />
+          <Route path="/terms-and-condition" element={<Terms />} />
           <Route path="/shipping" element={<Shipping />} />
-          <Route path="/Privacy" element={<Privacy />} />
+          <Route path="/privacy-policy" element={<Privacy />} />
           <Route path="/contact-us" element={<ContactPage />} />
           <Route
             path="/address"

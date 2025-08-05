@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Facebook,
   Twitter,
@@ -15,30 +15,30 @@ import {
   Star,
   Users,
   Package,
-} from "lucide-react"
-import { Link } from "react-router-dom"
-import footerLogo from "../../assest/footerLogo.jpg"
-import { useEffect, useState } from "react"
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import footerLogo from "/digihub_footer.png";
+import { useEffect, useState } from "react";
 
 export default function Footer() {
-  const [categories, setCategories] = useState<string[]>([])
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  const [categories, setCategories] = useState<string[]>([]);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
-        const data = await res.json()
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
+        const data = await res.json();
         if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name))
+          setCategories(data.website.categories.map((cat: any) => cat.name));
         }
       } catch (error) {
-        console.error("Failed to fetch categories:", error)
+        console.error("Failed to fetch categories:", error);
       }
-    }
-    fetchCategories()
-  }, [baseUrl, referenceWebsite])
+    };
+    fetchCategories();
+  }, [baseUrl, referenceWebsite]);
 
   const socialLinks = [
     {
@@ -65,14 +65,14 @@ export default function Footer() {
       name: "YouTube",
       color: "#FF0000",
     },
-  ]
+  ];
 
   const trustFeatures = [
     { icon: <Shield size={20} />, text: "Secure Shopping", color: "#10B981" },
     { icon: <Truck size={20} />, text: "Free Shipping", color: "#3B82F6" },
     { icon: <Award size={20} />, text: "Quality Guarantee", color: "#8B5CF6" },
     { icon: <CreditCard size={20} />, text: "Easy Returns", color: "#F59E0B" },
-  ]
+  ];
 
   return (
     <footer className="bg-white border-t border-gray-200">
@@ -91,7 +91,9 @@ export default function Footer() {
                 >
                   {feature.icon}
                 </div>
-                <span className="text-sm font-medium text-gray-700">{feature.text}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {feature.text}
+                </span>
               </div>
             ))}
           </div>
@@ -101,29 +103,44 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+         
           {/* Company Info */}
           <div className="space-y-6">
             <Link to="/" className="inline-block">
-              <img src={footerLogo || "/placeholder.svg"} alt="Company Logo" className="h-12 w-auto" />
+              <img
+                src={footerLogo || "/placeholder.svg"}
+                alt="Company Logo"
+                className="h-16 w-auto"
+              />
             </Link>
 
             <div className="space-y-4">
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Your trusted partner for premium quality products. We deliver excellence with every purchase.
+              <p className="text-sm leading-relaxed text-gray-600">
+                Your trusted partner for premium quality products. We deliver
+                excellence with every purchase.
               </p>
 
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                   <Mail size={16} className="text-gray-400" />
-                  <span>support@company.com</span>
+                  <a href="mailto:info@digihub.com" className="hover:underline">
+                    info@digihub.com
+                  </a>
                 </div>
+
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                   <Phone size={16} className="text-gray-400" />
-                  <span>+1 (555) 123-4567</span>
+                  <a href="tel:01414511098" className="hover:underline">
+                    0141-4511098
+                  </a>
                 </div>
+
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
-                  <MapPin size={16} className="text-gray-400" />
-                  <span>123 Business Street, City</span>
+                  <MapPin size={46} className="text-gray-400" />
+                  <span>
+                    Plot No. 97, Dakshinpuri-I, Shrikishanpura, Sanganer,
+                    Jagatpura, Jaipur – 302017, Rajasthan
+                  </span>
                 </div>
               </div>
             </div>
@@ -156,11 +173,13 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">Customer Service</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Customer Service
+            </h3>
             <div className="space-y-3">
               {[
                 { title: "Help Center", path: "/help" },
-                { title: "Contact Us", path: "/contact" },
+                { title: "Contact Us", path: "/contact-us" },
                 { title: "Shipping Info", path: "/shipping" },
                 { title: "Returns", path: "/returns" },
                 { title: "Size Guide", path: "/size-guide" },
@@ -202,12 +221,15 @@ export default function Footer() {
         </div>
 
         {/* Newsletter Section */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        {/* <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Stay Updated</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Stay Updated
+              </h3>
               <p className="text-gray-600 text-sm">
-                Subscribe to our newsletter for exclusive offers, new arrivals, and style tips.
+                Subscribe to our newsletter for exclusive offers, new arrivals,
+                and style tips.
               </p>
             </div>
             <div className="flex space-x-3">
@@ -221,7 +243,7 @@ export default function Footer() {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Social Media & Reviews */}
         <div className="mt-8 pt-8 border-t border-gray-200">
@@ -237,15 +259,15 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:text-white hover:border-transparent transition-all duration-200"
                   style={{
-                    ":hover": { backgroundColor: social.color },
+                    hover: { backgroundColor: social.color },
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = social.color
-                    e.currentTarget.style.color = "white"
+                    e.currentTarget.style.backgroundColor = social.color;
+                    e.currentTarget.style.color = "white";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent"
-                    e.currentTarget.style.color = "#6B7280"
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "#6B7280";
                   }}
                 >
                   {social.icon}
@@ -258,7 +280,11 @@ export default function Footer() {
               <div className="flex items-center space-x-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className="fill-yellow-400 stroke-yellow-400" />
+                    <Star
+                      key={i}
+                      size={14}
+                      className="fill-yellow-400 stroke-yellow-400"
+                    />
                   ))}
                 </div>
                 <span>4.8/5 Rating</span>
@@ -278,11 +304,17 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-600">© {new Date().getFullYear()} Your Company. All rights reserved.</p>
+            <p className="text-sm text-gray-600">
+              © {new Date().getFullYear()} Your Company. All rights reserved.
+            </p>
             <div className="flex space-x-6 text-sm">
               {[
-                { title: "Privacy Policy", path: "/privacy" },
-                { title: "Terms of Service", path: "/terms" },
+                { title: "Shipping Policy", path: "/shipping" },
+                { title: "Return & Exchanges", path: "/return-and-exchanges" },
+                { title: "Terms & Condition", path: "/terms-and-condition" },
+                { title: "Privacy Policy", path: "/privacy-policy" },
+                { title: "Cancellation Policy", path: "/cancellation-policy" },
+
                 { title: "Cookie Policy", path: "/cookies" },
               ].map((item, index) => (
                 <Link
@@ -298,5 +330,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

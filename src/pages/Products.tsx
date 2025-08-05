@@ -136,53 +136,49 @@ const handleBrandChange = (Brand: string) => {
               <span>Reset</span>
             </button> */}
             <div className="flex items-center gap-3">
-  <button
-    onClick={() => setViewMode("grid")}
-    className={`p-2 rounded-md border ${
-      viewMode === "grid"
-        ? "bg-[#9D3089] text-white border-[#9D3089]"
-        : "bg-white text-gray-600 border-gray-300"
-    }`}
-    title="Grid View"
-  >
-    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-      <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
-    </svg>
-  </button>
-  <button
-    onClick={() => setViewMode("list")}
-    className={`p-2 rounded-md border ${
-      viewMode === "list"
-        ? "bg-[#9D3089] text-white border-[#9D3089]"
-        : "bg-white text-gray-600 border-gray-300"
-    }`}
-    title="List View"
-  >
-    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-      <path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  </button>
-</div>
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-2 rounded-md border ${
+                  viewMode === "grid"
+                    ? "bg-[#9D3089] text-white border-[#9D3089]"
+                    : "bg-white text-gray-600 border-gray-300"
+                }`}
+                title="Grid View"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-2 rounded-md border ${
+                  viewMode === "list"
+                    ? "bg-[#9D3089] text-white border-[#9D3089]"
+                    : "bg-white text-gray-600 border-gray-300"
+                }`}
+                title="List View"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
 
-            <button
+            {/* <button
               onClick={() => {}}
               className="flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
               style={{ background: "rgb(157 48 137)" }}
             >
               <Sliders className="h-4 w-4" />
               <span>Filters</span>
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div
-            className={`lg:w-80 space-y-6 ${
-              showFilters
-                ? "fixed inset-0 z-50 bg-white p-6 overflow-y-auto"
-                : "hidden lg:block bg-white rounded-xl shadow-sm p-6 border border-gray-100"
-            }`}
+            className={`lg:w-80 space-y-6 `}
           >
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold" style={{ color: "#1B2E4F" }}>
@@ -350,7 +346,7 @@ const handleBrandChange = (Brand: string) => {
                 </button> */}
               </div>
 ) : viewMode === "grid" ? (
-  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
     {filteredProducts.map((product) => (
       <ProductCard key={product._id} product={product} />
     ))}
@@ -366,7 +362,7 @@ const handleBrandChange = (Brand: string) => {
 )}
 
 
-          )
+          
           </div>
         </div>
       </div>
