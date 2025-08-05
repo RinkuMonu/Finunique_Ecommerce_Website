@@ -804,6 +804,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 </svg>
               </button>
             </div>
+
           </div>
         </div>
       </div>
