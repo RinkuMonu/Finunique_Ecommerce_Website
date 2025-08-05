@@ -12,9 +12,6 @@ import {
   Truck,
   CreditCard,
   Award,
-  Star,
-  Users,
-  Package,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import footerLogo from "/digihub_footer.png";
@@ -115,10 +112,10 @@ export default function Footer() {
             </Link>
 
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-600">
+              {/* <p className="text-sm leading-relaxed text-gray-600">
                 Your trusted partner for premium quality products. We deliver
                 excellence with every purchase.
-              </p>
+              </p> */}
 
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
@@ -178,12 +175,13 @@ export default function Footer() {
             </h3>
             <div className="space-y-3">
               {[
-                { title: "Help Center", path: "/help" },
-                { title: "Contact Us", path: "/contact-us" },
-                { title: "Shipping Info", path: "/shipping" },
-                { title: "Returns", path: "/returns" },
-                { title: "Size Guide", path: "/size-guide" },
-                { title: "Track Order", path: "/track" },
+                { title: "Shipping Policy", path: "/shipping" },
+                { title: "Return & Exchanges", path: "/return-and-exchanges" },
+                { title: "Terms & Condition", path: "/terms-and-condition" },
+                { title: "Privacy Policy", path: "/privacy-policy" },
+                { title: "Cancellation Policy", path: "/cancellation-policy" },
+
+                { title: "Cookie Policy", path: "/cookies" },
               ].map((item, index) => (
                 <Link
                   key={index}
@@ -201,12 +199,13 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-900">Company</h3>
             <div className="space-y-3">
               {[
+                { title: "Home", path: "/" },
                 { title: "About Us", path: "/about" },
-                { title: "Careers", path: "/careers" },
-                { title: "Press", path: "/press" },
-                { title: "Blog", path: "/blog" },
-                { title: "Affiliate Program", path: "/affiliate" },
-                { title: "Wholesale", path: "/wholesale" },
+                { title: "WishList", path: "/wishlist" },
+                // { title: "Press", path: "/press" },
+                // { title: "Stories", path: "/stories" },
+                { title: "Contact Us", path: "/contact-us" },
+                { title: "Track Order", path: "/profile" },
               ].map((item, index) => (
                 <Link
                   key={index}
@@ -277,7 +276,7 @@ export default function Footer() {
 
             {/* Trust Indicators */}
             <div className="flex items-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -296,38 +295,16 @@ export default function Footer() {
               <div className="flex items-center space-x-2">
                 <Package size={16} className="text-gray-400" />
                 <span>100K+ Orders</span>
-              </div>
+              </div> */}
+               <p className="text-sm text-gray-600">
+              © {new Date().getFullYear()} Your Company. All rights reserved.
+            </p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Your Company. All rights reserved.
-            </p>
-            <div className="flex space-x-6 text-sm">
-              {[
-                { title: "Shipping Policy", path: "/shipping" },
-                { title: "Return & Exchanges", path: "/return-and-exchanges" },
-                { title: "Terms & Condition", path: "/terms-and-condition" },
-                { title: "Privacy Policy", path: "/privacy-policy" },
-                { title: "Cancellation Policy", path: "/cancellation-policy" },
-
-                { title: "Cookie Policy", path: "/cookies" },
-              ].map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+        
       </div>
     </footer>
   );
