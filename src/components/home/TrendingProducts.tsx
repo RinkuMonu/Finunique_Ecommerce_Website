@@ -322,7 +322,7 @@ const TrendingProducts = ({
                                 size={16}
                                 className="text-gray-600 hover:text-red-500"
                               />
-                            </button>
+                            </button> 
 
       {/* Quick View Button */}
       <button
