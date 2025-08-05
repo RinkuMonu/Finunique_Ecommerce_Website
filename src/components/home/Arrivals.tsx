@@ -171,8 +171,8 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     }, 3000)
   }
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  // const baseUrl = import.meta.env.VITE_API_BASE_URL
+  // const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
   useEffect(() => {
     const fetchProducts = async () => {
