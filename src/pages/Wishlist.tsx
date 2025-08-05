@@ -136,7 +136,7 @@ const Wishlist = () => {
                         <img
                           src={
                             item?.product?.images?.[0]
-                              ? `http://api.jajamblockprints.com${item.product.images[0]}`
+                              ? item?.product.images[0]
                               : "/diverse-products-still-life.png"
                           }
                           alt={item?.product?.productName || "No image"}

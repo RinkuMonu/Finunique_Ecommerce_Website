@@ -16,23 +16,24 @@ import {
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 
+
 const FeaturedSections = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [itemsPerSlide, setItemsPerSlide] = useState(8)
 
   const categories = [
-    { icon: <Tablet size={32} />, name: "Tablet", path: "/category/tablet" },
-    { icon: <Smartphone size={32} />, name: "Smartphone", path: "/category/smartphone" },
-    { icon: <Gamepad2 size={32} />, name: "Game Console", path: "/category/gaming" },
-    { icon: <Camera size={32} />, name: "Camera", path: "/category/camera" },
-    { icon: <Watch size={32} />, name: "Smartwatch", path: "/category/smartwatch" },
-    { icon: <Plane size={32} />, name: "Drone & Flycam", path: "/category/drone" },
-    { icon: <Headphones size={32} />, name: "Audio", path: "/category/audio" },
-    { icon: <Monitor size={32} />, name: "Computer", path: "/category/computer" },
-    { icon: <Tablet size={32} />, name: "Gaming Laptop", path: "/category/gaming-laptop" },
-    { icon: <Smartphone size={32} />, name: "Accessories", path: "/category/accessories" },
-    { icon: <Camera size={32} />, name: "Smart Home", path: "/category/smart-home" },
-    { icon: <Watch size={32} />, name: "Wearables", path: "/category/wearables" },
+    { image: "/saree1.webp", name: "Tablet", path: "/category/tablet" },
+    { image: "/saree1.webp", name: "Smartphone", path: "/category/smartphone" },
+    { image: "/saree1.webp", name: "Game Console", path: "/category/gaming" },
+    { image: "/saree1.webp", name: "Camera", path: "/category/camera" },
+    { image: "/saree1.webp", name: "Smartwatch", path: "/category/smartwatch" },
+    { image: "/saree1.webp", name: "Drone & Flycam", path: "/category/drone" },
+    { image: "/saree1.webp", name: "Audio", path: "/category/audio" },
+    { image: "/saree1.webp", name: "Computer", path: "/category/computer" },
+    { image: "/saree1.webp", name: "Gaming Laptop", path: "/category/gaming-laptop" },
+    { image: "/saree1.webp", name: "Accessories", path: "/category/accessories" },
+    { image: "/saree1.webp", name: "Smart Home", path: "/category/smart-home" },
+    { image: "/saree1.webp", name: "Wearables", path: "/category/wearables" },
   ]
 
   // Responsive items per slide
@@ -63,6 +64,7 @@ const FeaturedSections = () => {
 
     return () => clearInterval(interval)
   }, [categories.length, itemsPerSlide])
+
 
   const maxSlides = Math.ceil(categories.length / itemsPerSlide)
 
@@ -109,18 +111,68 @@ const FeaturedSections = () => {
                     {categories
                       .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
                       .map((category, index) => (
+                        // <Link
+                        //   key={`${slideIndex}-${index}`}
+                        //   to={category.path}
+                        //   className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group text-center transform hover:scale-105"
+                        //   style={{ animationDelay: `${index * 100}ms` }}
+                        // >
+                        //   <div className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200 mb-3 flex justify-center">
+                        //     {category.icon}
+                        //   </div>
+                        //   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
+                        //     {category.name}
+                        //   </span>
+                        // </Link>
                         <Link
-                          key={`${slideIndex}-${index}`}
-                          to={category.path}
-                          className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group text-center transform hover:scale-105"
-                          style={{ animationDelay: `${index * 100}ms` }}
+                          key={category.name}
+                          to={`/category/${category.name}`}
+                          className="group block py-2"
                         >
-                          <div className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200 mb-3 flex justify-center">
-                            {category.icon}
+                          <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#A13C78]/30 transform hover:-translate-y-2 relative h-full">
+                            {/* Image Section with Gradient Overlay */}
+                            <div className="relative h-28 overflow-hidden">
+                              <img
+                                src={category.image || "/placeholder.svg"}
+                                alt={category.name}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              />
+
+                              {/* Gradient Overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-[#1B2E4F]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                              {/* Hover Action Button */}
+                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <button className="w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-[#384D89] hover:text-[#C1467F] hover:scale-110 transition-all duration-300">
+                                  <ChevronRight size={20} strokeWidth={2} />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Content Section */}
+                            <div className="p-5 relative z-10">
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-bold text-lg text-[#1B2E4F] group-hover:text-[#384D89] transition-colors">
+                                  {category.name}
+                                </h3>
+
+                                {/* Optional: Product Count Badge */}
+                                {category.count && (
+                                  <span className="text-xs font-medium bg-[#2A4172]/10 text-[#2A4172] px-2 py-1 rounded-full">
+                                    {category.count} items
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Optional: Category Description (uncomment if needed) */}
+                              {/* <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+        {category.description}
+      </p> */}
+                            </div>
+
+                            {/* Accent Border on Hover */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#A13C78] to-[#C1467F] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           </div>
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
-                            {category.name}
-                          </span>
                         </Link>
                       ))}
                   </div>
@@ -135,9 +187,8 @@ const FeaturedSections = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                  currentSlide === index ? "bg-blue-600 w-6" : "bg-gray-300"
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${currentSlide === index ? "bg-blue-600 w-6" : "bg-gray-300"
+                  }`}
               />
             ))}
           </div>

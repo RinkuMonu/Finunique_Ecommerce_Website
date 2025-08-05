@@ -7,6 +7,7 @@ import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
 import { addItemToCart } from "../../reduxslice/CartSlice"
 import LoginModal from "../loginModal/LoginModal"
 import Login1 from "../../pages/Login1"
+import { Link } from "react-router-dom"
 
 interface Product {
   _id: string
@@ -111,7 +112,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
 
   if (listView) {
     return (
-      <div className="group flex gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#9D3089]/40">
+      <Link to={`/product/${product?._id}`} className="group flex gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#9D3089]/40">
         {/* Image Section */}
         <div className="relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
           {!imageLoaded && (
@@ -180,7 +181,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
             <span className="text-sm font-medium">Added to wishlist!</span>
           </div>
         )}
-      </div>
+      </Link>
      )
 
   }
@@ -205,7 +206,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           </div>
         </div>
       )}
-      <div
+     <Link to={`/product/${product?._id}`} 
         className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-200 hover:border-[#9D3089]/50 overflow-hidden hover:-translate-y-1 "
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -301,7 +302,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
             <span className="text-sm font-medium">Added to wishlist!</span>
           </div>
         )}
-      </div>
+      </Link>
        {showLoginModal && (
           <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
             <Login1 />
