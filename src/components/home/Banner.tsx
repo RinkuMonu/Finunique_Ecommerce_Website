@@ -37,7 +37,7 @@ const Banner: React.FC = () => {
   }, [banners])
 
   // ✅ Fetch categories
-  useEffect(() => {
+  useEffect(() => { 
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
@@ -99,7 +99,7 @@ const Banner: React.FC = () => {
 
 
   const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
-
+console.log(banners)
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -160,8 +160,10 @@ const Banner: React.FC = () => {
                 {/* Image with overlay effects */}
                 <div className="relative overflow-hidden">
                   <img
+
                     // src={`https://api.jajamblockprints.com${item.images[0]}`}
                               src={item.images[0]}
+
                     alt={item.bannerName}
                     className="w-full h-auto object-cover transition-transform duration-[6000ms] ease-out group-hover:scale-105"
                     loading="eager"
