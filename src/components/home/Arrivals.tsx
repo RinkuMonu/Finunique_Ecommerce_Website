@@ -19,6 +19,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [itemsPerSlide, setItemsPerSlide] = useState(4)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const dispatch = useDispatch()
+console.log(selectedProduct);
 
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -257,7 +258,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                         <div className="relative aspect-square overflow-hidden bg-gray-50">
                           <img
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            src={`${Image_BaseURL}${product.images}`}
+                            src={product.images[0] }
                             alt={product.productName}
                           />
 
@@ -435,8 +436,8 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px] shadow-lg"
-                  src={`${Image_BaseURL}${selectedProduct.images}`}
-                  alt={selectedProduct.productName}
+                  src={selectedProduct?.images[0] }
+                  alt={selectedProduct?.productName}
                 />
               </div>
 
