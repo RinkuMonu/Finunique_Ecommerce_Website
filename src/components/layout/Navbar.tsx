@@ -98,6 +98,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   );
 
   const [groupedCategories, setGroupedCategories] = useState({});
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [hoveredSubcategory, setHoveredSubcategory] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -105,14 +107,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
 
-        // Group items by subcategory
         const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
-          data?.website?.categories.forEach((item) => {
+          data.website.categories.forEach((item) => {
             const sub = item?.subcategory;
             if (!grouped[sub]) grouped[sub] = [];
             grouped[sub].push(item);
-            console.log(data);
           });
         }
 
@@ -387,7 +387,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     </div>
   );
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(null);
+  // const [activeCategory, setActiveCategory] = useState(null);
 
   const categoriess = [
     {
@@ -665,73 +665,72 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
               {/* Collection Dropdown */}
               {isCollectionOpen && (
-                <div className="absolute left-0 top-[50px] mt-2 w-full min-w-[800px] bg-white rounded-md shadow-xl z-50 border">
+                <div className="absolute left-0 top-[45px] mt-2 w-full min-w-[800px] bg-white rounded-md shadow-xl z-50 border">
                   <div className="p-6">
                     <div className="flex">
                       {/* Category List - Left Panel */}
                       <div className="w-1/4 border-r border-gray-200 pr-4">
-                        {categoriess.map((category, index) => (
-                          <div
-                            key={index}
-                            className="mb-4"
-                            onMouseEnter={() => setActiveCategory(index)}
-                          >
-                            <div className="border-b border-gray-200 pb-3">
-                              <a
-                                href="#"
-                                className={`flex items-center font-semibold text-gray-800 hover:text-[#A13C78] transition-colors duration-200 ${
-                                  activeCategory === index
-                                    ? "text-[#A13C78]"
-                                    : ""
-                                }`}
-                              >
-                                <span className="text-lg">{category.name}</span>
-                                {category.items.length > 0 && (
-                                  <ChevronRight className="w-4 h-4 ml-2" />
-                                )}
-                              </a>
+                        {Object.entries(groupedCategories).map(
+                          ([subcategory, items], index) => (
+                            <div
+                              key={index}
+                              className="mb-4"
+                              onMouseEnter={() => setActiveCategory(index)}
+                            >
+                              <div className="border-b border-gray-200 pb-3">
+                                <a
+                                  href="#"
+                                  className={`flex items-center font-semibold text-gray-800 hover:text-[#A13C78] transition-colors duration-200 ${
+                                    activeCategory === index
+                                      ? "text-[#A13C78]"
+                                      : ""
+                                  }`}
+                                >
+                                  <span className="text-lg">{subcategory}</span>
+                                  {items?.length > 0 && (
+                                    <ChevronRight className="w-4 h-4 ml-2" />
+                                  )}
+                                </a>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
 
                       {/* Subcategory Panel - Right Panel */}
                       <div className="w-3/4 pl-6">
-                        {activeCategory !== null &&
-                          categoriess[activeCategory].items.length > 0 && (
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                              {categoriess[activeCategory].items.map(
-                                (item, itemIndex) => (
-                                  <div
-                                    key={itemIndex}
-                                    className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
-                                  >
-                                    <div className="mr-4 bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                                      {item.icon ? (
-                                        <img
-                                          src={item.icon || "/placeholder.svg"}
-                                          alt={item.name}
-                                          className="w-12 h-12 object-contain"
-                                        />
-                                      ) : (
-                                        <div className="w-12 h-12 flex items-center justify-center text-gray-400">
-                                          <ImageIcon className="w-8 h-8" />
-                                        </div>
-                                      )}
+                        {activeCategory !== null && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {Object.values(groupedCategories)[
+                              activeCategory
+                            ]?.map((item, itemIndex) => (
+                              <Link to={`/category/${item.name}`}
+                                key={itemIndex}
+                                className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
+                              >
+                                <div className="mr-4 bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                  {item.image ? (
+                                    <img
+                                      src={item?.image}
+                                      alt={item?.name}
+                                      className="w-12 h-12 object-contain"
+                                    />
+                                  ) : (
+                                    <div className="w-12 h-12 flex items-center justify-center text-gray-400">
+                                      <ImageIcon className="w-8 h-8" />
                                     </div>
-                                    <div className="flex-1">
-                                      <div className="font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
-                                        <a href="#">{item.name}</a>
-                                      </div>
-                                      <div className="text-gray-500 text-sm mt-1">
-                                        {item.price}
-                                      </div>
-                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
+                                    {item?.name}
                                   </div>
-                                )
-                              )}
-                            </div>
-                          )}
+                                 
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -744,45 +743,45 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <nav>
                 <ul className="flex space-x-8 justify-center">
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to={"/"}
                       className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
                     >
                       HOME
-                    </a>
+                    </Link>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      COLLECTIONS
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      PRODUCTS
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      OTHER PAGES
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      BLOG PAGES
-                    </a>
-                  </li>
+                  {Object.entries(groupedCategories).map(
+                    ([subcategory, items], index) => (
+                      <li
+                        key={index}
+                        className="relative group"
+                        onMouseEnter={() => setHoveredSubcategory(subcategory)}
+                        onMouseLeave={() => setHoveredSubcategory(null)}
+                      >
+                        <span className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide cursor-pointer">
+                          {subcategory}
+                        </span>
+
+                        {/* Dropdown Panel */}
+                        {hoveredSubcategory === subcategory && (
+                          <div className="absolute left-0 top-[20px] mt-2 w-auto bg-white shadow-xl rounded-md z-50 p-6">
+                            <div className="grid grid-cols-2 gap-4">
+                              {items.map((item, itemIndex) => (
+                               <Link to={`/category/${item.name}`}
+                                  key={itemIndex}
+                                  className=" p-2 hover:bg-gray-100 rounded cursor-pointer"
+                                >
+                                  <div className=" flex flex-col font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
+                                   {item.name}
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    )
+                  )}
                 </ul>
               </nav>
             </div>

@@ -43,10 +43,8 @@ import AboutUs from "./pages/AboutUs";
 import Stories from "./pages/Stories";
 import StoriesDetails from "./pages/Stories-details";
 import ContactPage from "./pages/contactus/ContactPage";
-<<<<<<< HEAD
-=======
+
  import ProfilePage from "./components/userProfile/userProfile";
->>>>>>> 20733bdaf77989153f7e7b7673d105b9ab40954e
 
 function App() {
   const location = useLocation();
