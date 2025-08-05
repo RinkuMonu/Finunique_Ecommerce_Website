@@ -41,7 +41,7 @@ import WhatsAppButton from "./pages/WhatsAppButton";
 import LoginModal from "./components/loginModal/LoginModal";
 import AboutUs from "./pages/AboutUs";
 
-import ProfilePage from "./components/userProfile/userProfile";
+// import ProfilePage from "./components/userProfile/userProfile";
 
 import Stories from "./pages/Stories";
 import StoriesDetails from "./pages/Stories-details";
