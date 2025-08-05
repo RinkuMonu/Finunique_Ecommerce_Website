@@ -209,7 +209,7 @@ const HowItWorks = () => {
 </div>
       </div>
     </section>
-  )
+  ) 
 }
 
 export default HowItWorks
