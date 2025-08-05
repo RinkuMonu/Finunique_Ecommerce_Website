@@ -29,10 +29,10 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(
-          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
+
+const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`);
+        const data = await res.json()
+
         if (Array.isArray(data.products)) {
           setProducts(data.products);
           console.log(data);
