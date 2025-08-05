@@ -500,14 +500,14 @@ export default function Login1() {
               <h2 className="text-4xl font-bold text-white mb-4">
                 {isLogin ? "Welcome back!" : "Create your account"}
               </h2>
-              <p className="text-[#A13C78] text-lg">
+              <p className="text-white text-lg">
                 {isLogin
                   ? "Sign in to access your personalized dashboard."
                   : "Join our community to unlock exclusive features."}
               </p>
             </motion.div>
             <img
-              src="https://img.freepik.com/free-vector/secure-login-concept-illustration_114360-4585.jpg"
+              src="./LOGIN1.png"
               alt="Security"
               className="w-full max-w-md object-contain mt-10 hidden md:block"
             />
