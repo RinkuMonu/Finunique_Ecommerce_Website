@@ -211,7 +211,7 @@ const DealsOfTheDay = () => {
                   <ShoppingCart size={18} />
                   <span>QUICK ADD</span>
                 </button>
-                <div className="flex space-x-3">
+                {/* <div className="flex space-x-3">
                   <button className="flex-1 border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                     <Eye size={16} />
                     <span>Quick View</span>
@@ -220,7 +220,7 @@ const DealsOfTheDay = () => {
                     <Heart size={16} />
                     <span>Add To Wishlist</span>
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
