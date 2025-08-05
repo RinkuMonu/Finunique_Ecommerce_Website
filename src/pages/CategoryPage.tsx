@@ -149,25 +149,28 @@ const handleSizeChange = (size: string) => {
               <X className="h-4 w-4" />
               <span>Reset</span>
             </button> */}
-            <button
+            {/* <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
               style={{ background: "rgb(157 48 137)" }}
             >
               <Sliders className="h-4 w-4" />
               <span>Filters</span>
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
-          <div
+           {/* <div
             className={`lg:w-80 space-y-6 ${
               showFilters
                 ? "fixed inset-0 z-50 bg-white p-6 overflow-y-auto"
                 : "hidden lg:block bg-white rounded-xl shadow-sm p-6 border border-gray-100"
             }`}
+          > */}
+          <div
+            className={`lg:w-80 space-y-6 `}
           >
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold" style={{ color: "#1B2E4F" }}>
@@ -335,7 +338,7 @@ const handleSizeChange = (size: string) => {
                 </button> */}
               </div>
             ) : (
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
