@@ -1,6 +1,7 @@
 "use client"
 
 import { Search, Palette, ShoppingBag, ArrowRight, CheckCircle } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const HowItWorks = () => {
   const steps = [
@@ -200,9 +201,9 @@ const HowItWorks = () => {
     
     <div className="mt-12 text-center">
       <p className="text-gray-500 mb-4">Still have questions?</p>
-      <button className="bg-gradient-to-r from-[#A13C78] to-[#C1467F] text-white font-medium py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-[#C1467F]/30 transition-all duration-300">
+      <Link to={"/contact-us"} className="bg-gradient-to-r from-[#A13C78] to-[#C1467F] text-white font-medium py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-[#C1467F]/30 transition-all duration-300">
         Contact Support
-      </button>
+      </Link>
     </div>
   </div>
 </div>
