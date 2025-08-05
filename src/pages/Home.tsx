@@ -8,6 +8,8 @@ import HowItWorks from "../components/home/HowItWorks";
 import DeliveryFeatures from "../components/home/DeliveryFeatures";
 import axios from "axios";
 import { useEffect } from "react";
+import FeaturedSections from "../components/home/featured-sections";
+import DealsOfTheDay from "../components/home/deals-of-the-day";
 
 interface HomeProps {
   addToCart: (product: Product) => void;
@@ -68,7 +70,9 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
   return (
     <>
       <Banner />
+      <FeaturedSections />
       <TrendingProducts addToCart={addToCart} /> {/* Pass addToCart here */}
+      <DealsOfTheDay />
       <Arrivals addToCart={addToCart} />
       <TopCategories />
 

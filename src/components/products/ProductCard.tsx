@@ -127,6 +127,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
     ))
   }
 
+
+    const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE;
+
+
   return (
    <>
        <Link to={`/product/${product._id}`} className="group block">
@@ -139,7 +143,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="relative aspect-square overflow-hidden bg-gray-50">
           {/* Main Image */}
           <img
-            src={`http://api.jajamblockprints.com${product.images}`}
+            // src={`http://api.jajamblockprints.com${product.images}`}
+                    src={`${Image_BaseURL}${product.images[0]}`}
+
             alt={product.productName}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -147,7 +153,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Second Image on Hover */}
           {product.images?.[1] && (
             <img
-              src={`https://api.jajamblockprints.com/api${product.images} ` || "/placeholder.svg"}
+              // src={`http://localhost:5008/api${product.images} ` || "/placeholder.svg"}
+                src={`${Image_BaseURL}${product.images[0]}`}
               alt={`${product.productName} - View 2`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                 isHovered ? "opacity-100" : "opacity-0"
