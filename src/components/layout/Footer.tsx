@@ -70,6 +70,9 @@ export default function Footer() {
     { icon: <Award size={20} />, text: "Quality Guarantee", color: "#8B5CF6" },
     { icon: <CreditCard size={20} />, text: "Easy Returns", color: "#F59E0B" },
   ];
+  const scrollToTop = () => {
+    window.scrollTo({ top: 400, behavior: "smooth" });
+  };
 
   return (
     <footer className="bg-white border-t border-gray-200">
@@ -100,7 +103,6 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-         
           {/* Company Info */}
           <div className="space-y-6">
             <Link to="/" className="inline-block">
@@ -157,13 +159,12 @@ export default function Footer() {
                 </Link>
               ))}
               {categories.length > 6 && (
-                <Link
-                  to="/categories"
-                  className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+                <button className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+                onClick={scrollToTop}
                 >
                   View All Categories
                   <ArrowRight size={14} className="ml-1" />
-                </Link>
+                </button>
               )}
             </div>
           </div>
@@ -296,15 +297,14 @@ export default function Footer() {
                 <Package size={16} className="text-gray-400" />
                 <span>100K+ Orders</span>
               </div> */}
-               <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Your Company. All rights reserved.
-            </p>
+              <p className="text-sm text-gray-600">
+                © {new Date().getFullYear()} Your Company. All rights reserved.
+              </p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        
       </div>
     </footer>
   );

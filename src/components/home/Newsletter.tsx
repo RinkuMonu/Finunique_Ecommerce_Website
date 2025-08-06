@@ -15,7 +15,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="relative pt-20 pb-16 bg-[#5252a2] text-white z-[1]">
+    <section className="relative pt-20 pb-16 bg-[#C34D84] text-white z-[1]">
       {/* Background shapes */}
       <div className="hidden sm:block">
         {/* Shape 1 - Position it to cover the top */}
