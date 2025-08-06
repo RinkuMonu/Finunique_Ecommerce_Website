@@ -7,7 +7,7 @@ import logo from "/DigiLogo.jpg"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
-import LoginModal from "../components/loginModal/loginModal";
+import LoginModal from "../components/loginModal/LoginModal";
 import Login1 from "../pages/Login1";
 import Swal from 'sweetalert2';
 
@@ -63,7 +63,7 @@ const addresses: Address[] = [
     isDefault: true,
   },
 ]
-
+ 
 const shippingMethods: ShippingMethod[] = [
   { id: "1", name: "Free Delivery", description: "Free shipping", price: 0 },
   { id: "2", name: "Local Pickup", description: "Free shipping", price: 0 },
