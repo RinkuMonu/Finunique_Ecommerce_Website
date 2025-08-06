@@ -179,9 +179,8 @@ console.log(banners)
                 </div>
 
                 {/* Content Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center text-white z-20 px-4">
+                {/* <div className="absolute inset-0 flex items-center justify-center text-white z-20 px-4">
                   <div className="w-full max-w-4xl text-center space-y-8">
-                    {/* Slide Counter */}
                     <div className="absolute top-8 right-8 hidden md:flex items-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2 border border-white/20">
                       <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
                       <span className="text-xs font-mono text-white/80">
@@ -189,7 +188,7 @@ console.log(banners)
                       </span>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </SwiperSlide>
           ))}

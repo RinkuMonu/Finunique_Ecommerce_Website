@@ -19,6 +19,7 @@ export default function Products() {
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [moreProduct, setMoreProduct] = useState(15);
   const [openSections, setOpenSections] = useState({
     price: true,
     brands: true,
@@ -29,8 +30,10 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
-        const data = await res.json()
+        const res = await fetch(
+          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
 
         if (Array.isArray(data.products)) {
           setProducts(data.products);
@@ -96,9 +99,24 @@ export default function Products() {
     setSelectedBrands([]);
     setSortBy("newest");
   };
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.body.scrollHeight;
+
+      // When user reaches near the bottom (100px buffer), load more
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        setMoreProduct((prev) => prev + 15);
+      } 
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white ">
       <div className="container mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -121,7 +139,7 @@ export default function Products() {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 p-4 bg-gray-50 rounded-xl">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 p-4 bg-gray-50 rounded-xl  ">
           <div className="flex items-center gap-4 mb-4 sm:mb-0">
             {/* Sort Dropdown */}
             <select
@@ -137,7 +155,7 @@ export default function Products() {
             </select>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             {/* <button
               onClick={resetFilters}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-white"
@@ -198,10 +216,10 @@ export default function Products() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8  ">
           {/* Filters Sidebar */}
           <div className={`lg:w-80 space-y-6 `}>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center ">
               <h2 className="text-xl font-bold" style={{ color: "#1B2E4F" }}>
                 Filters
               </h2>
@@ -214,7 +232,7 @@ export default function Products() {
             </div>
 
             {/* Price Range */}
-            <div className="border-b border-gray-200 pb-6">
+            <div className="border-b border-gray-200 pb-6 ">
               <div
                 className="flex justify-between items-center cursor-pointer mb-4"
                 onClick={() => toggleSection("price")}
@@ -245,7 +263,11 @@ export default function Products() {
                         style={{
                           background: "rgb(157 48 137)",
                           left: `${(priceRange[0] / initialMaxPrice) * 100}%`,
-                          width: `${((priceRange[1] - priceRange[0]) / initialMaxPrice) * 100}%`
+                          width: `${
+                            ((priceRange[1] - priceRange[0]) /
+                              initialMaxPrice) *
+                            100
+                          }%`,
                         }}
                       />
                     </div>
@@ -397,7 +419,7 @@ export default function Products() {
               </div>
             ) : viewMode === "grid" ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-                {filteredProducts.map((product) => (
+                {filteredProducts.slice(0, moreProduct).map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>

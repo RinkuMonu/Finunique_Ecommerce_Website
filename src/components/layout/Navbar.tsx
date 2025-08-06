@@ -1,14 +1,12 @@
-"use client"
-import { useEffect, useState, useRef, useCallback, memo } from "react"
-import type React from "react"
-
+"use client";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
+import type React from "react";
 import {
   Search,
   Heart,
   ShoppingCart,
   Menu,
   X,
-  ChevronDown,
   ChevronRight,
   Smartphone,
   Cpu,
@@ -33,120 +31,153 @@ import {
   Watch,
   Speaker,
   ListFilter,
-} from "lucide-react"
-import { Link } from "react-router-dom"
-import logo from "../../assest/logo.png"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice"
-import { FaHeart, FaUser } from "react-icons/fa"
-import { CiLogin } from "react-icons/ci"
+  ChevronDown,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import logo from "../../assest/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
+import { FaHeart, FaUser } from "react-icons/fa";
+import { CiLogin } from "react-icons/ci";
 
 interface NavbarProps {
-  onCartClick: () => void
-  cartItemCount: number
+  onCartClick: () => void;
+  cartItemCount: number;
 }
 
 interface UserData {
-  firstName: string
-  lastName?: string
-  email: string
+  firstName: string;
+  lastName?: string;
+  email: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
-  const dispatch = useDispatch()
-  const wishlistCount = useSelector((state: any) => state.wishlist.items.length)
-  const navigate = useNavigate()
-  const isLoggedIn = !!localStorage.getItem("token")
-  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem("addtocart") || "[]")
-  const totalCart = isLoggedIn ? cartItemCount : cartItemsFromLocalStorage.length
+  const dispatch = useDispatch();
+  const wishlistCount = useSelector(
+    (state: any) => state.wishlist.items.length
+  );
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
+  const cartItemsFromLocalStorage = JSON.parse(
+    localStorage.getItem("addtocart") || "[]"
+  );
+  const totalCart = isLoggedIn
+    ? cartItemCount
+    : cartItemsFromLocalStorage.length;
 
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [categories, setCategories] = useState<string[]>([])
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
-  const [isSticky, setIsSticky] = useState(false)
-  const [user, setUser] = useState<UserData | null>(null)
-  const [isCollectionOpen, setIsCollectionOpen] = useState(false)
-  const [activeCategory, setActiveCategory] = useState(null)
-  const [hoveredSubcategory, setHoveredSubcategory] = useState(null)
-  const [groupedCategories, setGroupedCategories] = useState({})
+  // State management
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [hoveredSubcategory, setHoveredSubcategory] = useState<string | null>(
+    null
+  );
+  const [hoveredCategoryName, setHoveredCategoryName] = useState<string | null>(
+    null
+  );
 
-  const textColor = "#1B2E4F"
-  const primaryColor = "rgb(157 48 137)"
+  const [groupedCategories, setGroupedCategories] = useState<
+    Record<string, any[]>
+  >({});
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
 
-  const searchRef = useRef<HTMLDivElement>(null)
-  const userMenuRef = useRef<HTMLDivElement>(null)
-  const moreMenuRef = useRef<HTMLDivElement>(null)
+  // Refs
+  const searchRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  // Constants
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+  const primaryColor = "rgb(157 48 137)";
 
-  // Icon mapping for categories - this will be used to display icons for API data
+  // Responsive check
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 1024);
+      if (window.innerWidth >= 1024) {
+        setMenuOpen(false);
+        setSearchOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Category icon mappings
+  const categoryIcons = {
+    // Electronics
+    smartphones: <Smartphone size={32} className="text-blue-500" />,
+    smartphone: <Smartphone size={32} className="text-blue-500" />,
+    laptops: <Monitor size={32} className="text-purple-600" />,
+    laptop: <Monitor size={32} className="text-purple-600" />,
+    headphones: <Headphones size={32} className="text-green-600" />,
+    headphone: <Headphones size={32} className="text-green-600" />,
+    cameras: <Camera size={32} className="text-orange-600" />,
+    camera: <Camera size={32} className="text-orange-600" />,
+    gaming: <Gamepad2 size={32} className="text-red-600" />,
+    tablets: <Tablet size={32} className="text-cyan-600" />,
+    tablet: <Tablet size={32} className="text-cyan-600" />,
+    watches: <Watch size={32} className="text-pink-600" />,
+    watch: <Watch size={32} className="text-pink-600" />,
+    speakers: <Speaker size={32} className="text-indigo-600" />,
+    speaker: <Speaker size={32} className="text-indigo-600" />,
+    // Home Appliances
+    "air conditioning": <Wind size={32} className="text-blue-500" />,
+    blender: <Blender size={32} className="text-green-500" />,
+    lighting: <Lightbulb size={32} className="text-yellow-500" />,
+    "flat iron": <Flame size={32} className="text-orange-500" />,
+    "electric fan": <Fan size={32} className="text-blue-400" />,
+    fan: <Fan size={32} className="text-blue-400" />,
+    heating: <Flame size={32} className="text-red-500" />,
+    refrigerator: <Refrigerator size={32} className="text-cyan-500" />,
+    microwave: <Microwave size={32} className="text-gray-600" />,
+    "electric cooker": <ChefHat size={32} className="text-purple-500" />,
+    cooker: <ChefHat size={32} className="text-purple-500" />,
+    "washing machine": <WashingMachine size={32} className="text-indigo-500" />,
+    "electric stove": <Stove size={32} className="text-red-600" />,
+    stove: <Stove size={32} className="text-red-600" />,
+    "vacuum cleaner": <Vacuum size={32} className="text-pink-500" />,
+    vacuum: <Vacuum size={32} className="text-pink-500" />,
+    // Default
+    default: <Cpu size={32} className="text-gray-600" />,
+  };
+
+  const sidebarIcons = {
+    "home appliance": <Wind size={20} className="text-blue-600" />,
+    "gaming gears": <Gamepad2 size={20} className="text-red-600" />,
+    "computers & laptop": <Monitor size={20} className="text-purple-600" />,
+    "computer & peripherals": <Monitor size={20} className="text-purple-600" />,
+    "smartphone & tablet": <Smartphone size={20} className="text-green-600" />,
+    "mobile & tablet": <Smartphone size={20} className="text-green-600" />,
+    "audio gears": <Headphones size={20} className="text-orange-600" />,
+    cameras: <Camera size={20} className="text-cyan-600" />,
+    default: <Cpu size={20} className="text-gray-600" />,
+  };
+
+  // Helper functions
   const getCategoryIcon = (categoryName: string) => {
-    const iconMap: { [key: string]: React.ReactNode } = {
-      // Electronics
-      smartphones: <Smartphone size={32} className="text-blue-500" />,
-      smartphone: <Smartphone size={32} className="text-blue-500" />,
-      laptops: <Monitor size={32} className="text-purple-600" />,
-      laptop: <Monitor size={32} className="text-purple-600" />,
-      headphones: <Headphones size={32} className="text-green-600" />,
-      headphone: <Headphones size={32} className="text-green-600" />,
-      cameras: <Camera size={32} className="text-orange-600" />,
-      camera: <Camera size={32} className="text-orange-600" />,
-      gaming: <Gamepad2 size={32} className="text-red-600" />,
-      tablets: <Tablet size={32} className="text-cyan-600" />,
-      tablet: <Tablet size={32} className="text-cyan-600" />,
-      watches: <Watch size={32} className="text-pink-600" />,
-      watch: <Watch size={32} className="text-pink-600" />,
-      speakers: <Speaker size={32} className="text-indigo-600" />,
-      speaker: <Speaker size={32} className="text-indigo-600" />,
-      // Home Appliances
-      "air conditioning": <Wind size={32} className="text-blue-500" />,
-      blender: <Blender size={32} className="text-green-500" />,
-      lighting: <Lightbulb size={32} className="text-yellow-500" />,
-      "flat iron": <Flame size={32} className="text-orange-500" />,
-      "electric fan": <Fan size={32} className="text-blue-400" />,
-      fan: <Fan size={32} className="text-blue-400" />,
-      heating: <Flame size={32} className="text-red-500" />,
-      refrigerator: <Refrigerator size={32} className="text-cyan-500" />,
-      microwave: <Microwave size={32} className="text-gray-600" />,
-      "electric cooker": <ChefHat size={32} className="text-purple-500" />,
-      cooker: <ChefHat size={32} className="text-purple-500" />,
-      "washing machine": <WashingMachine size={32} className="text-indigo-500" />,
-      "electric stove": <Stove size={32} className="text-red-600" />,
-      stove: <Stove size={32} className="text-red-600" />,
-      "vacuum cleaner": <Vacuum size={32} className="text-pink-500" />,
-      vacuum: <Vacuum size={32} className="text-pink-500" />,
-      // Default
-      default: <Cpu size={32} className="text-gray-600" />,
-    }
+    const key = categoryName.toLowerCase();
+    return (
+      categoryIcons[key as keyof typeof categoryIcons] || categoryIcons.default
+    );
+  };
 
-    const key = categoryName.toLowerCase()
-    return iconMap[key] || iconMap.default
-  }
-
-  // Get sidebar icon for main categories
   const getSidebarIcon = (categoryName: string) => {
-    const iconMap: { [key: string]: React.ReactNode } = {
-      "home appliance": <Wind size={20} className="text-blue-600" />,
-      "gaming gears": <Gamepad2 size={20} className="text-red-600" />,
-      "computers & laptop": <Monitor size={20} className="text-purple-600" />,
-      "computer & peripherals": <Monitor size={20} className="text-purple-600" />,
-      "smartphone & tablet": <Smartphone size={20} className="text-green-600" />,
-      "mobile & tablet": <Smartphone size={20} className="text-green-600" />,
-      "audio gears": <Headphones size={20} className="text-orange-600" />,
-      cameras: <Camera size={20} className="text-cyan-600" />,
-      default: <Cpu size={20} className="text-gray-600" />,
-    }
+    const key = categoryName.toLowerCase();
+    return (
+      sidebarIcons[key as keyof typeof sidebarIcons] || sidebarIcons.default
+    );
+  };
 
-    const key = categoryName.toLowerCase()
-    return iconMap[key] || iconMap.default
-  }
-
-  // Get small icon for dropdown items
   const getDropdownIcon = (categoryName: string, index: number) => {
     const colors = [
       "text-blue-600 bg-blue-100",
@@ -159,11 +190,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       "text-indigo-600 bg-indigo-100",
       "text-yellow-600 bg-yellow-100",
       "text-teal-600 bg-teal-100",
-    ]
+    ];
 
-    const colorClass = colors[index % colors.length]
-    const iconMap: { [key: string]: React.ReactNode } = {
-      smartphones: <Smartphone size={20} className={colorClass.split(" ")[0]} />,
+    const colorClass = colors[index % colors.length];
+    const iconMap = {
+      smartphones: (
+        <Smartphone size={20} className={colorClass.split(" ")[0]} />
+      ),
       smartphone: <Smartphone size={20} className={colorClass.split(" ")[0]} />,
       laptops: <Monitor size={20} className={colorClass.split(" ")[0]} />,
       laptop: <Monitor size={20} className={colorClass.split(" ")[0]} />,
@@ -172,124 +205,143 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       headphones: <Headphones size={20} className={colorClass.split(" ")[0]} />,
       cameras: <Camera size={20} className={colorClass.split(" ")[0]} />,
       default: <Cpu size={20} className={colorClass.split(" ")[0]} />,
-    }
+    };
 
-    const key = categoryName.toLowerCase()
-    const icon = iconMap[key] || iconMap.default
+    const key = categoryName.toLowerCase();
+    const icon = (iconMap as any)[key] || iconMap.default;
 
     return (
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]}`}>{icon}</div>
-    )
-  }
+      <div
+        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+          colorClass.split(" ")[1]
+        }`}
+      >
+        {icon}
+      </div>
+    );
+  };
 
+  // Event handlers
   const handleLogout = useCallback(() => {
-    localStorage.removeItem("userData")
-    localStorage.removeItem("token")
-    setUser(null)
-    window.dispatchEvent(new Event("storage"))
-    dispatch(clearWishlist())
-    navigate("/login")
-    window.location.reload()
-    setUserMenuOpen(false)
-  }, [dispatch, navigate])
+    localStorage.removeItem("userData");
+    localStorage.removeItem("token");
+    setUser(null);
+    window.dispatchEvent(new Event("storage"));
+    dispatch(clearWishlist());
+    navigate("/login");
+    window.location.reload();
+    setUserMenuOpen(false);
+  }, [dispatch, navigate]);
 
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
-      e.preventDefault()
+      e.preventDefault();
       if (searchQuery) {
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`)
-        setSearchQuery("")
-        setSearchOpen(false)
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setSearchQuery("");
+        setSearchOpen(false);
       }
     },
-    [searchQuery, navigate],
-  )
+    [searchQuery, navigate]
+  );
 
   const handleCategorySelect = useCallback(
     (category: string) => {
-      navigate(`/category/${category.toLowerCase()}`)
-      setSearchQuery("")
-      setMoreMenuOpen(false)
-      setMenuOpen(false)
-      setIsCollectionOpen(false)
+      navigate(`/category/${category.toLowerCase()}`);
+      setSearchQuery("");
+      setMenuOpen(false);
+      setIsCollectionOpen(false);
     },
-    [navigate],
-  )
+    [navigate]
+  );
 
+  // Data fetching
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
-        const data = await res.json()
-        const grouped = {}
-        const categoryList = []
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
+        const data = await res.json();
+        const grouped: Record<string, any[]> = {};
+        const categoryList: string[] = [];
 
         if (Array.isArray(data?.website?.categories)) {
-          data.website.categories.forEach((item) => {
-            const sub = item?.subcategory
-            if (!grouped[sub]) grouped[sub] = []
-            grouped[sub].push(item)
-            categoryList.push(item.name)
-          })
+          data.website.categories.forEach((item: any) => {
+            const sub = item?.subcategory;
+            if (!grouped[sub]) grouped[sub] = [];
+            grouped[sub].push(item);
+            categoryList.push(item.name);
+          });
         }
 
-        setGroupedCategories(grouped)
-        setCategories(categoryList)
+        setGroupedCategories(grouped);
+        setCategories(categoryList);
       } catch (error) {
-        console.error("Failed to fetch categories:", error)
+        console.error("Failed to fetch categories:", error);
       }
-    }
-    fetchCategories()
-  }, [baseUrl, referenceWebsite])
+    };
+    fetchCategories();
+  }, [baseUrl, referenceWebsite]);
 
+  // User and scroll effects
   useEffect(() => {
     const loadUser = () => {
       try {
-        const storedUser = localStorage.getItem("userData")
-        setUser(storedUser ? JSON.parse(storedUser) : null)
+        const storedUser = localStorage.getItem("userData");
+        setUser(storedUser ? JSON.parse(storedUser) : null);
       } catch (error) {
-        console.error("Failed to parse user from localStorage:", error)
-        setUser(null)
+        console.error("Failed to parse user from localStorage:", error);
+        setUser(null);
       }
-    }
+    };
 
-    loadUser()
-    const handleScroll = () => setIsSticky(window.scrollY > 100)
-    window.addEventListener("scroll", handleScroll)
-    window.addEventListener("storage", loadUser)
+    loadUser();
+    const handleScroll = () => setIsSticky(window.scrollY > 100);
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("storage", loadUser);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("storage", loadUser)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("storage", loadUser);
+    };
+  }, []);
 
   useEffect(() => {
-    dispatch(fetchWishlist())
-  }, [dispatch])
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
+  // Click outside handlers
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setSearchQuery("")
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setSearchQuery("");
       }
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setUserMenuOpen(false)
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setUserMenuOpen(false);
       }
-      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
-        setMoreMenuOpen(false)
+      if (
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target as Node)
+      ) {
+        // setIsCollectionOpen(false);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  // Component render functions
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
       {categories
         .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
-        .map((cat, index) => (
+        .map((cat) => (
           <div
             key={cat}
             className="px-6 py-4 cursor-pointer transition-all duration-300 flex items-center justify-between border-b last:border-b-0 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 group"
@@ -306,7 +358,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           </div>
         ))}
     </div>
-  )
+  );
 
   const renderUserMenu = () => (
     <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl overflow-hidden z-30 border border-gray-100">
@@ -338,7 +390,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
               <div>
                 <span className="block">Your Wishlist</span>
-                <span className="text-xs text-gray-500">{wishlistCount} items saved</span>
+                <span className="text-xs text-gray-500">
+                  {wishlistCount} items saved
+                </span>
               </div>
             </Link>
           </div>
@@ -350,7 +404,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CiLogin color="white" size={18} />
               </div>
-              <span className="group-hover:text-red-600 transition-colors">Sign out</span>
+              <span className="group-hover:text-red-600 transition-colors">
+                Sign out
+              </span>
             </button>
           </div>
         </>
@@ -361,7 +417,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <User size={24} className="text-white" />
             </div>
             <h3 className="font-bold text-lg text-gray-800">Welcome!</h3>
-            <p className="text-sm text-gray-500">Sign in for the best experience</p>
+            <p className="text-sm text-gray-500">
+              Sign in for the best experience
+            </p>
           </div>
           <Link
             to="/login"
@@ -370,11 +428,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           >
             Login / Register
           </Link>
-          <p className="text-xs text-center text-gray-400 mt-4">Join us for exclusive tech deals and faster checkout</p>
+          <p className="text-xs text-center text-gray-400 mt-4">
+            Join us for exclusive tech deals and faster checkout
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 
   const renderMobileMenu = () => (
     <div className="fixed inset-0 z-40 lg:hidden bg-black bg-opacity-60 backdrop-blur-sm">
@@ -451,7 +511,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             </div>
             <div className="py-6 border-t border-gray-100">
-              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">Account</h3>
+              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                Account
+              </h3>
               <div className="mt-4">
                 <Link
                   to="/wishlist"
@@ -486,32 +548,182 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </div>
     </div>
-  )
+  );
+
+  const renderCollectionDropdown = () => (
+    <div className="absolute left-0 top-full w-full min-w-[300px] lg:min-w-[800px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
+      <div className="flex flex-col lg:flex-row">
+        {/* Category List - Left Panel */}
+        <div className="w-full lg:w-1/4 bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-200">
+          <div className="py-2">
+            {Object.entries(groupedCategories).map(
+              ([subcategory, items], index) => (
+                <div
+                  key={index}
+                  className={`px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0 ${
+                    activeCategory === index
+                      ? "bg-white text-blue-600"
+                      : "hover:bg-white hover:text-blue-600"
+                  }`}
+                  onMouseEnter={() => !isMobileView && setActiveCategory(index)}
+                  onClick={() =>
+                    isMobileView &&
+                    setActiveCategory(index === activeCategory ? null : index)
+                  }
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`${
+                          activeCategory === index
+                            ? "text-blue-600"
+                            : "text-gray-600"
+                        }`}
+                      >
+                        {getSidebarIcon(subcategory)}
+                      </div>
+                      <span className="text-sm font-medium">{subcategory}</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Product Grid - Right Panel */}
+        <div className="flex-1 p-4 lg:p-6 bg-white">
+          {activeCategory !== null &&
+          Object.values(groupedCategories)[activeCategory] ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-3">
+              {Object.values(groupedCategories)[activeCategory]?.map(
+                (item: any, index: number) => (
+                  <Link
+                    key={index}
+                    to={`/category/${item.name}`}
+                    className="group flex flex-col items-center p-3 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                    onClick={() => setIsCollectionOpen(false)}
+                  >
+                    <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                      {item.image ? (
+                        <img
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.name}
+                          className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
+                        />
+                      ) : (
+                        getCategoryIcon(item.name)
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <h3 className="font-medium text-gray-900 text-xs lg:text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                        {item.name}
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        {item.price ? `From $${item.price}` : "View Products"}
+                      </p>
+                    </div>
+                  </Link>
+                )
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              {categories.slice(0, 6).map((categoryName, index) => (
+                <Link
+                  key={index}
+                  to={`/category/${categoryName.toLowerCase()}`}
+                  className="group flex flex-col items-center p-3 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                  onClick={() => setIsCollectionOpen(false)}
+                >
+                  <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                    {getCategoryIcon(categoryName)}
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-medium text-gray-900 text-xs lg:text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                      {categoryName}
+                    </h3>
+                    <p className="text-xs text-gray-500">View Products</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSubcategoryDropdown = (subcategory: string, items: any[]) => (
+    <div className="absolute left-0 top-[14px] mt-2 w-auto min-w-[300px] bg-white shadow-xl rounded-md z-50 border">
+      <div className="p-4 lg:p-6">
+        <div className="flex flex-col space-y-3 lg:space-y-4">
+          {items.slice(0, 8).map((item: any, itemIndex: number) => (
+            <Link
+              to={`/category/${item.name}`}
+              key={itemIndex}
+              className="flex items-center space-x-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+            >
+              {getDropdownIcon(item.name, itemIndex)}
+              <div className="flex-1">
+                <div className="font-medium  text-[#ca6296] transition-colors duration-200 text-sm lg:text-base">
+                  {item.name}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {items.length > 8 && (
+          <div className="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t border-gray-200 text-center">
+            <Link
+              to={`/category/${subcategory.toLowerCase()}`}
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              View All {subcategory}
+              <ChevronRight size={16} className="ml-1" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2">
-        <div className="container mx-auto px-10">
-          <div className="flex items-center justify-between h-18">
+      <nav
+        className={`bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2 transition-all duration-300 ${
+          isSticky ? "shadow-md" : ""
+        }`}
+        ref={navbarRef}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 lg:h-18">
+            {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <img src={logo || "/placeholder.svg"} alt="Logo" className="h-20 w-25 rounded" />
+              <img
+                src={logo || "/placeholder.svg"}
+                alt="Logo"
+                className="h-12 w-auto lg:h-16"
+              />
             </Link>
 
             {/* Desktop Search Bar */}
-            <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+            <div className="hidden lg:flex flex-1 max-w-2xl mx-4 lg:mx-8">
               <div className="relative w-full" ref={searchRef}>
                 <form onSubmit={handleSearchSubmit} className="w-full">
                   <div className="relative">
                     <input
                       type="search"
-                      className="w-full pl-6 pr-14 py-3 text-sm border-2 border-gray-200 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50 hover:bg-white"
+                      className="w-full pl-6 pr-14 py-2 lg:py-3 text-sm border-2 border-gray-200 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50 hover:bg-white"
                       placeholder="Search for electronics, gadgets, accessories..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <button
                       type="submit"
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
                     >
                       <Search size={16} />
                     </button>
@@ -531,7 +743,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <User size={16} className="text-white" />
                   </div>
-                  <span className="text-sm font-semibold">{user ? user.firstName : "Account"}</span>
+                  <span className="text-sm font-semibold">
+                    {user ? user.firstName : "Account"}
+                  </span>
                 </button>
                 {userMenuOpen && renderUserMenu()}
               </div>
@@ -539,13 +753,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               {/* Wishlist */}
               <button
                 onClick={() => navigate("/wishlist")}
-                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
+                className="relative p-2 lg:p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-100 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Heart size={16} className="text-white" />
                 </div>
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-500 shadow-lg animate-pulse">
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-500 shadow-lg animate-pulse">
                     {wishlistCount}
                   </span>
                 )}
@@ -554,13 +768,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               {/* Shopping Cart */}
               <button
                 onClick={onCartClick}
-                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
+                className="relative p-2 lg:p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <ShoppingCart size={16} className="text-white" />
                 </div>
                 {totalCart > 0 && (
-                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-green-100 to-emerald-500 shadow-lg animate-bounce">
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-gradient-to-r from-green-100 to-emerald-500 shadow-lg animate-bounce">
                     {totalCart}
                   </span>
                 )}
@@ -568,7 +782,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </div>
 
             {/* Mobile Menu */}
-            <div className="flex lg:hidden items-center space-x-4">
+            <div className="flex lg:hidden items-center space-x-3">
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
@@ -603,7 +817,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   <div className="relative">
                     <input
                       type="search"
-                      className="w-full pl-6 pr-14 py-4 text-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50"
+                      className="w-full pl-6 pr-14 py-3 text-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50"
                       placeholder="Search electronics..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -623,202 +837,134 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </nav>
 
-      {/* Category Navigation - Matching the provided image with API data */}
-      <div className="bg-white border-b border-gray-200">
+      {/* Category Navigation */}
+      <div className="bg-[#C7588C] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
-          <div className="flex">
+          <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
             <div
-              className="w-1/4 relative"
-              onMouseEnter={() => {
-                setIsCollectionOpen(true)
-                setActiveCategory(0) // Auto-select first category on hover
-              }}
-              onMouseLeave={() => setIsCollectionOpen(false)}
+              className="w-full lg:w-1/4 relative"
+              onMouseEnter={() => !isMobileView && setIsCollectionOpen(true)}
+              onMouseLeave={() => !isMobileView && setIsCollectionOpen(false)}
             >
-              <div className="bg-gray-100 p-4 cursor-pointer hover:bg-gray-200 transition-all duration-200">
-                <div className="flex items-center justify-between">
-                <ListFilter />
-                <span className="font-semibold text-gray-800">Browse All Collection</span>
-                  <ChevronDown className="w-4 h-4 text-gray-600" />
+              <button
+                onClick={() =>
+                  isMobileView && setIsCollectionOpen(!isCollectionOpen)
+                }
+                className="w-full bg-[#C7588C] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C]transition-all duration-200 flex items-center justify-between"
+              >
+                <div className="flex items-center space-x-3">
+                  <ListFilter size={20} />
+                  <span className="font-semibold text-gray-800 text-sm lg:text-base">
+                    Browse All Collection
+                  </span>
                 </div>
-              </div>
+                <ChevronDown
+                  size={18}
+                  className={`text-[#C7588C] transition-transform ${
+                    isCollectionOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
               {/* Collection Dropdown */}
-              {isCollectionOpen && (
-                <div className="absolute left-0 top-full w-full min-w-[800px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
-                  <div className="flex">
-                    {/* Category List - Left Panel */}
-                    <div className="w-1/4 bg-gray-50 border-r border-gray-200">
-                      <div className="py-2">
-                        {Object.entries(groupedCategories).map(([subcategory, items], index) => (
-                          <div
-                            key={index}
-                            className={`px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0 ${
-                              activeCategory === index ? "bg-white text-blue-600" : "hover:bg-white hover:text-blue-600"
-                            }`}
-                            onMouseEnter={() => setActiveCategory(index)}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-3">
-                                <div className={`${activeCategory === index ? "text-blue-600" : "text-gray-600"}`}>
-                                  {getSidebarIcon(subcategory)}
-                                </div>
-                                <span className="text-sm font-medium">{subcategory}</span>
-                              </div>
-                              <ChevronRight className="w-4 h-4 text-gray-400" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Product Grid - Right Panel */}
-                    <div className="flex-1 p-6 bg-white">
-                      {activeCategory !== null && Object.values(groupedCategories)[activeCategory] ? (
-                        <div className="grid grid-cols-3 gap-6">
-                          {Object.values(groupedCategories)[activeCategory]?.map((item: any, index: number) => (
-                            <Link
-                              key={index}
-                              to={`/category/${item.name}`}
-                              className="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                              onClick={() => setIsCollectionOpen(false)}
-                            >
-                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors duration-300">
-                                {item.image ? (
-                                  <img
-                                    src={item.image || "/placeholder.svg"}
-                                    alt={item.name}
-                                    className="w-12 h-12 object-contain"
-                                  />
-                                ) : (
-                                  getCategoryIcon(item.name)
-                                )}
-                              </div>
-                              <div className="text-center">
-                                <h3 className="font-medium text-gray-900 text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
-                                  {item.name}
-                                </h3>
-                                <p className="text-xs text-gray-500">
-                                  {item.price ? `From $${item.price}` : "View Products"}
-                                </p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      ) : (
-                        // Show featured categories when no specific category is hovered
-                        <div className="grid grid-cols-3 gap-6">
-                          {categories.slice(0, 12).map((categoryName, index) => (
-                            <Link
-                              key={index}
-                              to={`/category/${categoryName.toLowerCase()}`}
-                              className="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                              onClick={() => setIsCollectionOpen(false)}
-                            >
-                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors duration-300">
-                                {getCategoryIcon(categoryName)}
-                              </div>
-                              <div className="text-center">
-                                <h3 className="font-medium text-gray-900 text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
-                                  {categoryName}
-                                </h3>
-                                <p className="text-xs text-gray-500">View Products</p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {isCollectionOpen && renderCollectionDropdown()}
             </div>
 
             {/* Navigation Menu - Right side */}
-            <div className="flex-1 py-4">
-              <div className="flex items-center justify-start ms-20">
+            <div className="flex-1 py-3 lg:py-4">
+              <div className="flex items-center justify-start lg:ms-20">
                 <nav className="hidden xl:block">
-                  <ul className="flex space-x-8">
+                  <ul className="flex space-x-6 lg:space-x-8 items-center">
                     <li>
                       <Link
                         to={"/"}
-                        className="font-medium text-black hover:text-[#c1467f] transition-colors duration-200 uppercase tracking-wide"
+                        className="font-medium text-white  hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs"
                       >
                         HOME
                       </Link>
                     </li>
-                    {Object.entries(groupedCategories).map(([subcategory, items], index) => (
-                      <li
-                        key={index}
-                        className="relative group"
-                        onMouseEnter={() => setHoveredSubcategory(subcategory)}
-                        onMouseLeave={() => setHoveredSubcategory(null)}
-                      >
-                        <span className="font-medium text-black hover:text-[#c1467f] transition-colors duration-200 uppercase tracking-wide cursor-pointer">
-                          {subcategory}
-                        </span>
-                        {/* Enhanced Dropdown Panel with API Data */}
-                        {hoveredSubcategory === subcategory && (
-                          <div className="absolute left-0 top-[20px] mt-2 w-auto min-w-[600px] bg-white shadow-xl rounded-md z-50 border">
-                            <div className="p-6">
-                              {/* Dynamic grid based on number of items */}
-                              <div
-                                className={`grid gap-6 ${items.length <= 6 ? "grid-cols-2" : items.length <= 9 ? "grid-cols-3" : "grid-cols-4"}`}
-                              >
-                                {items.map((item: any, itemIndex: number) => (
-                                  <Link
-                                    to={`/category/${item.name}`}
-                                    key={itemIndex}
-                                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
-                                  >
-                                    {getDropdownIcon(item.name, itemIndex)}
-                                    <div className="flex-1">
-                                      <div className="font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
-                                        {item.name}
-                                      </div>
-                                      {item.description && (
-                                        <div className="text-xs text-gray-500 mt-1 line-clamp-1">
-                                          {item.description}
-                                        </div>
-                                      )}
-                                      {item.price && (
-                                        <div className="text-xs text-green-600 font-medium mt-1">
-                                          From ${item.price}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </Link>
-                                ))}
-                              </div>
+                    {Object.entries(groupedCategories)
+                      .slice(0, 4)
+                      .map(([subcategory, items], index) => (
+                        <li
+                          key={index}
+                          className="relative group"
+                          onMouseEnter={() =>
+                            !isMobileView && setHoveredSubcategory(subcategory)
+                          }
+                          onMouseLeave={() =>
+                            !isMobileView && setHoveredSubcategory(null)
+                          }
+                        >
+                          <span className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase cursor-pointer text-xs">
+                            {subcategory}
+                          </span>
+                          {hoveredSubcategory === subcategory &&
+                            renderSubcategoryDropdown(subcategory, items)}
+                        </li>
+                      ))}
+                    <li
+                      className="relative group font-medium text-white   hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2 cursor-pointer"
+                      onMouseEnter={() =>
+                        !isMobileView && setHoveredSubcategory("more")
+                      }
+                      onMouseLeave={() =>
+                        !isMobileView && setHoveredSubcategory(null)
+                      }
+                    >
+                      More Product <ChevronDown size={18} />
+                      {hoveredSubcategory === "more" && (
+                        <div className="absolute left-0 top-[12px] mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border">
+                          <div className="p-4">
+                            <ul className="space-y-2">
+                              {Object.entries(groupedCategories)
+                                .slice(5)
+                                .map(([subcategory, items], index) => {
+                                  const uniqueItems = Array.from(
+                                    new Map(
+                                      items.map((item) => [
+                                        item.name.toLowerCase(),
+                                        item,
+                                      ])
+                                    ).values()
+                                  );
 
-                              {/* View All Link */}
-                              {items.length > 8 && (
-                                <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-                                  <Link
-                                    to={`/category/${subcategory.toLowerCase()}`}
-                                    className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
-                                  >
-                                    View All {subcategory}
-                                    <ChevronRight size={16} className="ml-1" />
-                                  </Link>
-                                </div>
-                              )}
-                            </div>
+                                  return uniqueItems.map((item, i) => (
+                                    <li
+                                      key={`${subcategory}-${i}`}
+                                      onMouseEnter={() =>
+                                        setHoveredCategoryName(item.name)
+                                      }
+                                      onMouseLeave={() =>
+                                        setHoveredCategoryName(null)
+                                      }
+                                      className="relative"
+                                    >
+                                      <Link
+                                        to={`/category/${encodeURIComponent(
+                                          item.name.toLowerCase()
+                                        )}`}
+                                        className="block text-sm text-[#c1467f] hover:text-[#c1467f] transition-colors flex flex-row gap-5 truncate"
+                                      >
+                                        {item.name}
+                                      </Link>
+
+                                      {hoveredCategoryName === item.name && (
+                                        <div className="absolute top-1/2 right-full ml-3 -translate-y-1/2 bg-[#c1467f] text-white px-3 py-1 text-xs rounded shadow-lg whitespace-nowrap z-50">
+                                          {item.subcategory}
+                                        </div>
+                                      )}
+                                    </li>
+                                  ));
+                                })}
+                            </ul>
                           </div>
-                        )}
-                      </li>
-                    ))}
+                        </div>
+                      )}
+                    </li>
                   </ul>
                 </nav>
-                {/* Mobile Menu Button */}
-                <div className="xl:hidden ml-auto">
-                  <button className="text-white p-2">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -827,7 +973,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
       {menuOpen && renderMobileMenu()}
     </>
-  )
-}
+  );
+};
 
-export default memo(Navbar)
+export default memo(Navbar);
