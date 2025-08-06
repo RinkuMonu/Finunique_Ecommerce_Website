@@ -213,7 +213,7 @@ const ContactPage = () => {
                 Feel free to contact us? submit your queries here and we will
                 get back to you as soon as possible.
               </p>
-              <div className="space-y-4 mt-8 sm:mt-12 lg:mt-44 text-gray-500">
+              <div className="space-y-4 sm:mt-12 lg:mt-56  text-gray-500">
                 <div className="flex items-center gap-4">
                   <div className="bg-white/10 p-2 rounded-full">
                     <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
@@ -275,13 +275,13 @@ const ContactPage = () => {
             </div>
             <div className="lg:pt-16">
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl border-0 p-4 sm:p-6">
-                <div className="mb-4 sm:mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#384D89]">
+                <div className="mb-3 sm:mb-3">
+                  <h2 className="text-[20px] sm:text-[20px] font-bold text-[#384D89]">
                     Send Us Message
                   </h2>
                 </div>
                 <div>
-                  <form className="space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
+                  <form className="space-y-6 sm:space-y-4" onSubmit={handleSubmit}>
                     <div>
                       <input
                         type="text"

@@ -508,7 +508,7 @@ const TrendingProducts = ({
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="max-h-96 object-contain"
-                  src={selectedProduct.image || "/placeholder.svg"}
+                  src={selectedProduct.images || "/placeholder.svg"}
                   alt={selectedProduct.productName}
                 />
               </div>
