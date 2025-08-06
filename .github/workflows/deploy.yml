@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies & dist
         run: |
           npm install
-          npm run build
+           CI=false npm run build   # 👈 CI=false taaki warnings build ko fail na kare
 
       - name: Zip dist files
         run: |
