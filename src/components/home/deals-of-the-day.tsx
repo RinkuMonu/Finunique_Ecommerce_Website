@@ -272,7 +272,7 @@ const handleAddToCart = (e: React.MouseEvent, deal: any) => {
               <div className="space-y-3">
                 <button
                   onClick={(e) => handleAddToCart(e, deal)}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="w-full bg-[#cf769f] hover:bg-[#BE457E] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart size={18} />
                   <span>QUICK ADD</span>

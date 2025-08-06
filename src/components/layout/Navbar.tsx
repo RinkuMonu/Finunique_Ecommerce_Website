@@ -1,5 +1,7 @@
-"use client";
-import { useEffect, useState, useRef, useCallback, memo } from "react";
+"use client"
+import { useEffect, useState, useRef, useCallback, memo } from "react"
+import type React from "react"
+
 import {
   Search,
   Heart,
@@ -7,172 +9,281 @@ import {
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
   Smartphone,
   Cpu,
   User,
-  ChevronRight,
-  ImageIcon,
   Zap,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import logo from "../../assest/logo.png";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
-import { FaHeart, FaUser } from "react-icons/fa";
-import { CiLogin } from "react-icons/ci";
+  Wind,
+  ComputerIcon as Blender,
+  Lightbulb,
+  Flame,
+  Fan,
+  Refrigerator,
+  Microwave,
+  ChefHat,
+  WashingMachine,
+  CookingPotIcon as Stove,
+  AirVentIcon as Vacuum,
+  Monitor,
+  Headphones,
+  Camera,
+  Gamepad2,
+  Tablet,
+  Watch,
+  Speaker,
+  ListFilter,
+} from "lucide-react"
+import { Link } from "react-router-dom"
+import logo from "../../assest/logo.png"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice"
+import { FaHeart, FaUser } from "react-icons/fa"
+import { CiLogin } from "react-icons/ci"
+
+interface NavbarProps {
+  onCartClick: () => void
+  cartItemCount: number
+}
+
+interface UserData {
+  firstName: string
+  lastName?: string
+  email: string
+}
 
 const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
-  const dispatch = useDispatch();
-  const wishlistCount = useSelector(
-    (state: any) => state.wishlist.items.length
-  );
-  const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const dispatch = useDispatch()
+  const wishlistCount = useSelector((state: any) => state.wishlist.items.length)
+  const navigate = useNavigate()
+  const isLoggedIn = !!localStorage.getItem("token")
+  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem("addtocart") || "[]")
+  const totalCart = isLoggedIn ? cartItemCount : cartItemsFromLocalStorage.length
 
-  const cartItemsFromLocalStorage = JSON.parse(
-    localStorage.getItem("addtocart") || "[]"
-  );
-  const totalCart = isLoggedIn
-    ? cartItemCount
-    : cartItemsFromLocalStorage.length;
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [categories, setCategories] = useState<string[]>([])
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
+  const [isSticky, setIsSticky] = useState(false)
+  const [user, setUser] = useState<UserData | null>(null)
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false)
+  const [activeCategory, setActiveCategory] = useState(null)
+  const [hoveredSubcategory, setHoveredSubcategory] = useState(null)
+  const [groupedCategories, setGroupedCategories] = useState({})
 
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categories, setCategories] = useState<string[]>([]);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
-  const [user, setUser] = useState<UserData | null>(null);
-  const textColor = "#1B2E4F";
-  const primaryColor = "rgb(157 48 137)";
+  const textColor = "#1B2E4F"
+  const primaryColor = "rgb(157 48 137)"
 
-  // Memoized styles
-  const gradientStyle = {
-    background: `linear-gradient(135deg, ${primaryColor}, #2A4172)`,
-  };
-  const buttonHoverStyle = {
-    background: `linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))`,
-    color: primaryColor,
-  };
+  const searchRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+  const moreMenuRef = useRef<HTMLDivElement>(null)
 
-  const searchRef = useRef<HTMLDivElement>(null);
-  const userMenuRef = useRef<HTMLDivElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+  // Icon mapping for categories - this will be used to display icons for API data
+  const getCategoryIcon = (categoryName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      // Electronics
+      smartphones: <Smartphone size={32} className="text-blue-500" />,
+      smartphone: <Smartphone size={32} className="text-blue-500" />,
+      laptops: <Monitor size={32} className="text-purple-600" />,
+      laptop: <Monitor size={32} className="text-purple-600" />,
+      headphones: <Headphones size={32} className="text-green-600" />,
+      headphone: <Headphones size={32} className="text-green-600" />,
+      cameras: <Camera size={32} className="text-orange-600" />,
+      camera: <Camera size={32} className="text-orange-600" />,
+      gaming: <Gamepad2 size={32} className="text-red-600" />,
+      tablets: <Tablet size={32} className="text-cyan-600" />,
+      tablet: <Tablet size={32} className="text-cyan-600" />,
+      watches: <Watch size={32} className="text-pink-600" />,
+      watch: <Watch size={32} className="text-pink-600" />,
+      speakers: <Speaker size={32} className="text-indigo-600" />,
+      speaker: <Speaker size={32} className="text-indigo-600" />,
+      // Home Appliances
+      "air conditioning": <Wind size={32} className="text-blue-500" />,
+      blender: <Blender size={32} className="text-green-500" />,
+      lighting: <Lightbulb size={32} className="text-yellow-500" />,
+      "flat iron": <Flame size={32} className="text-orange-500" />,
+      "electric fan": <Fan size={32} className="text-blue-400" />,
+      fan: <Fan size={32} className="text-blue-400" />,
+      heating: <Flame size={32} className="text-red-500" />,
+      refrigerator: <Refrigerator size={32} className="text-cyan-500" />,
+      microwave: <Microwave size={32} className="text-gray-600" />,
+      "electric cooker": <ChefHat size={32} className="text-purple-500" />,
+      cooker: <ChefHat size={32} className="text-purple-500" />,
+      "washing machine": <WashingMachine size={32} className="text-indigo-500" />,
+      "electric stove": <Stove size={32} className="text-red-600" />,
+      stove: <Stove size={32} className="text-red-600" />,
+      "vacuum cleaner": <Vacuum size={32} className="text-pink-500" />,
+      vacuum: <Vacuum size={32} className="text-pink-500" />,
+      // Default
+      default: <Cpu size={32} className="text-gray-600" />,
+    }
+
+    const key = categoryName.toLowerCase()
+    return iconMap[key] || iconMap.default
+  }
+
+  // Get sidebar icon for main categories
+  const getSidebarIcon = (categoryName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      "home appliance": <Wind size={20} className="text-blue-600" />,
+      "gaming gears": <Gamepad2 size={20} className="text-red-600" />,
+      "computers & laptop": <Monitor size={20} className="text-purple-600" />,
+      "computer & peripherals": <Monitor size={20} className="text-purple-600" />,
+      "smartphone & tablet": <Smartphone size={20} className="text-green-600" />,
+      "mobile & tablet": <Smartphone size={20} className="text-green-600" />,
+      "audio gears": <Headphones size={20} className="text-orange-600" />,
+      cameras: <Camera size={20} className="text-cyan-600" />,
+      default: <Cpu size={20} className="text-gray-600" />,
+    }
+
+    const key = categoryName.toLowerCase()
+    return iconMap[key] || iconMap.default
+  }
+
+  // Get small icon for dropdown items
+  const getDropdownIcon = (categoryName: string, index: number) => {
+    const colors = [
+      "text-blue-600 bg-blue-100",
+      "text-green-600 bg-green-100",
+      "text-purple-600 bg-purple-100",
+      "text-orange-600 bg-orange-100",
+      "text-red-600 bg-red-100",
+      "text-cyan-600 bg-cyan-100",
+      "text-pink-600 bg-pink-100",
+      "text-indigo-600 bg-indigo-100",
+      "text-yellow-600 bg-yellow-100",
+      "text-teal-600 bg-teal-100",
+    ]
+
+    const colorClass = colors[index % colors.length]
+    const iconMap: { [key: string]: React.ReactNode } = {
+      smartphones: <Smartphone size={20} className={colorClass.split(" ")[0]} />,
+      smartphone: <Smartphone size={20} className={colorClass.split(" ")[0]} />,
+      laptops: <Monitor size={20} className={colorClass.split(" ")[0]} />,
+      laptop: <Monitor size={20} className={colorClass.split(" ")[0]} />,
+      tablets: <Tablet size={20} className={colorClass.split(" ")[0]} />,
+      tablet: <Tablet size={20} className={colorClass.split(" ")[0]} />,
+      headphones: <Headphones size={20} className={colorClass.split(" ")[0]} />,
+      cameras: <Camera size={20} className={colorClass.split(" ")[0]} />,
+      default: <Cpu size={20} className={colorClass.split(" ")[0]} />,
+    }
+
+    const key = categoryName.toLowerCase()
+    const icon = iconMap[key] || iconMap.default
+
+    return (
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]}`}>{icon}</div>
+    )
+  }
 
   const handleLogout = useCallback(() => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("token");
-    setUser(null);
-    window.dispatchEvent(new Event("storage"));
-    dispatch(clearWishlist());
-    navigate("/login");
-    window.location.reload();
-    setUserMenuOpen(false);
-  }, [dispatch, navigate]);
+    localStorage.removeItem("userData")
+    localStorage.removeItem("token")
+    setUser(null)
+    window.dispatchEvent(new Event("storage"))
+    dispatch(clearWishlist())
+    navigate("/login")
+    window.location.reload()
+    setUserMenuOpen(false)
+  }, [dispatch, navigate])
 
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
-      e.preventDefault();
+      e.preventDefault()
       if (searchQuery) {
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-        setSearchQuery("");
-        setSearchOpen(false);
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`)
+        setSearchQuery("")
+        setSearchOpen(false)
       }
     },
-    [searchQuery, navigate]
-  );
+    [searchQuery, navigate],
+  )
 
   const handleCategorySelect = useCallback(
     (category: string) => {
-      navigate(`/category/${category.toLowerCase()}`);
-      setSearchQuery("");
-      setMoreMenuOpen(false);
-      setMenuOpen(false);
+      navigate(`/category/${category.toLowerCase()}`)
+      setSearchQuery("")
+      setMoreMenuOpen(false)
+      setMenuOpen(false)
+      setIsCollectionOpen(false)
     },
-    [navigate]
-  );
-
-  const [groupedCategories, setGroupedCategories] = useState({});
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [hoveredSubcategory, setHoveredSubcategory] = useState(null);
+    [navigate],
+  )
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
-        const data = await res.json();
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`)
+        const data = await res.json()
+        const grouped = {}
+        const categoryList = []
 
-        const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
           data.website.categories.forEach((item) => {
-            const sub = item?.subcategory;
-            if (!grouped[sub]) grouped[sub] = [];
-            grouped[sub].push(item);
-          });
+            const sub = item?.subcategory
+            if (!grouped[sub]) grouped[sub] = []
+            grouped[sub].push(item)
+            categoryList.push(item.name)
+          })
         }
 
-        setGroupedCategories(grouped);
+        setGroupedCategories(grouped)
+        setCategories(categoryList)
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        console.error("Failed to fetch categories:", error)
       }
-    };
-
-    fetchCategories();
-  }, [baseUrl, referenceWebsite]);
+    }
+    fetchCategories()
+  }, [baseUrl, referenceWebsite])
 
   useEffect(() => {
     const loadUser = () => {
       try {
-        const storedUser = localStorage.getItem("userData");
-        setUser(storedUser ? JSON.parse(storedUser) : null);
+        const storedUser = localStorage.getItem("userData")
+        setUser(storedUser ? JSON.parse(storedUser) : null)
       } catch (error) {
-        console.error("Failed to parse user from localStorage:", error);
-        setUser(null);
+        console.error("Failed to parse user from localStorage:", error)
+        setUser(null)
       }
-    };
-    loadUser();
-    const handleScroll = () => setIsSticky(window.scrollY > 100);
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("storage", loadUser);
+    }
+
+    loadUser()
+    const handleScroll = () => setIsSticky(window.scrollY > 100)
+    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("storage", loadUser)
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("storage", loadUser);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("storage", loadUser)
+    }
+  }, [])
 
   useEffect(() => {
-    dispatch(fetchWishlist());
-  }, [dispatch]);
+    dispatch(fetchWishlist())
+  }, [dispatch])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
-        setSearchQuery("");
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setSearchQuery("")
       }
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(event.target as Node)
-      ) {
-        setUserMenuOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false)
       }
-      if (
-        moreMenuRef.current &&
-        !moreMenuRef.current.contains(event.target as Node)
-      ) {
-        setMoreMenuOpen(false);
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
+        setMoreMenuOpen(false)
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
@@ -195,10 +306,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           </div>
         ))}
     </div>
-  );
+  )
 
   const renderUserMenu = () => (
-    <div className="absolute right-0 mt-3 w-72 bg-white shadow-lg rounded-2xl overflow-hidden z-30 border border-gray-100">
+    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl overflow-hidden z-30 border border-gray-100">
       {user ? (
         <>
           <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-cyan-600">
@@ -227,9 +338,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
               <div>
                 <span className="block">Your Wishlist</span>
-                <span className="text-xs text-gray-500">
-                  {wishlistCount} items saved
-                </span>
+                <span className="text-xs text-gray-500">{wishlistCount} items saved</span>
               </div>
             </Link>
           </div>
@@ -241,9 +350,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CiLogin color="white" size={18} />
               </div>
-              <span className="group-hover:text-red-600 transition-colors">
-                Sign out
-              </span>
+              <span className="group-hover:text-red-600 transition-colors">Sign out</span>
             </button>
           </div>
         </>
@@ -254,9 +361,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               <User size={24} className="text-white" />
             </div>
             <h3 className="font-bold text-lg text-gray-800">Welcome!</h3>
-            <p className="text-sm text-gray-500">
-              Sign in for the best experience
-            </p>
+            <p className="text-sm text-gray-500">Sign in for the best experience</p>
           </div>
           <Link
             to="/login"
@@ -265,13 +370,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           >
             Login / Register
           </Link>
-          <p className="text-xs text-center text-gray-400 mt-4">
-            Join us for exclusive tech deals and faster checkout
-          </p>
+          <p className="text-xs text-center text-gray-400 mt-4">Join us for exclusive tech deals and faster checkout</p>
         </div>
       )}
     </div>
-  );
+  )
 
   const renderMobileMenu = () => (
     <div className="fixed inset-0 z-40 lg:hidden bg-black bg-opacity-60 backdrop-blur-sm">
@@ -348,9 +451,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             </div>
             <div className="py-6 border-t border-gray-100">
-              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">
-                Account
-              </h3>
+              <h3 className="px-6 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">Account</h3>
               <div className="mt-4">
                 <Link
                   to="/wishlist"
@@ -385,134 +486,15 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </div>
     </div>
-  );
-  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
-  // const [activeCategory, setActiveCategory] = useState(null);
-
-  const categoriess = [
-    {
-      name: "Electronics",
-      items: [
-        {
-          name: "Smartphones",
-          price: "From $299",
-          icon: "/placeholder.svg?height=48&width=48&text=Phone",
-        },
-        {
-          name: "Laptops",
-          price: "From $599",
-          icon: "/placeholder.svg?height=48&width=48&text=Laptop",
-        },
-        {
-          name: "Headphones",
-          price: "From $49",
-          icon: "/placeholder.svg?height=48&width=48&text=Headphones",
-        },
-        {
-          name: "Tablets",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Tablet",
-        },
-        {
-          name: "Smart Watches",
-          price: "From $129",
-          icon: "/placeholder.svg?height=48&width=48&text=Watch",
-        },
-      ],
-    },
-    {
-      name: "Fashion",
-      items: [
-        {
-          name: "Men's Clothing",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Shirt",
-        },
-        {
-          name: "Women's Clothing",
-          price: "From $39",
-          icon: "/placeholder.svg?height=48&width=48&text=Dress",
-        },
-        {
-          name: "Shoes",
-          price: "From $59",
-          icon: "/placeholder.svg?height=48&width=48&text=Shoes",
-        },
-        {
-          name: "Bags",
-          price: "From $49",
-          icon: "/placeholder.svg?height=48&width=48&text=Bag",
-        },
-        {
-          name: "Accessories",
-          price: "From $19",
-          icon: "/placeholder.svg?height=48&width=48&text=Accessory",
-        },
-      ],
-    },
-    {
-      name: "Home & Garden",
-      items: [
-        {
-          name: "Furniture",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Chair",
-        },
-        {
-          name: "Decor",
-          price: "From $19",
-          icon: "/placeholder.svg?height=48&width=48&text=Vase",
-        },
-        {
-          name: "Kitchenware",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Kitchen",
-        },
-        {
-          name: "Bedding",
-          price: "From $39",
-          icon: "/placeholder.svg?height=48&width=48&text=Bed",
-        },
-        {
-          name: "Lighting",
-          price: "From $25",
-          icon: "/placeholder.svg?height=48&width=48&text=Light",
-        },
-      ],
-    },
-    {
-      name: "Sports",
-      items: [
-        {
-          name: "Fitness Equipment",
-          price: "From $99",
-          icon: "/placeholder.svg?height=48&width=48&text=Dumbbell",
-        },
-        {
-          name: "Team Sports",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Ball",
-        },
-        {
-          name: "Cycling",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Bike",
-        },
-      ],
-    },
-  ];
+  )
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-lg py-2">
+      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2">
         <div className="container mx-auto px-10">
           <div className="flex items-center justify-between h-18">
             <Link to="/" className="flex items-center space-x-3">
-              <img
-                src={logo || "/placeholder.svg"}
-                alt="Logo"
-                className="h-20 w-25 rounded"
-              />
+              <img src={logo || "/placeholder.svg"} alt="Logo" className="h-20 w-25 rounded" />
             </Link>
 
             {/* Desktop Search Bar */}
@@ -549,9 +531,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <User size={16} className="text-white" />
                   </div>
-                  <span className="text-sm font-semibold">
-                    {user ? user.firstName : "Account"}
-                  </span>
+                  <span className="text-sm font-semibold">{user ? user.firstName : "Account"}</span>
                 </button>
                 {userMenuOpen && renderUserMenu()}
               </div>
@@ -643,175 +623,211 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         </div>
       </nav>
 
-      {/* Category Navigation */}
-      <div className="header-bottom bg-gradient-to-r from-[#A13C78] to-[#da77b2] py-4">
+      {/* Category Navigation - Matching the provided image with API data */}
+      <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center">
-            {/* Browse All Collection */}
+          <div className="flex">
+            {/* Browse All Collection Dropdown */}
             <div
-              className="w-full md:w-auto lg:w-3/12 xl:w-3/12 relative"
+              className="w-1/4 relative"
               onMouseEnter={() => {
-                setIsCollectionOpen(true);
-                setActiveCategory(0); // Auto-select first category on hover
+                setIsCollectionOpen(true)
+                setActiveCategory(0) // Auto-select first category on hover
               }}
               onMouseLeave={() => setIsCollectionOpen(false)}
             >
-              <div className=" bg-opacity-90 backdrop-blur-sm rounded-lg p-4 cursor-pointer hover:bg-opacity-100 transition-all duration-200">
-                <div className="uppercase font-bold inline-flex items-center text-gray-800">
-                  <span className="text-gray-200">Browse All Collection</span>
-                  <ChevronDown className="w-4 h-4 ml-2" />
+              <div className="bg-gray-100 p-4 cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                <div className="flex items-center justify-between">
+                <ListFilter />
+                <span className="font-semibold text-gray-800">Browse All Collection</span>
+                  <ChevronDown className="w-4 h-4 text-gray-600" />
                 </div>
               </div>
 
               {/* Collection Dropdown */}
               {isCollectionOpen && (
-                <div className="absolute left-0 top-[45px] mt-2 w-full min-w-[800px] bg-white rounded-md shadow-xl z-50 border">
-                  <div className="p-6">
-                    <div className="flex">
-                      {/* Category List - Left Panel */}
-                      <div className="w-1/4 border-r border-gray-200 pr-4">
-                        {Object.entries(groupedCategories).map(
-                          ([subcategory, items], index) => (
-                            <div
-                              key={index}
-                              className="mb-4"
-                              onMouseEnter={() => setActiveCategory(index)}
-                            >
-                              <div className="border-b border-gray-200 pb-3">
-                                <a
-                                  href="#"
-                                  className={`flex items-center font-semibold text-gray-800 hover:text-[#A13C78] transition-colors duration-200 ${
-                                    activeCategory === index
-                                      ? "text-[#A13C78]"
-                                      : ""
-                                  }`}
-                                >
-                                  <span className="text-lg">{subcategory}</span>
-                                  {items?.length > 0 && (
-                                    <ChevronRight className="w-4 h-4 ml-2" />
-                                  )}
-                                </a>
+                <div className="absolute left-0 top-full w-full min-w-[800px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
+                  <div className="flex">
+                    {/* Category List - Left Panel */}
+                    <div className="w-1/4 bg-gray-50 border-r border-gray-200">
+                      <div className="py-2">
+                        {Object.entries(groupedCategories).map(([subcategory, items], index) => (
+                          <div
+                            key={index}
+                            className={`px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0 ${
+                              activeCategory === index ? "bg-white text-blue-600" : "hover:bg-white hover:text-blue-600"
+                            }`}
+                            onMouseEnter={() => setActiveCategory(index)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className={`${activeCategory === index ? "text-blue-600" : "text-gray-600"}`}>
+                                  {getSidebarIcon(subcategory)}
+                                </div>
+                                <span className="text-sm font-medium">{subcategory}</span>
                               </div>
+                              <ChevronRight className="w-4 h-4 text-gray-400" />
                             </div>
-                          )
-                        )}
-                      </div>
-
-                      {/* Subcategory Panel - Right Panel */}
-                      <div className="w-3/4 pl-6">
-                        {activeCategory !== null && (
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {Object.values(groupedCategories)[
-                              activeCategory
-                            ]?.map((item, itemIndex) => (
-                              <Link to={`/category/${item.name}`}
-                                key={itemIndex}
-                                className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
-                              >
-                                <div className="mr-4 bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                                  {item.image ? (
-                                    <img
-                                      src={item?.image}
-                                      alt={item?.name}
-                                      className="w-12 h-12 object-contain"
-                                    />
-                                  ) : (
-                                    <div className="w-12 h-12 flex items-center justify-center text-gray-400">
-                                      <ImageIcon className="w-8 h-8" />
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
-                                    {item?.name}
-                                  </div>
-                                 
-                                </div>
-                              </Link>
-                            ))}
                           </div>
-                        )}
+                        ))}
                       </div>
+                    </div>
+
+                    {/* Product Grid - Right Panel */}
+                    <div className="flex-1 p-6 bg-white">
+                      {activeCategory !== null && Object.values(groupedCategories)[activeCategory] ? (
+                        <div className="grid grid-cols-3 gap-6">
+                          {Object.values(groupedCategories)[activeCategory]?.map((item: any, index: number) => (
+                            <Link
+                              key={index}
+                              to={`/category/${item.name}`}
+                              className="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                              onClick={() => setIsCollectionOpen(false)}
+                            >
+                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                                {item.image ? (
+                                  <img
+                                    src={item.image || "/placeholder.svg"}
+                                    alt={item.name}
+                                    className="w-12 h-12 object-contain"
+                                  />
+                                ) : (
+                                  getCategoryIcon(item.name)
+                                )}
+                              </div>
+                              <div className="text-center">
+                                <h3 className="font-medium text-gray-900 text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                                  {item.name}
+                                </h3>
+                                <p className="text-xs text-gray-500">
+                                  {item.price ? `From $${item.price}` : "View Products"}
+                                </p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        // Show featured categories when no specific category is hovered
+                        <div className="grid grid-cols-3 gap-6">
+                          {categories.slice(0, 12).map((categoryName, index) => (
+                            <Link
+                              key={index}
+                              to={`/category/${categoryName.toLowerCase()}`}
+                              className="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                              onClick={() => setIsCollectionOpen(false)}
+                            >
+                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                                {getCategoryIcon(categoryName)}
+                              </div>
+                              <div className="text-center">
+                                <h3 className="font-medium text-gray-900 text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                                  {categoryName}
+                                </h3>
+                                <p className="text-xs text-gray-500">View Products</p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Navigation Menu */}
-            <div className="hidden xl:block xl:flex-1 ml-8">
-              <nav>
-                <ul className="flex space-x-8 justify-center">
-                  <li>
-                    <Link
-                      to={"/"}
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      HOME
-                    </Link>
-                  </li>
-                  {Object.entries(groupedCategories).map(
-                    ([subcategory, items], index) => (
+            {/* Navigation Menu - Right side */}
+            <div className="flex-1 py-4">
+              <div className="flex items-center justify-start ms-20">
+                <nav className="hidden xl:block">
+                  <ul className="flex space-x-8">
+                    <li>
+                      <Link
+                        to={"/"}
+                        className="font-medium text-black hover:text-[#c1467f] transition-colors duration-200 uppercase tracking-wide"
+                      >
+                        HOME
+                      </Link>
+                    </li>
+                    {Object.entries(groupedCategories).map(([subcategory, items], index) => (
                       <li
                         key={index}
                         className="relative group"
                         onMouseEnter={() => setHoveredSubcategory(subcategory)}
                         onMouseLeave={() => setHoveredSubcategory(null)}
                       >
-                        <span className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide cursor-pointer">
+                        <span className="font-medium text-black hover:text-[#c1467f] transition-colors duration-200 uppercase tracking-wide cursor-pointer">
                           {subcategory}
                         </span>
-
-                        {/* Dropdown Panel */}
+                        {/* Enhanced Dropdown Panel with API Data */}
                         {hoveredSubcategory === subcategory && (
-                          <div className="absolute left-0 top-[20px] mt-2 w-auto bg-white shadow-xl rounded-md z-50 p-6">
-                            <div className="grid grid-cols-2 gap-4">
-                              {items.map((item, itemIndex) => (
-                               <Link to={`/category/${item.name}`}
-                                  key={itemIndex}
-                                  className=" p-2 hover:bg-gray-100 rounded cursor-pointer"
-                                >
-                                  <div className=" flex flex-col font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
-                                   {item.name}
-                                  </div>
-                                </Link>
-                              ))}
+                          <div className="absolute left-0 top-[20px] mt-2 w-auto min-w-[600px] bg-white shadow-xl rounded-md z-50 border">
+                            <div className="p-6">
+                              {/* Dynamic grid based on number of items */}
+                              <div
+                                className={`grid gap-6 ${items.length <= 6 ? "grid-cols-2" : items.length <= 9 ? "grid-cols-3" : "grid-cols-4"}`}
+                              >
+                                {items.map((item: any, itemIndex: number) => (
+                                  <Link
+                                    to={`/category/${item.name}`}
+                                    key={itemIndex}
+                                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                                  >
+                                    {getDropdownIcon(item.name, itemIndex)}
+                                    <div className="flex-1">
+                                      <div className="font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
+                                        {item.name}
+                                      </div>
+                                      {item.description && (
+                                        <div className="text-xs text-gray-500 mt-1 line-clamp-1">
+                                          {item.description}
+                                        </div>
+                                      )}
+                                      {item.price && (
+                                        <div className="text-xs text-green-600 font-medium mt-1">
+                                          From ${item.price}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+
+                              {/* View All Link */}
+                              {items.length > 8 && (
+                                <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+                                  <Link
+                                    to={`/category/${subcategory.toLowerCase()}`}
+                                    className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                  >
+                                    View All {subcategory}
+                                    <ChevronRight size={16} className="ml-1" />
+                                  </Link>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
                       </li>
-                    )
-                  )}
-                </ul>
-              </nav>
+                    ))}
+                  </ul>
+                </nav>
+                {/* Mobile Menu Button */}
+                <div className="xl:hidden ml-auto">
+                  <button className="text-white p-2">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* Mobile Menu Button (for responsive design) */}
-            <div className="xl:hidden ml-auto">
-              <button className="text-white p-2">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-
           </div>
         </div>
       </div>
 
       {menuOpen && renderMobileMenu()}
     </>
-  );
-};
+  )
+}
 
-export default memo(Navbar);
+export default memo(Navbar)
