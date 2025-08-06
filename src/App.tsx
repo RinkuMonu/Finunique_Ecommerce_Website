@@ -40,7 +40,12 @@ import Products from "./pages/Products";
 import WhatsAppButton from "./pages/WhatsAppButton";
 import LoginModal from "./components/loginModal/LoginModal";
 import AboutUs from "./pages/AboutUs";
-import {ProfilePage} from "./components/userProfile/userProfile";
+// import ProfilePage from "./components/userProfile/userProfile";
+import Stories from "./pages/Stories";
+import StoriesDetails from "./pages/Stories-details";
+import ContactPage from "./pages/contactus/ContactPage";
+
+ import ProfilePage from "./components/userProfile/userProfile";
 
 function App() {
   const location = useLocation();
@@ -138,11 +143,13 @@ function App() {
           {/* <Route path="/policy" element={<Policy />} />  */}
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/refund" element={<Refund />} />
-          <Route path="/cancellation_policy" element={<CancellationPolicy />} />
-          <Route path="/terms" element={<Terms />} />
+          {/* <Route path="/profile-page" element={<ProfilePage />} /> */}
+          <Route path="/return-and-exchanges" element={<Refund />} />
+          <Route path="/cancellation-policy" element={<CancellationPolicy />} />
+          <Route path="/terms-and-condition" element={<Terms />} />
           <Route path="/shipping" element={<Shipping />} />
-          <Route path="/Privacy" element={<Privacy />} />
+          <Route path="/privacy-policy" element={<Privacy />} />
+          <Route path="/contact-us" element={<ContactPage />} />
           <Route
             path="/address"
             element={
@@ -166,7 +173,8 @@ function App() {
           <Route path="/trackorder" element={<TrackOrder />} />
           <Route path="/products" element={<Products />} />
           <Route path="/termsandcondition" element={<Termsandcondition />} />
-
+   <Route path="/stories" element={<Stories/>} />
+      <Route path="/stories-details" element={<StoriesDetails/>} />
           {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
         </Routes>
       </main>

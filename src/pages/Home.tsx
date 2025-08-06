@@ -71,14 +71,14 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
     <>
       <Banner />
       <FeaturedSections />
-      <TrendingProducts addToCart={addToCart} /> {/* Pass addToCart here */}
+      <TrendingProducts addToCart={addToCart} /> 
       <DealsOfTheDay />
-      <Arrivals addToCart={addToCart} />
-      <TopCategories />
+      {/* <Arrivals addToCart={addToCart} />
+      <TopCategories /> */}
 
       <HowItWorks />
       <DeliveryFeatures />
-      {/* <Newsletter /> */}
+      <Newsletter />
     </>
   );
 }

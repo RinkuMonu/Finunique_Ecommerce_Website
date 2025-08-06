@@ -1,6 +1,7 @@
 "use client"
 
 import { Search, Palette, ShoppingBag, ArrowRight, CheckCircle } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const HowItWorks = () => {
   const steps = [
@@ -96,57 +97,119 @@ const HowItWorks = () => {
         
 
         {/* Trust Indicators */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-[#A13C78] mb-1">10K+</div>
-            <div className="text-sm text-gray-600">Happy Customers</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-[#384D89] mb-1">99%</div>
-            <div className="text-sm text-gray-600">Satisfaction Rate</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-[#2A4172] mb-1">24/7</div>
-            <div className="text-sm text-gray-600">Customer Support</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-[#C1467F] mb-1">2-Day</div>
-            <div className="text-sm text-gray-600">Fast Delivery</div>
-          </div>
+    <div className="mt-20 mb-16 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-6xl mx-auto">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* Happy Customers */}
+      <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#A13C78]/5 to-[#C1467F]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative z-10 text-center">
+          <div className="text-4xl font-bold text-[#A13C78] mb-2">10K+</div>
+          <div className="text-sm font-medium text-gray-600">Happy Customers</div>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#A13C78] to-[#C1467F]"></div>
+      </div>
+
+      {/* Satisfaction Rate */}
+      <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#384D89]/5 to-[#2A4172]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative z-10 text-center">
+          <div className="text-4xl font-bold text-[#384D89] mb-2">99%</div>
+          <div className="text-sm font-medium text-gray-600">Satisfaction Rate</div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#384D89] to-[#2A4172]"></div>
+      </div>
+
+      {/* Customer Support */}
+      <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2A4172]/5 to-[#1B2E4F]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative z-10 text-center">
+          <div className="text-4xl font-bold text-[#2A4172] mb-2">24/7</div>
+          <div className="text-sm font-medium text-gray-600">Customer Support</div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2A4172] to-[#1B2E4F]"></div>
+      </div>
+
+      {/* Fast Delivery */}
+      <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#C1467F]/5 to-[#A13C78]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative z-10 text-center">
+          <div className="text-4xl font-bold text-[#C1467F] mb-2">2-Day</div>
+          <div className="text-sm font-medium text-gray-600">Fast Delivery</div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C1467F] to-[#A13C78]"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* FAQ Preview */}
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Frequently Asked Questions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                question: "How long does delivery take?",
-                answer: "Most orders are delivered within 2-3 business days with free shipping on orders over $50.",
-              },
-              {
-                question: "What's your return policy?",
-                answer: "We offer a 30-day return policy for all items in original condition with tags attached.",
-              },
-              {
-                question: "Do you offer customer support?",
-                answer: "Yes, our customer support team is available 24/7 via chat, email, or phone.",
-              },
-              {
-                question: "Are payments secure?",
-                answer: "All payments are processed securely using industry-standard encryption and security measures.",
-              },
-            ].map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                <h4 className="font-semibold text-gray-900 mb-2">{faq.question}</h4>
-                <p className="text-gray-600 text-sm">{faq.answer}</p>
-              </div>
-            ))}
+     <div className="mt-20 mb-16 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-4xl mx-auto">
+    <h3 className="text-3xl font-bold text-[#1B2E4F] text-center mb-12 relative">
+      Frequently Asked Questions
+      <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#A13C78] to-[#C1467F] rounded-full"></span>
+    </h3>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {[
+        {
+          question: "How long does delivery take?",
+          answer: "Most orders are delivered within 2-3 business days with free shipping on orders over $50.",
+          icon: "🚚",
+        },
+        {
+          question: "What's your return policy?",
+          answer: "We offer a 30-day return policy for all items in original condition with tags attached.",
+          icon: "🔄",
+        },
+        {
+          question: "Do you offer customer support?",
+          answer: "Yes, our customer support team is available 24/7 via chat, email, or phone.",
+          icon: "💬",
+        },
+        {
+          question: "Are payments secure?",
+          answer: "All payments are processed securely using industry-standard encryption and security measures.",
+          icon: "🔒",
+        },
+      ].map((faq, index) => (
+        <div 
+          key={index} 
+          className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 relative overflow-hidden group"
+        >
+          {/* Decorative accent */}
+          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#A13C78] to-[#C1467F]"></div>
+          
+          <div className="flex items-start space-x-4">
+            <span className="text-2xl flex-shrink-0">{faq.icon}</span>
+            <div>
+              <h4 className="font-bold text-lg text-[#2A4172] mb-3 group-hover:text-[#384D89] transition-colors">
+                {faq.question}
+              </h4>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {faq.answer}
+              </p>
+            </div>
           </div>
+          
+          {/* Hover effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#384D89]/5 to-[#C1467F]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         </div>
+      ))}
+    </div>
+    
+    <div className="mt-12 text-center">
+      <p className="text-gray-500 mb-4">Still have questions?</p>
+      <Link to={"/contact-us"} className="bg-gradient-to-r from-[#A13C78] to-[#C1467F] text-white font-medium py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-[#C1467F]/30 transition-all duration-300">
+        Contact Support
+      </Link>
+    </div>
+  </div>
+</div>
       </div>
     </section>
-  )
+  ) 
 }
 
 export default HowItWorks
