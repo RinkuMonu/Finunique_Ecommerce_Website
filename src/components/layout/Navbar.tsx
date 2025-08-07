@@ -240,27 +240,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-
-      const filtered = categories.filter((cat) =>
-        cat.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      if (filtered.length > 0) {
-        // Use first suggestion
-        const firstSuggestion = filtered[0];
-        handleCategorySelect(firstSuggestion);
-        navigate(`/category/${encodeURIComponent(firstSuggestion)}`);
-      } else if (searchQuery) {
-        // Fallback to raw query
-        navigate(`/category/${encodeURIComponent(searchQuery)}`);
+      if (searchQuery) {
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setSearchQuery("");
+        setSearchOpen(false);
       }
-
-      setSearchQuery("");
-      setSearchOpen(false);
     },
-    [searchQuery, navigate, categories]
+    [searchQuery, navigate]
   );
-
 
   const handleCategorySelect = useCallback(
     (category: string) => {
@@ -898,7 +885,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="bg-gradient-to-br from-[#2a4172] to-[#dd45a8]  border-b border-gray-200 p-2">
+      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
@@ -978,10 +965,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
                       onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
                     >
-
+                   
                       More Product <ChevronDown size={18} />
                       {hoveredSubcategory === "more" && (
-                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{ height: "80vh", overflowY: "auto" }}>
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
                           <div className="p-4">
                             <ul className="space-y-4">
                               {Object.entries(groupedCategories)

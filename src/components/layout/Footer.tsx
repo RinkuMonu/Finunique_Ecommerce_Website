@@ -122,7 +122,7 @@ export default function Footer() {
 
           {/* Categories */}
           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+            <h3 className="text-lg uppercase font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
               Categories
             </h3>
             <div className="space-y-3">
@@ -141,7 +141,7 @@ export default function Footer() {
 
            <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Collections
+            POPULAR SEARCHES
             </h3>
             <div className="space-y-3">
               {categories.slice(11, 20).map((category, index) => (
@@ -183,7 +183,7 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+            <h3 className="text-lg font-semibold uppercase text-white border-b border-[#C1467F] pb-2 inline-block">
               Company
             </h3>
             <div className="space-y-3">
