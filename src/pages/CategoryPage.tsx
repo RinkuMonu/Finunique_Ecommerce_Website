@@ -8,7 +8,10 @@ export default function CategoryPage() {
   let initialMinPrice = 0
   let initialMaxPrice = 50000
   const { category } = useParams()
-  const catagory1 = category?.replace("-", " ")
+  // const catagory1 = category?.replace("-", " ")
+   const catagory1 = category
+  ?.replace(/-/g, " ")      // step 1: replace all hyphens with space
+  .replace(/\band\b/g, "&");
   const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])

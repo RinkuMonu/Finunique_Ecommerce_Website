@@ -146,13 +146,13 @@ export default function Footer() {
 
            <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Categories
+              Collections
             </h3>
             <div className="space-y-3">
               {categories.slice(11, 20).map((category, index) => (
                 <Link
                   key={category._id}
-                  to={`/category/${encodeURIComponent(category.name)}`}
+                  to={`/category/${encodeURIComponent(slugify(category.name))}`}
                   className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
                   {category.name}
