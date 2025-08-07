@@ -149,7 +149,7 @@ export const OrderPage1 = () => {
                     >
                       <div className="flex-shrink-0 h-24 w-24">
                         <img
-                          src={`${baseUrliMAGE}${product?.product?.images[0]}`}
+                          src={product?.product?.images}
                           alt={product?.product?.productName}
                           className="h-full w-full object-cover rounded-lg border border-[#C1467F]"
                         />

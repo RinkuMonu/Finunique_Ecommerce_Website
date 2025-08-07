@@ -1,26 +1,56 @@
 "use client";
 import { useEffect, useState, useRef, useCallback, memo } from "react";
+import type React from "react";
 import {
   Search,
   Heart,
   ShoppingCart,
   Menu,
   X,
-  ChevronDown,
+  ChevronRight,
   Smartphone,
   Cpu,
   User,
-  ChevronRight,
-  ImageIcon,
   Zap,
+  Wind,
+  ComputerIcon as Blender,
+  Lightbulb,
+  Flame,
+  Fan,
+  Refrigerator,
+  Microwave,
+  ChefHat,
+  WashingMachine,
+  CookingPotIcon as Stove,
+  AirVentIcon as Vacuum,
+  Monitor,
+  Headphones,
+  Camera,
+  Gamepad2,
+  Tablet,
+  Watch,
+  Speaker,
+  ListFilter,
+  ChevronDown,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import logo from "../../assest/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
 import { FaHeart, FaUser } from "react-icons/fa";
 import { CiLogin } from "react-icons/ci";
+
+interface NavbarProps {
+  onCartClick: () => void;
+  cartItemCount: number;
+}
+
+interface UserData {
+  firstName: string;
+  lastName?: string;
+  email: string;
+}
 
 const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const dispatch = useDispatch();
@@ -29,7 +59,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   );
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("token");
-
   const cartItemsFromLocalStorage = JSON.parse(
     localStorage.getItem("addtocart") || "[]"
   );
@@ -37,33 +66,165 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     ? cartItemCount
     : cartItemsFromLocalStorage.length;
 
+  // State management
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [user, setUser] = useState<UserData | null>(null);
-  const textColor = "#1B2E4F";
-  const primaryColor = "rgb(157 48 137)";
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [hoveredSubcategory, setHoveredSubcategory] = useState<string | null>(
+    null
+  );
+  const [hoveredCategoryName, setHoveredCategoryName] = useState<string | null>(
+    null
+  );
+  const [mobileSubcategoryOpen, setMobileSubcategoryOpen] = useState<
+    string | null
+  >(null);
 
-  // Memoized styles
-  const gradientStyle = {
-    background: `linear-gradient(135deg, ${primaryColor}, #2A4172)`,
-  };
-  const buttonHoverStyle = {
-    background: `linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))`,
-    color: primaryColor,
-  };
+  const [groupedCategories, setGroupedCategories] = useState<
+    Record<string, any[]>
+  >({});
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
 
+  // Refs
   const searchRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
+  // Constants
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+  const primaryColor = "rgb(157 48 137)";
 
+  // Responsive check
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 1024);
+      if (window.innerWidth >= 1024) {
+        setMenuOpen(false);
+        setSearchOpen(false);
+        setMobileSubcategoryOpen(null);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Category icon mappings
+  const categoryIcons = {
+    // Electronics
+    smartphones: <Smartphone size={32} className="text-blue-500" />,
+    smartphone: <Smartphone size={32} className="text-blue-500" />,
+    laptops: <Monitor size={32} className="text-purple-600" />,
+    laptop: <Monitor size={32} className="text-purple-600" />,
+    headphones: <Headphones size={32} className="text-green-600" />,
+    headphone: <Headphones size={32} className="text-green-600" />,
+    cameras: <Camera size={32} className="text-orange-600" />,
+    camera: <Camera size={32} className="text-orange-600" />,
+    gaming: <Gamepad2 size={32} className="text-red-600" />,
+    tablets: <Tablet size={32} className="text-cyan-600" />,
+    tablet: <Tablet size={32} className="text-cyan-600" />,
+    watches: <Watch size={32} className="text-pink-600" />,
+    watch: <Watch size={32} className="text-pink-600" />,
+    speakers: <Speaker size={32} className="text-indigo-600" />,
+    speaker: <Speaker size={32} className="text-indigo-600" />,
+    // Home Appliances
+    "air conditioning": <Wind size={32} className="text-blue-500" />,
+    blender: <Blender size={32} className="text-green-500" />,
+    lighting: <Lightbulb size={32} className="text-yellow-500" />,
+    "flat iron": <Flame size={32} className="text-orange-500" />,
+    "electric fan": <Fan size={32} className="text-blue-400" />,
+    fan: <Fan size={32} className="text-blue-400" />,
+    heating: <Flame size={32} className="text-red-500" />,
+    refrigerator: <Refrigerator size={32} className="text-cyan-500" />,
+    microwave: <Microwave size={32} className="text-gray-600" />,
+    "electric cooker": <ChefHat size={32} className="text-purple-500" />,
+    cooker: <ChefHat size={32} className="text-purple-500" />,
+    "washing machine": <WashingMachine size={32} className="text-indigo-500" />,
+    "electric stove": <Stove size={32} className="text-red-600" />,
+    stove: <Stove size={32} className="text-red-600" />,
+    "vacuum cleaner": <Vacuum size={32} className="text-pink-500" />,
+    vacuum: <Vacuum size={32} className="text-pink-500" />,
+    // Default
+    default: <Cpu size={32} className="text-gray-600" />,
+  };
+
+  const sidebarIcons = {
+    "home appliance": <Wind size={20} className="text-blue-600" />,
+    "gaming gears": <Gamepad2 size={20} className="text-red-600" />,
+    "computers & laptop": <Monitor size={20} className="text-purple-600" />,
+    "computer & peripherals": <Monitor size={20} className="text-purple-600" />,
+    "smartphone & tablet": <Smartphone size={20} className="text-green-600" />,
+    "mobile & tablet": <Smartphone size={20} className="text-green-600" />,
+    "audio gears": <Headphones size={20} className="text-orange-600" />,
+    cameras: <Camera size={20} className="text-cyan-600" />,
+    default: <Cpu size={20} className="text-gray-600" />,
+  };
+
+  // Helper functions
+  const getCategoryIcon = (categoryName: string) => {
+    const key = categoryName.toLowerCase();
+    return (
+      categoryIcons[key as keyof typeof categoryIcons] || categoryIcons.default
+    );
+  };
+
+  const getSidebarIcon = (categoryName: string) => {
+    const key = categoryName.toLowerCase();
+    return (
+      sidebarIcons[key as keyof typeof sidebarIcons] || sidebarIcons.default
+    );
+  };
+
+  const getDropdownIcon = (categoryName: string, index: number) => {
+    const colors = [
+      "text-blue-600 bg-blue-100",
+      "text-green-600 bg-green-100",
+      "text-purple-600 bg-purple-100",
+      "text-orange-600 bg-orange-100",
+      "text-red-600 bg-red-100",
+      "text-cyan-600 bg-cyan-100",
+      "text-pink-600 bg-pink-100",
+      "text-indigo-600 bg-indigo-100",
+      "text-yellow-600 bg-yellow-100",
+      "text-teal-600 bg-teal-100",
+    ];
+
+    const colorClass = colors[index % colors.length];
+    const iconMap = {
+      smartphones: (
+        <Smartphone size={20} className={colorClass.split(" ")[0]} />
+      ),
+      smartphone: <Smartphone size={20} className={colorClass.split(" ")[0]} />,
+      laptops: <Monitor size={20} className={colorClass.split(" ")[0]} />,
+      laptop: <Monitor size={20} className={colorClass.split(" ")[0]} />,
+      tablets: <Tablet size={20} className={colorClass.split(" ")[0]} />,
+      tablet: <Tablet size={20} className={colorClass.split(" ")[0]} />,
+      headphones: <Headphones size={20} className={colorClass.split(" ")[0]} />,
+      cameras: <Camera size={20} className={colorClass.split(" ")[0]} />,
+      default: <Cpu size={20} className={colorClass.split(" ")[0]} />,
+    };
+
+    const key = categoryName.toLowerCase();
+    const icon = (iconMap as any)[key] || iconMap.default;
+
+    return (
+      <div
+        className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]
+          }`}
+      >
+        {icon}
+      </div>
+    );
+  };
+
+  // Event handlers
   const handleLogout = useCallback(() => {
     localStorage.removeItem("userData");
     localStorage.removeItem("token");
@@ -91,40 +252,41 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     (category: string) => {
       navigate(`/category/${category.toLowerCase()}`);
       setSearchQuery("");
-      setMoreMenuOpen(false);
       setMenuOpen(false);
+      setIsCollectionOpen(false);
+      setMobileSubcategoryOpen(null);
     },
     [navigate]
   );
 
-  const [groupedCategories, setGroupedCategories] = useState({});
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [hoveredSubcategory, setHoveredSubcategory] = useState(null);
-
+  // Data fetching
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
+        const grouped: Record<string, any[]> = {};
+        const categoryList: string[] = [];
 
-        const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
-          data.website.categories.forEach((item) => {
+          data.website.categories.forEach((item: any) => {
             const sub = item?.subcategory;
             if (!grouped[sub]) grouped[sub] = [];
             grouped[sub].push(item);
+            categoryList.push(item.name);
           });
         }
 
         setGroupedCategories(grouped);
+        setCategories(categoryList);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
     };
-
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
 
+  // User and scroll effects
   useEffect(() => {
     const loadUser = () => {
       try {
@@ -135,10 +297,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         setUser(null);
       }
     };
+
     loadUser();
     const handleScroll = () => setIsSticky(window.scrollY > 100);
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("storage", loadUser);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("storage", loadUser);
@@ -149,6 +313,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     dispatch(fetchWishlist());
   }, [dispatch]);
 
+  // Click outside handlers
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -164,21 +329,23 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         setUserMenuOpen(false);
       }
       if (
-        moreMenuRef.current &&
-        !moreMenuRef.current.contains(event.target as Node)
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target as Node)
       ) {
-        setMoreMenuOpen(false);
+        // setIsCollectionOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Component render functions
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
       {categories
         .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
-        .map((cat, index) => (
+        .map((cat) => (
           <div
             key={cat}
             className="px-6 py-4 cursor-pointer transition-all duration-300 flex items-center justify-between border-b last:border-b-0 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 group"
@@ -198,7 +365,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   );
 
   const renderUserMenu = () => (
-    <div className="absolute right-0 mt-3 w-72 bg-white shadow-lg rounded-2xl overflow-hidden z-30 border border-gray-100">
+    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl overflow-hidden z-30 border border-gray-100">
       {user ? (
         <>
           <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-cyan-600">
@@ -386,150 +553,220 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </div>
     </div>
   );
-  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
-  // const [activeCategory, setActiveCategory] = useState(null);
 
-  const categoriess = [
-    {
-      name: "Electronics",
-      items: [
-        {
-          name: "Smartphones",
-          price: "From $299",
-          icon: "/placeholder.svg?height=48&width=48&text=Phone",
-        },
-        {
-          name: "Laptops",
-          price: "From $599",
-          icon: "/placeholder.svg?height=48&width=48&text=Laptop",
-        },
-        {
-          name: "Headphones",
-          price: "From $49",
-          icon: "/placeholder.svg?height=48&width=48&text=Headphones",
-        },
-        {
-          name: "Tablets",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Tablet",
-        },
-        {
-          name: "Smart Watches",
-          price: "From $129",
-          icon: "/placeholder.svg?height=48&width=48&text=Watch",
-        },
-      ],
-    },
-    {
-      name: "Fashion",
-      items: [
-        {
-          name: "Men's Clothing",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Shirt",
-        },
-        {
-          name: "Women's Clothing",
-          price: "From $39",
-          icon: "/placeholder.svg?height=48&width=48&text=Dress",
-        },
-        {
-          name: "Shoes",
-          price: "From $59",
-          icon: "/placeholder.svg?height=48&width=48&text=Shoes",
-        },
-        {
-          name: "Bags",
-          price: "From $49",
-          icon: "/placeholder.svg?height=48&width=48&text=Bag",
-        },
-        {
-          name: "Accessories",
-          price: "From $19",
-          icon: "/placeholder.svg?height=48&width=48&text=Accessory",
-        },
-      ],
-    },
-    {
-      name: "Home & Garden",
-      items: [
-        {
-          name: "Furniture",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Chair",
-        },
-        {
-          name: "Decor",
-          price: "From $19",
-          icon: "/placeholder.svg?height=48&width=48&text=Vase",
-        },
-        {
-          name: "Kitchenware",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Kitchen",
-        },
-        {
-          name: "Bedding",
-          price: "From $39",
-          icon: "/placeholder.svg?height=48&width=48&text=Bed",
-        },
-        {
-          name: "Lighting",
-          price: "From $25",
-          icon: "/placeholder.svg?height=48&width=48&text=Light",
-        },
-      ],
-    },
-    {
-      name: "Sports",
-      items: [
-        {
-          name: "Fitness Equipment",
-          price: "From $99",
-          icon: "/placeholder.svg?height=48&width=48&text=Dumbbell",
-        },
-        {
-          name: "Team Sports",
-          price: "From $29",
-          icon: "/placeholder.svg?height=48&width=48&text=Ball",
-        },
-        {
-          name: "Cycling",
-          price: "From $199",
-          icon: "/placeholder.svg?height=48&width=48&text=Bike",
-        },
-      ],
-    },
-  ];
+  const renderCollectionDropdown = () => {
+    const handleSubcategoryClick = (subcategory: string) => {
+      if (isMobileView) {
+        setMobileSubcategoryOpen(
+          mobileSubcategoryOpen === subcategory ? null : subcategory
+        );
+      }
+    };
+
+    return (
+      <div className="absolute left-0  h-96 overflow-y-auto top-full w-full min-w-[400px] lg:min-w-[1200px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
+        <div className="flex flex-col lg:flex-row">
+          {/* Category List - Left Panel */}
+          <div className="w-full lg:w-1/4 bg-gray-50  lg:border-r  border-white">
+            <div className="py-2">
+              {Object.entries(groupedCategories).map(
+                ([subcategory, items], index) => (
+                  <div
+                    key={index}
+                    className={`px-4 py-3 my-4 mx-4 border-r-2 rounded-full cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0  ${activeCategory === index ||
+                      mobileSubcategoryOpen === subcategory
+                      ? "bg-white text-blue-600 font-semibold shadow-sm rounded-full"
+                      : "hover:bg-white hover:rounded-full hover:text-blue-600"
+                      }`}
+                    onMouseEnter={() =>
+                      !isMobileView && setActiveCategory(index)
+                    }
+                    onClick={() => handleSubcategoryClick(subcategory)}
+                  >
+                    <div className="relative flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`${activeCategory === index ||
+                            mobileSubcategoryOpen === subcategory
+                            ? "text-blue-600"
+                            : "text-gray-600"
+                            }`}
+                        >
+                          {getSidebarIcon(subcategory)}
+                        </div>
+                        <span className="text-sm font-medium">
+                          {subcategory}
+                        </span>
+                      </div>
+                      {isMobileView && (
+                        <ChevronRight
+                          className={`w-4 h-4 text-gray-400 transition-transform ${mobileSubcategoryOpen === subcategory
+                            ? "rotate-90"
+                            : ""
+                            }`}
+                        />
+                      )}
+                    </div>
+
+                    {/* Mobile subcategory items */}
+                    {isMobileView && mobileSubcategoryOpen === subcategory && (
+                      <div className="mt-2 ml-10 space-y-2">
+                        {items.map((item: any, itemIndex: number) => (
+                          <Link
+                            key={itemIndex}
+                            to={`/category/${item.name}`}
+                            className="block py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                            onClick={() => {
+                              setIsCollectionOpen(false);
+                              setMobileSubcategoryOpen(null);
+                            }}
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          {/* Product Grid - Right Panel (Desktop only) */}
+          {!isMobileView && (
+            <div className="flex-1 p-4 lg:p-6 bg-white">
+              {activeCategory !== null &&
+                Object.values(groupedCategories)[activeCategory] ? (
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {Object.values(groupedCategories)[activeCategory]?.map(
+                    (item: any, index: number) => (
+                      <Link
+                        key={index}
+                        to={`/category/${item.name}`}
+                        className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                        onClick={() => setIsCollectionOpen(false)}
+                      >
+                        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                          {item.image ? (
+                            <img
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
+                              className="w-8 h-8 lg:w-10 lg:h-10 object-contain"
+                            />
+                          ) : (
+                            getCategoryIcon(item.name)
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <h3 className="font-semibold text-sm lg:text-base group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                            {item.name}
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            {item.price ? `From $${item.price}` : "View Products"}
+                          </p>
+                        </div>
+                      </Link>
+                    )
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {categories.slice(0, 6).map((categoryName, index) => (
+                    <Link
+                      key={index}
+                      to={`/category/${categoryName.toLowerCase()}`}
+                      className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      onClick={() => setIsCollectionOpen(false)}
+                    >
+                      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                        {getCategoryIcon(categoryName)}
+                      </div>
+                      <div className="text-center">
+                        <h3 className="font-semibold text-sm lg:text-base group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                          {categoryName}
+                        </h3>
+                        <p className="text-xs text-gray-500">View Products</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+    );
+  };
+
+  const renderSubcategoryDropdown = (subcategory: string, items: any[]) => (
+    <div className="absolute left-0 top-[14px] mt-2 w-auto min-w-[300px] bg-white shadow-xl rounded-md z-50 border">
+      <div className="p-4 lg:p-6">
+        <div className="flex flex-col space-y-3 lg:space-y-4">
+          {items.slice(0, 8).map((item: any, itemIndex: number) => (
+            <Link
+              to={`/category/${item.name}`}
+              key={itemIndex}
+              className="flex items-center space-x-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+            >
+              {getDropdownIcon(item.name, itemIndex)}
+              <div className="flex-1">
+                <div className="font-medium  text-[#ca6296] transition-colors duration-200 text-sm lg:text-base">
+                  {item.name}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {items.length > 8 && (
+          <div className="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t border-gray-200 text-center">
+            <Link
+              to={`/category/${subcategory.toLowerCase()}`}
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              View All {subcategory}
+              <ChevronRight size={16} className="ml-1" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-lg py-2">
-        <div className="container mx-auto px-10">
-          <div className="flex items-center justify-between h-18">
+      <nav
+        className={`bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2 transition-all duration-300 ${isSticky ? "shadow-md" : ""
+          }`}
+        ref={navbarRef}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 lg:h-18">
+            {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
               <img
                 src={logo || "/placeholder.svg"}
                 alt="Logo"
-                className="h-20 w-25 rounded"
+                className="h-12 w-auto lg:h-16"
               />
             </Link>
 
             {/* Desktop Search Bar */}
-            <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+            <div className="hidden lg:flex flex-1 max-w-2xl mx-4 lg:mx-8">
               <div className="relative w-full" ref={searchRef}>
                 <form onSubmit={handleSearchSubmit} className="w-full">
                   <div className="relative">
                     <input
                       type="search"
-                      className="w-full pl-6 pr-14 py-3 text-sm border-2 border-gray-200 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50 hover:bg-white"
+                      className="w-full pl-6 pr-14 py-2 lg:py-3 text-sm border-2 border-gray-200 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50 hover:bg-white"
                       placeholder="Search for electronics, gadgets, accessories..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <button
                       type="submit"
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
                     >
                       <Search size={16} />
                     </button>
@@ -559,13 +796,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               {/* Wishlist */}
               <button
                 onClick={() => navigate("/wishlist")}
-                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
+                className="relative p-2 lg:p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-100 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Heart size={16} className="text-white" />
                 </div>
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-500 shadow-lg animate-pulse">
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-500 shadow-lg animate-pulse">
                     {wishlistCount}
                   </span>
                 )}
@@ -574,13 +811,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               {/* Shopping Cart */}
               <button
                 onClick={onCartClick}
-                className="relative p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
+                className="relative p-2 lg:p-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all group"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <ShoppingCart size={16} className="text-white" />
                 </div>
                 {totalCart > 0 && (
-                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center bg-gradient-to-r from-green-100 to-emerald-500 shadow-lg animate-bounce">
+                  <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-gradient-to-r from-green-100 to-emerald-500 shadow-lg animate-bounce">
                     {totalCart}
                   </span>
                 )}
@@ -588,7 +825,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </div>
 
             {/* Mobile Menu */}
-            <div className="flex lg:hidden items-center space-x-4">
+            <div className="flex lg:hidden items-center space-x-3">
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
@@ -623,7 +860,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   <div className="relative">
                     <input
                       type="search"
-                      className="w-full pl-6 pr-14 py-4 text-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50"
+                      className="w-full pl-6 pr-14 py-3 text-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-gray-50"
                       placeholder="Search electronics..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -644,165 +881,132 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="header-bottom bg-gradient-to-r from-[#A13C78] to-[#da77b2] py-4">
+      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center">
-            {/* Browse All Collection */}
+          <div className="flex flex-col lg:flex-row">
+            {/* Browse All Collection Dropdown */}
             <div
-              className="w-full md:w-auto lg:w-3/12 xl:w-3/12 relative"
-              onMouseEnter={() => {
-                setIsCollectionOpen(true);
-                setActiveCategory(0); // Auto-select first category on hover
-              }}
-              onMouseLeave={() => setIsCollectionOpen(false)}
+              className="w-full lg:w-1/4 relative"
+              onMouseEnter={() => !isMobileView && setIsCollectionOpen(true)}
+              onMouseLeave={() => !isMobileView && setIsCollectionOpen(false)}
             >
-              <div className=" bg-opacity-90 backdrop-blur-sm rounded-lg p-4 cursor-pointer hover:bg-opacity-100 transition-all duration-200">
-                <div className="uppercase font-bold inline-flex items-center text-gray-800">
-                  <span className="text-gray-200">Browse All Collection</span>
-                  <ChevronDown className="w-4 h-4 ml-2" />
+              <button
+                onClick={() =>
+                  isMobileView && setIsCollectionOpen(!isCollectionOpen)
+                }
+                className="w-full text-white bg-[#c7588cc9] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C] transition-all duration-200 flex items-center justify-between"
+              >
+                <div className="flex items-center space-x-3">
+                  {/* <ListFilter size={20} /> */}
+                  <span className="font-semibold text-white text-sm lg:text-base">
+                    Browse All Category
+                  </span>
                 </div>
-              </div>
+                <ChevronDown
+                  size={18}
+                  className={`text-white transition-transform ${isCollectionOpen ? "rotate-180" : ""
+                    }`}
+                />
+              </button>
 
               {/* Collection Dropdown */}
-              {isCollectionOpen && (
-                <div className="absolute left-0 top-[45px] mt-2 w-full min-w-[800px] bg-white rounded-md shadow-xl z-50 border">
-                  <div className="p-6">
-                    <div className="flex">
-                      {/* Category List - Left Panel */}
-                      <div className="w-1/4 border-r border-gray-200 pr-4">
-                        {Object.entries(groupedCategories).map(
-                          ([subcategory, items], index) => (
-                            <div
-                              key={index}
-                              className="mb-4"
-                              onMouseEnter={() => setActiveCategory(index)}
-                            >
-                              <div className="border-b border-gray-200 pb-3">
-                                <a
-                                  href="#"
-                                  className={`flex items-center font-semibold text-gray-800 hover:text-[#A13C78] transition-colors duration-200 ${
-                                    activeCategory === index
-                                      ? "text-[#A13C78]"
-                                      : ""
-                                  }`}
-                                >
-                                  <span className="text-lg">{subcategory}</span>
-                                  {items?.length > 0 && (
-                                    <ChevronRight className="w-4 h-4 ml-2" />
-                                  )}
-                                </a>
-                              </div>
-                            </div>
-                          )
-                        )}
-                      </div>
-
-                      {/* Subcategory Panel - Right Panel */}
-                      <div className="w-3/4 pl-6">
-                        {activeCategory !== null && (
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {Object.values(groupedCategories)[
-                              activeCategory
-                            ]?.map((item, itemIndex) => (
-                              <Link to={`/category/${item.name}`}
-                                key={itemIndex}
-                                className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
-                              >
-                                <div className="mr-4 bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                                  {item.image ? (
-                                    <img
-                                      src={item?.image}
-                                      alt={item?.name}
-                                      className="w-12 h-12 object-contain"
-                                    />
-                                  ) : (
-                                    <div className="w-12 h-12 flex items-center justify-center text-gray-400">
-                                      <ImageIcon className="w-8 h-8" />
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
-                                    {item?.name}
-                                  </div>
-                                 
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {isCollectionOpen && renderCollectionDropdown()}
             </div>
 
-            {/* Navigation Menu */}
-            <div className="hidden xl:block xl:flex-1 ml-8">
-              <nav>
-                <ul className="flex space-x-8 justify-center">
-                  <li>
-                    <Link
-                      to={"/"}
-                      className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide"
-                    >
-                      HOME
-                    </Link>
-                  </li>
-                  {Object.entries(groupedCategories).map(
-                    ([subcategory, items], index) => (
-                      <li
-                        key={index}
-                        className="relative group"
-                        onMouseEnter={() => setHoveredSubcategory(subcategory)}
-                        onMouseLeave={() => setHoveredSubcategory(null)}
+            {/* Navigation Menu - Right side */}
+            <div className="flex-1 py-3 lg:py-4">
+              <div className="flex items-center justify-start lg:ms-20">
+                <nav className="hidden xl:block">
+                  <ul className="flex space-x-6 lg:space-x-8 items-center">
+                    <li>
+                      <Link
+                        to={"/"}
+                        className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2"
                       >
-                        <span className="font-medium text-white hover:text-gray-200 transition-colors duration-200 uppercase tracking-wide cursor-pointer">
-                          {subcategory}
-                        </span>
+                        {/* <img
+                          src="./Digiimage/1.avif" // Replace with the correct path to your image
+                          alt="Home Icon"
+                          className="h-4 w-4 rounded-full" // Adjust size as needed
+                        /> */}
+                        HOME
+                      </Link>
+                    </li>
+                    {Object.entries(groupedCategories)
+                      .slice(0, 4)
+                      .map(([subcategory, items], index) => (
+                        <li
+                          key={index}
+                          className="relative group"
+                          onMouseEnter={() =>
+                            !isMobileView && setHoveredSubcategory(subcategory)
+                          }
+                          onMouseLeave={() =>
+                            !isMobileView && setHoveredSubcategory(null)
+                          }
+                        >
+                          <span className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase cursor-pointer text-xs flex items-center gap-2">
+                            {/* <img
+                              src={`/path/to/${subcategory}-icon.svg`} // Replace with the correct path to your image
+                              alt={`${subcategory} Icon`}
+                              className="h-4 w-4" // Adjust size as needed
+                            /> */}
+                            {subcategory}
+                          </span>
+                          {hoveredSubcategory === subcategory &&
+                            renderSubcategoryDropdown(subcategory, items)}
+                        </li>
+                      ))}
+                    <li
+                      className="relative group font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2 cursor-pointer"
+                      onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
+                      onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
+                    >
+                   
+                      More Product <ChevronDown size={18} />
+                      {hoveredSubcategory === "more" && (
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
+                          <div className="p-4">
+                            <ul className="space-y-4">
+                              {Object.entries(groupedCategories)
+                                .slice(5)
+                                .map(([subcategory, items], index) => {
+                                  const uniqueItems = Array.from(
+                                    new Map(
+                                      items.map((item) => [
+                                        item.name.toLowerCase(),
+                                        item,
+                                      ])
+                                    ).values()
+                                  );
 
-                        {/* Dropdown Panel */}
-                        {hoveredSubcategory === subcategory && (
-                          <div className="absolute left-0 top-[20px] mt-2 w-auto bg-white shadow-xl rounded-md z-50 p-6">
-                            <div className="grid grid-cols-2 gap-4">
-                              {items.map((item, itemIndex) => (
-                               <Link to={`/category/${item.name}`}
-                                  key={itemIndex}
-                                  className=" p-2 hover:bg-gray-100 rounded cursor-pointer"
-                                >
-                                  <div className=" flex flex-col font-medium text-gray-800 hover:text-[#A13C78] transition-colors duration-200">
-                                   {item.name}
-                                  </div>
-                                </Link>
-                              ))}
-                            </div>
+                                  return uniqueItems.map((item, i) => (
+                                    <li
+                                      key={`${subcategory}-${i}`}
+                                      onMouseEnter={() => setHoveredCategoryName(item.name)}
+                                      onMouseLeave={() => setHoveredCategoryName(null)}
+                                      className="relative group"
+                                    >
+                                      <Link
+                                        to={`/category/${encodeURIComponent(
+                                          item.name.toLowerCase()
+                                        )}`}
+                                        className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                                      >
+                                        <span className="text-sm font-medium text-gray-800 truncate">
+                                          {item.name}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  ));
+                                })}
+                            </ul>
                           </div>
-                        )}
-                      </li>
-                    )
-                  )}
-                </ul>
-              </nav>
-            </div>
-
-            {/* Mobile Menu Button (for responsive design) */}
-            <div className="xl:hidden ml-auto">
-              <button className="text-white p-2">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
+                        </div>
+                      )}
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
 
           </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Palette, Layers, Leaf, Globe, Shield, Truck, Award, Users } from "lucide-react"
+import { Palette, Layers, Leaf, Globe, Award,  } from "lucide-react"
 
 const DeliveryFeatures = () => {
   const features = [
@@ -34,44 +34,18 @@ const DeliveryFeatures = () => {
     },
   ]
 
-  const trustIndicators = [
-    {
-      icon: <Shield className="w-5 h-5" />,
-      title: "Quality Guarantee",
-      description: "100% authentic products",
-      color: "#384D89",
-    },
-    {
-      icon: <Truck className="w-5 h-5" />,
-      title: "Free Shipping",
-      description: "On orders above ₹999",
-      color: "#A13C78",
-    },
-    {
-      icon: <Award className="w-5 h-5" />,
-      title: "Certified Artisans",
-      description: "Direct from master craftsmen",
-      color: "#2A4172",
-    },
-    {
-      icon: <Users className="w-5 h-5" />,
-      title: "10K+ Customers",
-      description: "Trusted by thousands",
-      color: "#C1467F",
-    },
-  ]
 
   return (
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Modern Header */}
-        <div className="text-center mb-12">
+        <div className="text-left mb-12">
           <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
             <Award size={16} />
             <span>Why Choose Us</span>
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Premium Quality Features</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">Premium Quality Features</h2>
+          <p className="text-md text-gray-600 max-w-2xl">
             Experience authentic craftsmanship with modern convenience and reliability
           </p>
         </div>
@@ -101,23 +75,7 @@ const DeliveryFeatures = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="bg-white rounded-2xl p-8 shadow-md border border-gray-200 mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Our Commitments</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {trustIndicators.map((indicator, index) => (
-              <div key={index} className="text-center group">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-white group-hover:scale-110 transition-transform duration-300"
-                  style={{ backgroundColor: indicator.color }}
-                >
-                  {indicator.icon}
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1">{indicator.title}</h4>
-                <p className="text-sm text-gray-600">{indicator.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        
 
         
       </div>

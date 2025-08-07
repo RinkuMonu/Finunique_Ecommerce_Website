@@ -87,23 +87,23 @@ export default function AboutUs() {
             <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-center text-center">
                 <div className="h-24 w-24 rounded-full bg-[#384D89] flex items-center justify-center text-2xl font-medium text-white">
-                  JD
+                  DK
                 </div>
-                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">Jane Doe</h3>
+                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">Mr. Dinesh Kumar</h3>
                 <p className="text-[#2A4172]">Founder & CEO</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="h-24 w-24 rounded-full bg-[#384D89] flex items-center justify-center text-2xl font-medium text-white">
-                  JS
+                  DS
                 </div>
-                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">John Smith</h3>
+                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">Mr. Deepak Sharma</h3>
                 <p className="text-[#2A4172]">Head of Products</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="h-24 w-24 rounded-full bg-[#A13C78] flex items-center justify-center text-2xl font-medium text-white">
-                  AR
+                  RK
                 </div>
-                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">Alex Ray</h3>
+                <h3 className="mt-4 text-xl font-semibold text-[#1B2E4F]">Rekha Kirad</h3>
                 <p className="text-[#2A4172]">Customer Experience Lead</p>
               </div>
             </div>

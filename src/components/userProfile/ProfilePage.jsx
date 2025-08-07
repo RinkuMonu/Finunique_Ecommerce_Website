@@ -13,7 +13,7 @@ export default function ProfilePage1() {
               src="https://via.placeholder.com/1536x384"
               alt="Cover photo of a mountain range"
               className="w-full h-full object-cover"
-            />
+            />    
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
           <div className="absolute bottom-4 right-4">
