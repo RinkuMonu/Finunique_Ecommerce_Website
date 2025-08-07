@@ -240,7 +240,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-
+      const slugify = (text) =>
+        text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
       const filtered = categories.filter((cat) =>
         cat.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -249,10 +250,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         // Use first suggestion
         const firstSuggestion = filtered[0];
         handleCategorySelect(firstSuggestion);
-        navigate(`/category/${encodeURIComponent(firstSuggestion)}`);
+        navigate(`/category/${encodeURIComponent(slugify(firstSuggestion))}`);
       } else if (searchQuery) {
         // Fallback to raw query
-        navigate(`/category/${encodeURIComponent(searchQuery)}`);
+        navigate(`/category/${encodeURIComponent(slugify(searchQuery))}`);
       }
 
       setSearchQuery("");
@@ -898,7 +899,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
+      <div className="bg-gradient-to-br from-[#2a4172] to-[#dd45a8] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
@@ -1005,7 +1006,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                                     >
                                       <Link
                                         to={`/category/${encodeURIComponent(
-                                         slugify(item.name).toLowerCase()
+                                          slugify(item.name).toLowerCase()
                                         )}`}
                                         className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                                       >
