@@ -170,8 +170,8 @@ export default function OrdersPage() {
           {orders.map((order) => {
             const status = order.status.toLowerCase();
             const statusColor = statusColors[status] || statusColors.pending;
-
-            return (
+            console.log(orders)
+            return (  
               <div
                 key={order._id}
                 className="grid grid-cols-1 md:grid-cols-12 px-6 py-4 hover:bg-gray-50 transition-colors"
@@ -185,7 +185,7 @@ export default function OrdersPage() {
                           className="relative h-12 w-12 rounded-md border-2 border-white shadow-sm"
                         >
                           <img
-                            src={`${baseUrliMAGE}${item.product?.images?.[0]}`}
+                            src={item.product?.images}
                             alt={item.product?.productName || "Product"}
                             className="h-full w-full object-cover rounded-md"
                           />

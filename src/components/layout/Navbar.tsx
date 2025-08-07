@@ -33,7 +33,7 @@ import {
   ListFilter,
   ChevronDown,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import logo from "../../assest/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -82,6 +82,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const [hoveredCategoryName, setHoveredCategoryName] = useState<string | null>(
     null
   );
+  const [mobileSubcategoryOpen, setMobileSubcategoryOpen] = useState<
+    string | null
+  >(null);
 
   const [groupedCategories, setGroupedCategories] = useState<
     Record<string, any[]>
@@ -105,6 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       if (window.innerWidth >= 1024) {
         setMenuOpen(false);
         setSearchOpen(false);
+        setMobileSubcategoryOpen(null);
       }
     };
 
@@ -212,9 +216,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
     return (
       <div
-        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-          colorClass.split(" ")[1]
-        }`}
+        className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]
+          }`}
       >
         {icon}
       </div>
@@ -251,6 +254,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       setSearchQuery("");
       setMenuOpen(false);
       setIsCollectionOpen(false);
+      setMobileSubcategoryOpen(null);
     },
     [navigate]
   );
@@ -550,110 +554,150 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     </div>
   );
 
-  const renderCollectionDropdown = () => (
-    <div className="absolute left-0 top-full w-full min-w-[300px] lg:min-w-[800px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
-      <div className="flex flex-col lg:flex-row">
-        {/* Category List - Left Panel */}
-        <div className="w-full lg:w-1/4 bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-200">
-          <div className="py-2">
-            {Object.entries(groupedCategories).map(
-              ([subcategory, items], index) => (
-                <div
-                  key={index}
-                  className={`px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0 ${
-                    activeCategory === index
-                      ? "bg-white text-blue-600"
-                      : "hover:bg-white hover:text-blue-600"
-                  }`}
-                  onMouseEnter={() => !isMobileView && setActiveCategory(index)}
-                  onClick={() =>
-                    isMobileView &&
-                    setActiveCategory(index === activeCategory ? null : index)
-                  }
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`${
-                          activeCategory === index
+  const renderCollectionDropdown = () => {
+    const handleSubcategoryClick = (subcategory: string) => {
+      if (isMobileView) {
+        setMobileSubcategoryOpen(
+          mobileSubcategoryOpen === subcategory ? null : subcategory
+        );
+      }
+    };
+
+    return (
+      <div className="absolute left-0  h-96 overflow-y-auto top-full w-full min-w-[400px] lg:min-w-[1200px] bg-white rounded-b-md shadow-xl z-50 border border-t-0">
+        <div className="flex flex-col lg:flex-row">
+          {/* Category List - Left Panel */}
+          <div className="w-full lg:w-1/4 bg-gray-50  lg:border-r  border-white">
+            <div className="py-2">
+              {Object.entries(groupedCategories).map(
+                ([subcategory, items], index) => (
+                  <div
+                    key={index}
+                    className={`px-4 py-3 my-4 mx-4 border-r-2 rounded-full cursor-pointer transition-colors duration-200 border-b border-gray-200 last:border-b-0  ${activeCategory === index ||
+                      mobileSubcategoryOpen === subcategory
+                      ? "bg-white text-blue-600 font-semibold shadow-sm rounded-full"
+                      : "hover:bg-white hover:rounded-full hover:text-blue-600"
+                      }`}
+                    onMouseEnter={() =>
+                      !isMobileView && setActiveCategory(index)
+                    }
+                    onClick={() => handleSubcategoryClick(subcategory)}
+                  >
+                    <div className="relative flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`${activeCategory === index ||
+                            mobileSubcategoryOpen === subcategory
                             ? "text-blue-600"
                             : "text-gray-600"
-                        }`}
-                      >
-                        {getSidebarIcon(subcategory)}
+                            }`}
+                        >
+                          {getSidebarIcon(subcategory)}
+                        </div>
+                        <span className="text-sm font-medium">
+                          {subcategory}
+                        </span>
                       </div>
-                      <span className="text-sm font-medium">{subcategory}</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-
-        {/* Product Grid - Right Panel */}
-        <div className="flex-1 p-4 lg:p-6 bg-white">
-          {activeCategory !== null &&
-          Object.values(groupedCategories)[activeCategory] ? (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-3">
-              {Object.values(groupedCategories)[activeCategory]?.map(
-                (item: any, index: number) => (
-                  <Link
-                    key={index}
-                    to={`/category/${item.name}`}
-                    className="group flex flex-col items-center p-3 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                    onClick={() => setIsCollectionOpen(false)}
-                  >
-                    <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
-                      {item.image ? (
-                        <img
-                          src={item.image || "/placeholder.svg"}
-                          alt={item.name}
-                          className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
+                      {isMobileView && (
+                        <ChevronRight
+                          className={`w-4 h-4 text-gray-400 transition-transform ${mobileSubcategoryOpen === subcategory
+                            ? "rotate-90"
+                            : ""
+                            }`}
                         />
-                      ) : (
-                        getCategoryIcon(item.name)
                       )}
                     </div>
-                    <div className="text-center">
-                      <h3 className="font-medium text-gray-900 text-xs lg:text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
-                        {item.name}
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        {item.price ? `From $${item.price}` : "View Products"}
-                      </p>
-                    </div>
-                  </Link>
+
+                    {/* Mobile subcategory items */}
+                    {isMobileView && mobileSubcategoryOpen === subcategory && (
+                      <div className="mt-2 ml-10 space-y-2">
+                        {items.map((item: any, itemIndex: number) => (
+                          <Link
+                            key={itemIndex}
+                            to={`/category/${item.name}`}
+                            className="block py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                            onClick={() => {
+                              setIsCollectionOpen(false);
+                              setMobileSubcategoryOpen(null);
+                            }}
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )
               )}
             </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              {categories.slice(0, 6).map((categoryName, index) => (
-                <Link
-                  key={index}
-                  to={`/category/${categoryName.toLowerCase()}`}
-                  className="group flex flex-col items-center p-3 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                  onClick={() => setIsCollectionOpen(false)}
-                >
-                  <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
-                    {getCategoryIcon(categoryName)}
-                  </div>
-                  <div className="text-center">
-                    <h3 className="font-medium text-gray-900 text-xs lg:text-sm group-hover:text-blue-600 transition-colors duration-200 mb-1">
-                      {categoryName}
-                    </h3>
-                    <p className="text-xs text-gray-500">View Products</p>
-                  </div>
-                </Link>
-              ))}
+          </div>
+
+          {/* Product Grid - Right Panel (Desktop only) */}
+          {!isMobileView && (
+            <div className="flex-1 p-4 lg:p-6 bg-white">
+              {activeCategory !== null &&
+                Object.values(groupedCategories)[activeCategory] ? (
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {Object.values(groupedCategories)[activeCategory]?.map(
+                    (item: any, index: number) => (
+                      <Link
+                        key={index}
+                        to={`/category/${item.name}`}
+                        className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                        onClick={() => setIsCollectionOpen(false)}
+                      >
+                        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                          {item.image ? (
+                            <img
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
+                              className="w-8 h-8 lg:w-10 lg:h-10 object-contain"
+                            />
+                          ) : (
+                            getCategoryIcon(item.name)
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <h3 className="font-semibold text-sm lg:text-base group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                            {item.name}
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            {item.price ? `From $${item.price}` : "View Products"}
+                          </p>
+                        </div>
+                      </Link>
+                    )
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {categories.slice(0, 6).map((categoryName, index) => (
+                    <Link
+                      key={index}
+                      to={`/category/${categoryName.toLowerCase()}`}
+                      className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      onClick={() => setIsCollectionOpen(false)}
+                    >
+                      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 lg:mb-3 group-hover:bg-blue-50 transition-colors duration-300">
+                        {getCategoryIcon(categoryName)}
+                      </div>
+                      <div className="text-center">
+                        <h3 className="font-semibold text-sm lg:text-base group-hover:text-blue-600 transition-colors duration-200 mb-1">
+                          {categoryName}
+                        </h3>
+                        <p className="text-xs text-gray-500">View Products</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
-    </div>
-  );
+
+    );
+  };
 
   const renderSubcategoryDropdown = (subcategory: string, items: any[]) => (
     <div className="absolute left-0 top-[14px] mt-2 w-auto min-w-[300px] bg-white shadow-xl rounded-md z-50 border">
@@ -693,9 +737,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   return (
     <>
       <nav
-        className={`bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2 transition-all duration-300 ${
-          isSticky ? "shadow-md" : ""
-        }`}
+        className={`bg-white border-b border-gray-100 sticky top-0 z-40 shadow-none py-2 transition-all duration-300 ${isSticky ? "shadow-md" : ""
+          }`}
         ref={navbarRef}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -838,7 +881,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="bg-[#C7588C] border-b border-gray-200 p-2">
+      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
@@ -851,19 +894,18 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 onClick={() =>
                   isMobileView && setIsCollectionOpen(!isCollectionOpen)
                 }
-                className="w-full bg-[#C7588C] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C]transition-all duration-200 flex items-center justify-between"
+                className="w-full text-white bg-[#c7588cc9] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C] transition-all duration-200 flex items-center justify-between"
               >
                 <div className="flex items-center space-x-3">
-                  <ListFilter size={20} />
-                  <span className="font-semibold text-gray-800 text-sm lg:text-base">
-                    Browse All Collection
+                  {/* <ListFilter size={20} /> */}
+                  <span className="font-semibold text-white text-sm lg:text-base">
+                    Browse All Category
                   </span>
                 </div>
                 <ChevronDown
                   size={18}
-                  className={`text-[#C7588C] transition-transform ${
-                    isCollectionOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-white transition-transform ${isCollectionOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -879,8 +921,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                     <li>
                       <Link
                         to={"/"}
-                        className="font-medium text-white  hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs"
+                        className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2"
                       >
+                        {/* <img
+                          src="./Digiimage/1.avif" // Replace with the correct path to your image
+                          alt="Home Icon"
+                          className="h-4 w-4 rounded-full" // Adjust size as needed
+                        /> */}
                         HOME
                       </Link>
                     </li>
@@ -897,7 +944,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                             !isMobileView && setHoveredSubcategory(null)
                           }
                         >
-                          <span className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase cursor-pointer text-xs">
+                          <span className="font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase cursor-pointer text-xs flex items-center gap-2">
+                            {/* <img
+                              src={`/path/to/${subcategory}-icon.svg`} // Replace with the correct path to your image
+                              alt={`${subcategory} Icon`}
+                              className="h-4 w-4" // Adjust size as needed
+                            /> */}
                             {subcategory}
                           </span>
                           {hoveredSubcategory === subcategory &&
@@ -905,19 +957,16 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                         </li>
                       ))}
                     <li
-                      className="relative group font-medium text-white   hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2 cursor-pointer"
-                      onMouseEnter={() =>
-                        !isMobileView && setHoveredSubcategory("more")
-                      }
-                      onMouseLeave={() =>
-                        !isMobileView && setHoveredSubcategory(null)
-                      }
+                      className="relative group font-medium text-white hover:text-[#f7f5f6] transition-colors duration-200 uppercase text-xs flex items-center gap-2 cursor-pointer"
+                      onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
+                      onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
                     >
+                   
                       More Product <ChevronDown size={18} />
                       {hoveredSubcategory === "more" && (
-                        <div className="absolute left-0 top-[12px] mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border">
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
                           <div className="p-4">
-                            <ul className="space-y-2">
+                            <ul className="space-y-4">
                               {Object.entries(groupedCategories)
                                 .slice(5)
                                 .map(([subcategory, items], index) => {
@@ -933,28 +982,20 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                                   return uniqueItems.map((item, i) => (
                                     <li
                                       key={`${subcategory}-${i}`}
-                                      onMouseEnter={() =>
-                                        setHoveredCategoryName(item.name)
-                                      }
-                                      onMouseLeave={() =>
-                                        setHoveredCategoryName(null)
-                                      }
-                                      className="relative"
+                                      onMouseEnter={() => setHoveredCategoryName(item.name)}
+                                      onMouseLeave={() => setHoveredCategoryName(null)}
+                                      className="relative group"
                                     >
                                       <Link
                                         to={`/category/${encodeURIComponent(
                                           item.name.toLowerCase()
                                         )}`}
-                                        className="block text-sm text-[#c1467f] hover:text-[#c1467f] transition-colors flex flex-row gap-5 truncate"
+                                        className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                                       >
-                                        {item.name}
+                                        <span className="text-sm font-medium text-gray-800 truncate">
+                                          {item.name}
+                                        </span>
                                       </Link>
-
-                                      {hoveredCategoryName === item.name && (
-                                        <div className="absolute top-1/2 right-full ml-3 -translate-y-1/2 bg-[#c1467f] text-white px-3 py-1 text-xs rounded shadow-lg whitespace-nowrap z-50">
-                                          {item.subcategory}
-                                        </div>
-                                      )}
                                     </li>
                                   ));
                                 })}
@@ -967,6 +1008,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 </nav>
               </div>
             </div>
+
           </div>
         </div>
       </div>
