@@ -3,6 +3,47 @@ import {Link} from "react-router-dom"
 import  Sidebar  from './Sidebar'
 
 export default function ShippingPolicy() {
+  const warrantyPoints = [
+  {
+    title: "Service Charges:",
+    content:
+      "For products outside the warranty period, a service charge of Rs. 450 + GST or more (subject to prevailing charges) and replacement part charges will apply.",
+  },
+  {
+    title: "Cost Estimate:",
+    content:
+      "Service charges and part costs will be estimated after product inspection. If you reject the estimate after product inspection, inspection charges will apply, and your product will be returned without repair.",
+  },
+  {
+    title: "Service Types:",
+    content:
+      "Carry-In, Workshop, or Onsite Home repair work will be conducted based on accepted estimates.",
+  },
+  {
+    title: "Repeat Complaints:",
+    content:
+      "No service charges will apply if the same complaint recurs within 30 days of the last service.",
+  },
+  {
+    title: "GST:",
+    content: "All services attract a GST of 18%.",
+  },
+  {
+    title: "Onsite Service:",
+    content:
+      "Onsite/In-Home service is available for specific products. Contact Customer Care for more details.",
+  },
+  {
+    title: "Damage Exclusions:",
+    content:
+      "Damage or failure due to unauthorized modifications, improper use, or removal of identification labels will be treated as outside warranty, and out-of-warranty charges will apply.",
+  },
+  {
+    title: "Modification Prohibition:",
+    content:
+      "Any modification to the product is strictly prohibited. The Company will not be liable for any accidents or damages resulting from modifications.",
+  },
+];
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container max-w-7xl mx-auto px-4 py-8">
@@ -114,26 +155,26 @@ export default function ShippingPolicy() {
                         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow group/card">
                           <div className="flex items-center justify-between mb-3">
                             <div className="font-bold text-[#14263F]">Standard Shipping</div>
-                            <ArrowRight className="w-4 h-4 text-[#384D89] opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                            {/* <ArrowRight className="w-4 h-4 text-[#384D89] opacity-0 group-hover/card:opacity-100 transition-opacity" /> */}
                           </div>
                           <div className="text-gray-600 text-sm mb-2">3 to 5 business days</div>
-                          <div className="text-[#C1467F] font-semibold">FREE</div>
+                          {/* <div className="text-[#C1467F] font-semibold">FREE</div> */}
                         </div>
                         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow group/card">
                           <div className="flex items-center justify-between mb-3">
                             <div className="font-bold text-[#14263F]">Express Shipping</div>
-                            <ArrowRight className="w-4 h-4 text-[#A13C78] opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                            {/* <ArrowRight className="w-4 h-4 text-[#A13C78] opacity-0 group-hover/card:opacity-100 transition-opacity" /> */}
                           </div>
                           <div className="text-gray-600 text-sm mb-2">1 to 2 business days</div>
-                          <div className="text-[#C1467F] font-semibold">$9.99</div>
+                          {/* <div className="text-[#C1467F] font-semibold">9.99</div> */}
                         </div>
                         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow group/card">
                           <div className="flex items-center justify-between mb-3">
                             <div className="font-bold text-[#14263F]">International</div>
-                            <ArrowRight className="w-4 h-4 text-[#C1467F] opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                            {/* <ArrowRight className="w-4 h-4 text-[#C1467F] opacity-0 group-hover/card:opacity-100 transition-opacity" /> */}
                           </div>
                           <div className="text-gray-600 text-sm mb-2">7 to 14 business days</div>
-                          <div className="text-[#C1467F] font-semibold">$24.99</div>
+                          {/* <div className="text-[#C1467F] font-semibold">24.99</div> */}
                         </div>
                       </div>
                     </div>
@@ -181,6 +222,7 @@ export default function ShippingPolicy() {
                           { title: "Proof of Purchase", content: "You must provide a clear and legible copy of the proof of purchase (such as a bill or invoice) and details of the product's model and serial number." },
                           { title: "Customer Responsibility", content: "It is your sole responsibility to support the Company/service provider in offering its services." },
                           { title: "Warranty Terms", content: "The service of the product(s) is governed by the terms of the warranty conditions. Please refer to the warranty terms on our website for detailed inclusions and exclusions." },
+                                                    { title: "Warranty Expiration", content: "The product warranty will expire as specified in the warranty terms. In the event of repair or replacement of any part, the warranty will continue only for the unexpired period of the main product’s warranty." },
                           { title: "Free Service", content: "Products covered under warranty will receive free service and replacement of components, provided the product is used as per the user manual instructions." },
                           { title: "Property Rights", content: "Replaced products or parts under warranty will become your property, and removed parts will become the property of the Company." },
                           { title: "Service Charges", content: "Charges will apply for products under warranty if the product is not used as per the user manual instructions." },
@@ -200,25 +242,34 @@ export default function ShippingPolicy() {
                   </section>
 
                   {/* Out-of-Warranty Product Service */}
-                  <section className="group">
-                    <div className="flex items-center mb-6">
-                      <div className="bg-gradient-to-br from-[#C1467F] to-[#A13C78] p-3 rounded-lg mr-4">
-                        <AlertTriangle className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-[#14263F] mb-1">Out-of-Warranty Product Service</h3>
-                        <div className="w-16 h-1 bg-gradient-to-r from-[#C1467F] to-[#A13C78] rounded-full"></div>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F]">
-                      <div className="bg-white p-4 rounded-lg shadow-sm flex items-start">
-                        <CheckCircle className="w-5 h-5 text-[#C1467F] mr-3 mt-0.5 flex-shrink-0" />
-                        <div className="text-gray-700 leading-relaxed">
-                          <strong className="text-[#384D89]">Service Charges:</strong> For products outside the warranty period, a service charge of Rs. 450 + GST or more (subject to prevailing charges) and replacement part charges will apply.
-                        </div>
-                      </div>
-                    </div>
-                  </section>
+                <section className="group">
+      <div className="flex items-center mb-6">
+        <div className="bg-gradient-to-br from-[#C1467F] to-[#A13C78] p-3 rounded-lg mr-4">
+          <AlertTriangle className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold text-[#14263F] mb-1">
+            Out-of-Warranty Product Service
+          </h3>
+          <div className="w-16 h-1 bg-gradient-to-r from-[#C1467F] to-[#A13C78] rounded-full"></div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F] space-y-4">
+        {warrantyPoints.map((item, idx) => (
+          <div
+            key={idx}
+            className="bg-white p-4 rounded-lg shadow-sm flex items-start"
+          >
+            <CheckCircle className="w-5 h-5 text-[#C1467F] mr-3 mt-0.5 flex-shrink-0" />
+            <div className="text-gray-700 leading-relaxed">
+              <strong className="text-[#384D89]">{item.title}</strong>{" "}
+              {item.content}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
                   {/* Force Majeure */}
                   <section className="group">

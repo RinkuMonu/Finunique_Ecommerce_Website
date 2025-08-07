@@ -444,7 +444,6 @@ const TrendingProducts = ({
         </div>
 
         {/* View All Button */}
-
       </div>
 
       {/* Success Popups */}

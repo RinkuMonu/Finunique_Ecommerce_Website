@@ -31,17 +31,14 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(
-          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
-
+const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`);
+        const data = await res.json()
         if (Array.isArray(data.products)) {
           setProducts(data.products);
           setFilteredProducts(data.products); // Initialize filtered products with all products
         } else {
-          console.error("Unexpected products format:", data);
-        }
+          console.error("Unexpected products format:", data)
+        }    
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -269,17 +266,14 @@ export default function Products() {
                   <div className="relative pt-2">
                     <div className="relative h-1 bg-gray-200 rounded-full">
                       <div
-                        className="absolute h-1 rounded-full"
-                        style={{
-                          background: "rgb(157 48 137)",
-                          left: `${(priceRange[0] / initialMaxPrice) * 100}%`,
-                          width: `${
-                            ((priceRange[1] - priceRange[0]) / initialMaxPrice) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
+                          className="absolute h-1 rounded-full"
+                          style={{
+                            background: "rgb(157 48 137)",
+                            left:`${(priceRange[0] / initialMaxPrice) * 100}%`,
+                            width: `${((priceRange[1] - priceRange[0]) / initialMaxPrice) * 100}%`,
+                          }}
+                        />
+                    </div>  
                     <input
                       type="range"
                       min={initialMinPrice}

@@ -155,11 +155,11 @@ const Privacy = () => {
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F] space-y-4">
-                    <div className="bg-white p-4 rounded-lg shadow-sm">
+                    {/* <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-gray-700 leading-relaxed">
                         <strong className="text-[#384D89]">Types of Data Collected:</strong>
                       </p>
-                    </div>
+                    </div> */}
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-gray-700 leading-relaxed">
                         <strong className="text-[#384D89]">Personal Data:</strong> While using Our Service, We may ask You to provide Us with personally identifiable information such as Email address, Phone number, and Usage Data.
@@ -410,7 +410,7 @@ const Privacy = () => {
                   </div>
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F]">
                     <p className="text-gray-700 leading-relaxed">
-                      If you have any questions about this Privacy Policy, You can contact us via email at <a href="mailto:info@digihub.com" className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">info@digihub.com</a>.
+                      If you have any questions about this Privacy Policy, You can contact us via email at <a href="mailto:info@digihubtech.in" className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">info@digihubtech.in</a>.
                     </p>
                   </div>
                 </section>
