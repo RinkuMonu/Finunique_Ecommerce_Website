@@ -165,7 +165,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
                       <img
                         src={img}
                         alt={`${product.productName} ${index}`}
-                        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                        className={` object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                         onLoad={() => setImageLoaded(true)}
                       />
                     </div>

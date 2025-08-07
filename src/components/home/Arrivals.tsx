@@ -204,15 +204,24 @@ console.log(selectedProduct);
     <section className="py-16 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Modern Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <Sparkles size={16} />
-            <span>New Arrivals</span>
-          </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Latest Products</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="text-left mb-12">
+          <div className="flex justify-between">
+            <div className="right">
+            <h2 className="text-xl font-bold text-gray-900">Latest Products</h2>
+          <p className="text-md text-gray-600 max-w-2xl">
             Discover our newest collection of premium products just added to our store
           </p>
+            </div>
+       
+          <Link
+            to="/products"
+            className="inline-flex items-center space-x-2  text-black underline font-medium px-6 py-3 rounded-md transition-colors duration-200"
+          >
+            <span>View All Products</span>
+            <ChevronRight size={16} />
+          </Link>
+          </div>
+         
         </div>
 
         {/* Products Slider */}
@@ -248,95 +257,64 @@ console.log(selectedProduct);
                     }}
                   >
                     {products.slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide).map((product) => (
-                      <div
-                        key={product._id}
-                        className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 group"
-                        onMouseEnter={() => setHoveredProduct(product._id)}
-                        onMouseLeave={() => setHoveredProduct(null)}
-                      >
-                        {/* Product Image Container */}
-                        <div className="relative aspect-square overflow-hidden bg-gray-50">
-                          <img
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            src={product.images[0] }
-                            alt={product.productName}
-                          />
-
-                          {/* New Badge */}
-                          <div className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
-                            NEW
-                          </div>
-
-                          {/* Discount Badge */}
-                          {product.discount && (
-                            <div className="absolute top-3 left-3 mt-8 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                              -{product.discount}%
-                            </div>
-                          )}
-
-                          {/* Wishlist Button */}
-                          <button
-                            onClick={() => handleAddToWishlist(product)}
-                            className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors duration-200"
-                          >
-                            <Heart size={16} className="text-gray-600 hover:text-red-500" />
-                          </button>
-
-                          {/* Quick View Button */}
-                          <button
-                            onClick={() => openProductModal(product)}
-                            className={`absolute bottom-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transition-all duration-200 ${
-                              hoveredProduct === product._id ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-                            }`}
-                          >
-                            <Eye size={16} className="text-gray-600" />
-                          </button>
-                        </div>
-
-                        {/* Product Info */}
-                        <div className="p-4">
-                          {/* Category */}
-                          <div className="flex items-center mb-2">
-                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                              {product.category?.name || "New Arrival"}
-                            </span>
-                          </div>
-
-                          {/* Product Name */}
-                          <Link
-                            to={`/product/${product._id}`}
-                            className="block text-gray-900 font-medium text-sm mb-2 line-clamp-2 hover:text-green-600 transition-colors duration-200"
-                          >
-                            {product.productName}
-                          </Link>
-
-                          {/* Rating */}
-                          <div className="flex items-center mb-3">
-                            <div className="flex items-center mr-2">{renderStars(product.rating || 4)}</div>
-                            <span className="text-xs text-gray-500">(Reviews)</span>
-                          </div>
-
-                          {/* Price */}
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-lg font-bold text-gray-900">₹{product.actualPrice}</span>
-                              {product.price && product.price !== product.actualPrice && (
-                                <span className="text-sm text-gray-500 line-through">₹{product.price}</span>
-                              )}
-                            </div>
-                            <div className="text-xs text-green-600 font-medium">In Stock</div>
-                          </div>
-
-                          {/* Add to Cart Button */}
-                          <button
-                            onClick={() => handleAddToCart(product)}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2"
-                          >
-                            <ShoppingCart size={16} />
-                            <span>Add to Cart</span>
-                          </button>
-                        </div>
-                      </div>
+                     <div
+                     key={product._id}
+                     className="group bg-white rounded-md border border-gray-200 hover:shadow-md transition-all duration-300 overflow-hidden"
+                   >
+                     {/* Discount badge */}
+                     {product.price && product.actualPrice && (
+                       <div className="absolute top-2 left-2 bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-0.5 rounded-sm z-10">
+                         -₹{Math.floor(product.price - product.actualPrice)}
+                       </div>
+                     )}
+                   
+                     {/* Product image with hover icons */}
+                     <div className="relative aspect-square overflow-hidden bg-white">
+                       <img
+                         src={product.images[0]}
+                         alt={product.productName}
+                         className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                       />
+                   
+                       {/* Hover Icons */}
+                       <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/5">
+                         <button
+                           onClick={() => handleAddToWishlist(product)}
+                           className="w-10 h-10 bg-pink-400 text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
+                         >
+                           <Heart size={18} />
+                         </button>
+                         <button
+                           onClick={() => openProductModal(product)}
+                           className="w-10 h-10 bg-pink-400 text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
+                         >
+                           <ShoppingCart size={18} />
+                         </button>
+                       </div>
+                     </div>
+                   
+                     {/* Product Info */}
+                     <div className="p-4">
+                       <p className="text-xs text-gray-400 uppercase font-medium tracking-wide mb-1">
+                         {product.category?.name || "Category"}
+                       </p>
+                   
+                       <Link
+                         to={`/product/${product._id}`}
+                         className="text-sm font-semibold text-gray-800 mb-1 line-clamp-2 hover:text-[#9D3089] transition-colors duration-200"
+                       >
+                         {product.productName}
+                       </Link>
+                   
+                       <div className="mt-2 flex items-center gap-2">
+                         {product.price && product.price > product.actualPrice && (
+                           <span className="text-sm text-gray-400 line-through">₹{product.price}</span>
+                         )}
+                         <span className="text-sm font-bold text-[#9D3089]">₹{product.actualPrice}</span>
+                       </div>
+                     </div>
+                   </div>
+                   
                     ))}
                   </div>
                 </div>
@@ -356,17 +334,6 @@ console.log(selectedProduct);
               />
             ))}
           </div>
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <Link
-            to="/products"
-            className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-md transition-colors duration-200"
-          >
-            <span>View All Products</span>
-            <ChevronRight size={16} />
-          </Link>
         </div>
       </div>
 
