@@ -193,6 +193,7 @@ export default function Footer() {
             </h3>
             <div className="space-y-3">
               {[
+                { title :"FAQ",path:"/faqs"},
                 { title: "Home", path: "/" },
                 { title: "About Us", path: "/about" },
                 { title: "WishList", path: "/wishlist" },
