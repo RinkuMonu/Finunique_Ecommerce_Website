@@ -237,8 +237,9 @@ const TrendingProducts = ({
   const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE
 
   return (
+    <>
     <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl  mx-16">
         {/* Modern Header */}
         <div className="flex justify-between align-middle">
           <div className="text-left mb-12">
@@ -595,7 +596,23 @@ const TrendingProducts = ({
           <Login1 />
         </LoginModal>
       )}
+
+
+
+
+       <div className="row mx-16 mt-3">
+        <div className="grid grid-cols-1">
+          <img
+            src="./Digiimage/tp-banner.jpg"
+            alt="Special Offer Banner"
+            className="w-full h-auto rounded-3xl transition"
+          />
+        </div>
+      </div>
     </section>
+
+
+    </>
   )
 }
 
