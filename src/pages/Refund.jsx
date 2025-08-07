@@ -24,12 +24,12 @@ function Refund() {
         <p className="text-gray-700 text-lg mb-4">
           We're sorry to hear that you're not satisfied with your purchase. Please provide the necessary information below, and we will process your refund request as quickly as possible.
         </p>
-        
+
         <p className="text-gray-700 text-lg mb-4">
           **Refund Instructions**:
           Please enter your order number and explain the reason for your refund request. Our team will review your request and follow up with you. Please note that refunds are processed within 7-10 business days, depending on the circumstances.
         </p>
-        
+
         <p className="text-gray-700 text-lg mb-6">
           **Refund Policy**:
           - Refunds are accepted within 30 days of purchase.
@@ -78,7 +78,7 @@ function Refund() {
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <DollarSign className="mr-2 text-green-500" size={20} />
-                <span className="text-sm text-gray-600">Refund Amount: ₹2000</span>
+                <span className="text-sm text-gray-600">Refund Amount: <span className="rupee">₹</span>2000</span>
               </div>
               <button
                 type="submit"

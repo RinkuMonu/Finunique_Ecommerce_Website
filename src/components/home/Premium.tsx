@@ -62,7 +62,7 @@ const Premium = () => {
         </a>
       </div>
 <div className="relative">
-   
+
       <Swiper
             modules={[Autoplay]}
   autoplay={{ delay: 2500, disableOnInteraction: false }}
@@ -112,8 +112,8 @@ const Premium = () => {
                 <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2 truncate">
                   {item?.productName}
                 </h3>
-                <div className="flex items-center gap-2 text-lg font-bold text-black">
-                  ₹ {Math.floor(item?.actualPrice)}
+                <div className="flex items-center gap-1 text-lg font-bold text-black">
+                  <span className="rupee mb-1">₹</span> {Math.floor(item?.actualPrice)}
                 </div>
                 {item?.price && item?.price !== item?.actualPrice && (
                   <div className="flex items-center gap-2">
@@ -124,7 +124,7 @@ const Premium = () => {
                   </div>
                 )}
                 <div className="text-sm text-gray-500 line-through mt-1">
-                  ₹ {Math.floor(item?.price)}
+                  <span className="rupee">₹</span> {Math.floor(item?.price)}
                 </div>
               </div>
             </Link>

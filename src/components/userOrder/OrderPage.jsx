@@ -171,7 +171,7 @@ export default function OrdersPage() {
             const status = order.status.toLowerCase();
             const statusColor = statusColors[status] || statusColors.pending;
             console.log(orders)
-            return (  
+            return (
               <div
                 key={order._id}
                 className="grid grid-cols-1 md:grid-cols-12 px-6 py-4 hover:bg-gray-50 transition-colors"
@@ -259,7 +259,7 @@ export default function OrdersPage() {
                   </div>
                   <div className="flex items-center justify-end">
                     <span className="text-sm font-medium text-gray-900">
-                      ₹{order.totalAmount?.toFixed(2)}
+                      <span className="rupee">₹</span>{order.totalAmount?.toFixed(2)}
                     </span>
                     <button className="ml-2 p-1 text-gray-400 hover:text-gray-600 md:hidden">
                       <FaChevronRight className="h-4 w-4" />

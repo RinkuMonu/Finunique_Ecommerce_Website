@@ -222,7 +222,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
                       <div className="flex items-center justify-between text-sm sm:text-base mt-auto">
                         <span className="font-semibold text-[rgb(157_48_137)]">
-                          ₹{item.price.toLocaleString()}
+                          <span className="rupee">₹</span>{item.price.toLocaleString()}
                         </span>
                         <button
                           onClick={() => handleDelete(item.id)}
@@ -254,7 +254,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                         </div>
 
                         <span className="text-sm font-medium text-gray-700 flex justify-end">
-                          Total: ₹
+                          Total: <span className="rupee">₹</span>
                           {(item.price * item.quantity).toLocaleString()}
                         </span>
                       </div>
@@ -277,7 +277,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                     </span>
                   </span>
                   <span className="text-sm font-semibold text-gray-800">
-                    ₹{total.toLocaleString()}
+                    <span className="rupee">₹</span>{total.toLocaleString()}
                   </span>
                 </div>
 
@@ -288,7 +288,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
                 <div className="border-t border-dashed border-gray-300 pt-3 flex justify-between text-base font-bold text-gray-900">
                   <span>Total</span>
-                  <span>₹{total.toLocaleString()}</span>
+                  <span><span className="rupee">₹</span>{total.toLocaleString()}</span>
                 </div>
               </div>
 

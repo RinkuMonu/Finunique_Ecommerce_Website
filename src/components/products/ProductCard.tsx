@@ -204,9 +204,9 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
             {/* Price + Cart Button */}
             <div className="flex items-center justify-between mt-2 sm:mt-3 gap-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                <span className="font-bold text-[#9D3089] text-sm sm:text-base">₹{Math.floor(product?.actualPrice)}</span>
+                <span className="font-bold text-[#9D3089] text-sm sm:text-base"><span className="rupee">₹</span>{Math.floor(product?.actualPrice)}</span>
                 {product.price && product.price > product.actualPrice && (
-                  <span className="text-[10px] sm:text-xs text-gray-400 line-through">₹{Math.floor(product?.price)}</span>
+                  <span className="text-[10px] sm:text-xs text-gray-400 line-through"><span className="rupee">₹</span>{Math.floor(product?.price)}</span>
                 )}
               </div>
               <button
@@ -267,7 +267,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
         {/* Discount Badge */}
         {discountPercentage > 0 && (
           <div className="absolute rounded-sm top-3 left-3 bg-orange-100 text-orange-500 text-xs z-10 font-semibold px-2 py-0.5 ">
-            -₹{Math.floor(product.price - product.actualPrice)}
+            -<span className="rupee">₹</span>{Math.floor(product.price - product.actualPrice)}
           </div>
         )}
 
@@ -320,12 +320,12 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           </h3>
 
           {/* Price */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {product.price && product.price > product.actualPrice && (
-              <span className="text-sm text-gray-400 line-through">₹{Math.floor(product.price)}</span>
+              <span className="text-sm text-gray-400 line-through"><span className="rupee mb-1">₹</span>{Math.floor(product.price)}</span>
             )}
             <span className="text-sm font-bold text-[#9D3089]">
-              ₹{Math.floor(product.actualPrice)}
+              <span className="rupee">₹</span>{Math.floor(product.actualPrice)}
             </span>
           </div>
         </div>

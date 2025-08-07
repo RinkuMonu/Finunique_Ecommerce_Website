@@ -587,7 +587,7 @@ const TrackOrder = () => {
                   {order.status}
                 </div>
                 <div className="text-xs text-blue-500">
-                  ₹{order.total.toLocaleString()}
+                  <span className="rupee">₹</span>{order.total.toLocaleString()}
                 </div>
               </button>
             ))}
@@ -683,7 +683,7 @@ const TrackOrder = () => {
                       className="text-3xl font-bold"
                       style={{ color: "rgb(157 48 137)" }}
                     >
-                      ₹{orderData.total.toLocaleString()}
+                      <span className="rupee">₹</span>{orderData.total.toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-500">
                       {orderData.items.length} item(s)
@@ -938,7 +938,7 @@ const TrackOrder = () => {
                             className="font-medium"
                             style={{ color: "rgb(157 48 137)" }}
                           >
-                            ₹{item.price.toLocaleString()}
+                            <span className="rupee">₹</span>{item.price.toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -1017,7 +1017,7 @@ const TrackOrder = () => {
                         className="font-bold text-xl"
                         style={{ color: "rgb(157 48 137)" }}
                       >
-                        ₹{orderData.total.toLocaleString()}
+                        <span className="rupee">₹</span>{orderData.total.toLocaleString()}
                       </span>
                     </div>
                     <div className="pt-2 border-t border-gray-200">

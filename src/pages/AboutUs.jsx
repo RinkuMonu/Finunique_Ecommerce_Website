@@ -1,149 +1,190 @@
 import { motion } from "framer-motion";
 import { FaShippingFast, FaShieldAlt, FaHeadset, FaExchangeAlt, FaCheckCircle } from "react-icons/fa";
 
-const AboutUs = () => {
-  const stats = [
-    { value: "2+ Lakh", label: "Happy Customers" },
-    { value: "5+ Lakh", label: "Orders Delivered" },
-    { value: "25,000+", label: "Electronics & Gadgets" },
-    { value: "28+", label: "States Served" }
-  ];
-
+const AboutPage = () => {
   const whyChooseUs = [
     {
       icon: <FaCheckCircle className="text-3xl" />,
-      title: "Everything Tech, One Place",
-      description: "Mobiles, laptops, accessories, home tech, and gaming — find it all in one platform."
+      title: "All Tech in One Place",
+      description: "Mobiles, laptops, accessories, smart gadgets, and more — everything you need under one roof."
     },
     {
       icon: <FaShieldAlt className="text-3xl" />,
-      title: "Only Verified Brands",
-      description: "We partner with trusted global and Indian brands to ensure top quality."
+      title: "Trusted Brands Only",
+      description: "We deal only in 100% genuine, brand-authorized products."
     },
     {
       icon: <FaShippingFast className="text-3xl" />,
-      title: "Fast & Reliable Shipping",
-      description: "Across India with real-time tracking and secure delivery."
+      title: "Pan-India Fast Delivery",
+      description: "Quick, safe, and trackable shipping across India, including remote areas."
     },
     {
       icon: <FaHeadset className="text-3xl" />,
-      title: "24x7 Support",
-      description: "Quick issue resolution and dedicated post-sale support."
+      title: "Always Here to Help",
+      description: "Friendly, reliable customer support at every step of your journey."
     },
     {
       icon: <FaExchangeAlt className="text-3xl" />,
-      title: "Hassle-free Returns",
-      description: "Easy exchange and refund process for your peace of mind."
+      title: "Clear Pricing & Easy Returns",
+      description: "No hidden charges. Simple return policies. Transparent service you can trust."
     }
   ];
-
   return (
-    <section className="">
-      <div className="bg-white">
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-white to-blue-50 py-20 px-4 text-[#0F172A] overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-6xl mx-auto text-center"
-          >
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4">About DigiHub</h1>
-            <p className="text-lg md:text-2xl font-medium max-w-2xl mx-auto">
-              India’s Go-To Platform for Latest Electronics, Tech Deals & Smart Shopping
+    <main className="w-full bg-gray-50">
+      {/* Hero Banner with Animated Circles */}
+      <section className="relative w-full h-72 md:h-[28rem] overflow-hidden bg-gradient-to-r from-[#384D89] via-[#2A4172] to-[#1B2E4F]">
+        {/* Animated Circles */}
+        <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-[#A13C78]/20 animate-pulse-slow"></div>
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-[#872D67]/20 animate-pulse-slow animation-delay-2000"></div>
+        <div className="absolute top-1/4 right-1/4 w-40 h-40 rounded-full bg-[#C1467F]/15 animate-float"></div>
+        
+        <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            About <span className="text-[#C1467F]">DigiHub</span>
+          </h1>
+          <div className="w-24 h-1 bg-[#A13C78] mb-8"></div>
+          <p className="text-lg md:text-xl text-blue-100 max-w-2xl">
+            India's Premier Destination for Electronics & Gadgets
+          </p>
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="max-w-7xl mx-auto py-16 px-6 space-y-16">
+        {/* Intro Card */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-[#14263F]/10">
+          <div className="p-8 md:p-10 space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#14263F]">
+              India's Trusted Online Destination for Electronics & Gadgets
+            </h2>
+            <p className="text-[#2A4172] leading-relaxed text-lg">
+              At DigiHubUnique Tech Solutions Pvt. Ltd., we're redefining how India shops for technology. From the latest gadgets to everyday accessories, we bring together quality, affordability, and customer-first service — all in one place.
             </p>
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-100/30 rounded-full"></div>
-            <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-100/30 rounded-full"></div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Company Intro */}
-        <div className="max-w-6xl mx-auto py-16 px-8">
+        {/* Journey Section */}
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-[#14263F]">
+              Our <span className="text-[#A13C78]">Journey</span>
+            </h2>
+            <p className="text-[#2A4172] leading-relaxed">
+              Our journey began in 2025 with one clear mission — to bring the best of electronics, gadgets, and accessories within easy reach of every Indian household.
+            </p>
+            <p className="text-[#2A4172] leading-relaxed">
+              Founded by a passionate team of tech enthusiasts in Jaipur, Rajasthan, DigiHub started with just a few shelves of products and a vision to change how India experiences technology.
+            </p>
+          </div>
+          <div className="bg-[#F3F6FF] rounded-xl p-6 h-full flex items-center justify-center border border-[#384D89]/10">
+            <div className="text-center">
+              <div className="text-5xl font-bold text-[#A13C78] mb-2">2025</div>
+              <div className="text-[#2A4172]">Year Founded</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
+          <div className="bg-[#384D89] text-white rounded-xl p-8 text-center shadow-lg transform hover:scale-105 transition-transform">
+            <div className="text-4xl font-bold mb-2">2,00,000+</div>
+            <div className="text-blue-100">Happy Customers</div>
+          </div>
+          <div className="bg-[#2A4172] text-white rounded-xl p-8 text-center shadow-lg transform hover:scale-105 transition-transform">
+            <div className="text-4xl font-bold mb-2">5,00,000+</div>
+            <div className="text-blue-100">Successful Deliveries</div>
+          </div>
+          <div className="bg-[#1B2E4F] text-white rounded-xl p-8 text-center shadow-lg transform hover:scale-105 transition-transform">
+            <div className="text-4xl font-bold mb-2">25,000+</div>
+            <div className="text-blue-100">Products</div>
+          </div>
+        </div>
+
+        {/* What Makes Us Different */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mt-12 border border-[#14263F]/10">
+          <div className="p-8 md:p-10 space-y-6">
+            <h2 className="text-3xl font-bold text-[#14263F]">
+              What Makes Us <span className="text-[#A13C78]">Different</span>
+            </h2>
+            <p className="text-[#2A4172] leading-relaxed">
+              With a 4.7 out of 5 customer satisfaction rating, 100+ trusted brand partnerships, and an in-house team of product experts, we make sure every product is not just trendy — but tested, reliable, and built to serve real needs.
+            </p>
+          </div>
+        </div>
+
+      <div className="mb-20">
+          <motion.h2
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold text-[#384d89] mb-8 text-center"
+          >
+            Why Choose DigiHub
+          </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center text-gray-700 text-lg max-w-4xl mx-auto mb-16"
-          >
-            DigiHub Unique Tech Solutions Pvt. Ltd. brings the future of electronics to your doorstep. From daily-use gadgets to high-end tech, we focus on providing quality, affordability, and lightning-fast delivery.
-          </motion.p>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
+            className="text-xl text-center text-[#872d67] font-medium mb-12"
           >
-            {stats.map((stat, index) => (
-              <div
+            5+ Lakh Customers. 8+ Lakh Deliveries. One Trusted Platform.
+          </motion.p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {whyChooseUs.map((item, index) => (
+              <motion.div
                 key={index}
-                className="bg-white border border-gray-200 p-6 rounded-xl text-center hover:bg-[] transition shadow"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white hover:bg-[#f8d3e9] p-6 rounded-xl shadow-md hover:shadow-lg transition hover:-translate-y-1"
               >
-                <p className="text-3xl font-bold text-[#0F172A]">{stat.value}</p>
-                <p className="text-gray-600">{stat.label}</p>
-              </div>
+                <div className="text-[#a13c78] mb-4">{item.icon}</div>
+                <h3 className="text-xl font-bold text-[#384d89] mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </motion.div>
             ))}
-          </motion.div>
-
-          {/* Mission and Vision */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 gap-10 mb-20"
-          >
-            <div className="bg-white border border-gray-200 p-6 rounded-xl text-[#0F172A]">
-              <h3 className="text-2xl font-bold mb-3">Our Mission</h3>
-              <p className="text-gray-700 text-base">
-                To empower every Indian with easy, affordable, and trusted access to modern electronics and tech accessories — through an online experience that is smooth, secure, and satisfying.
-                We exist to ensure that technology serves you — not the other way around.
-              </p>
-            </div>
-            <div className="bg-white border border-gray-200 p-6 rounded-xl text-[#0F172A]">
-              <h3 className="text-2xl font-bold mb-3">Our Vision</h3>
-              <p className="text-gray-700 text-base">
-                To become India’s most reliable and customer-centric electronics platform, delivering cutting-edge products and extraordinary service — while making innovation accessible to every home, business, and lifestyle.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Why Choose DigiHub */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold text-center text-[#0F172A] mb-6">Why Choose DigiHub</h2>
-            <p className="text-center text-gray-600 mb-10 text-lg">
-              Trusted by 5+ Lakh Customers for Genuine Products & Seamless Service
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {whyChooseUs.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white hover:bg-blue-50 p-6 rounded-xl border border-gray-200 text-left shadow-sm hover:shadow-md"
-                >
-                  <div className="text-[#0F172A] mb-3">{item.icon}</div>
-                  <h3 className="text-lg font-semibold text-[#1E293B] mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          </div>
         </div>
-      </div>
-    </section>
+
+        {/* Mission & Vision */}
+        <div className="grid md:grid-cols-2 gap-8 mt-16">
+          <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-[#A13C78] hover:shadow-lg">
+            <h3 className="text-2xl font-bold text-[#A13C78] mb-4">Our Mission</h3>
+            <p className="text-[#2A4172] leading-relaxed">
+              To empower every Indian with easy, affordable, and trusted access to modern electronics and tech accessories — through an online experience that is smooth, secure, and satisfying.
+            </p>
+            <p className="text-[#2A4172] leading-relaxed mt-4">
+              We exist to ensure that technology serves you — not the other way around.
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-[#A13C78] hover:shadow-lg">
+            <h3 className="text-2xl font-bold text-[#A13C78] mb-4">Our Vision</h3>
+            <p className="text-[#2A4172] leading-relaxed">
+              To become India's most reliable and customer-centric electronics platform, delivering cutting-edge products and extraordinary service — while making innovation accessible to every home, business, and lifestyle.
+            </p>
+          </div>
+        </div>
+
+        {/* Additional Content */}
+        <div className="mt-12 space-y-6">
+          <p className="text-[#2A4172] leading-relaxed">
+            Today, DigiHub proudly serves:
+            <br />
+            Over 2,00,000 happy customers across India
+            <br />
+            More than 5,00,000 successful deliveries, including mobiles, laptops, audio devices, smart gadgets, printers, camera gear, wearables, and many more electronics
+          </p>
+          <p className="text-[#2A4172] leading-relaxed">
+            Our extensive catalogue includes everything from smartphones and power banks to fitness trackers, tablets, musical instruments, chargers, desktops, grooming devices, and more — carefully curated for quality, affordability, and satisfaction.
+          </p>
+        </div>
+      </section>
+    </main>
   );
 };
 
-export default AboutUs;
+export default AboutPage;

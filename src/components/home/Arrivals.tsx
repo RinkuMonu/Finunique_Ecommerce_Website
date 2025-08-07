@@ -212,7 +212,7 @@ console.log(selectedProduct);
             Discover our newest collection of premium products just added to our store
           </p>
             </div>
-       
+
           <Link
             to="/products"
             className="inline-flex items-center space-x-2  text-black underline font-medium md:px-6 py-3 rounded-md transition-colors duration-200"
@@ -221,7 +221,7 @@ console.log(selectedProduct);
             <ChevronRight size={16} />
           </Link>
           </div>
-         
+
         </div>
 
         {/* Products Slider */}
@@ -264,10 +264,10 @@ console.log(selectedProduct);
                      {/* Discount badge */}
                      {product.price && product.actualPrice && (
                        <div className="absolute top-2 left-2 bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-0.5 rounded-sm z-10">
-                         -₹{Math.floor(product.price - product.actualPrice)}
+                         -<span className="rupee">₹</span>{Math.floor(product.price - product.actualPrice)}
                        </div>
                      )}
-                   
+
                      {/* Product image with hover icons */}
                      <div className="relative aspect-square overflow-hidden bg-white">
                        <img
@@ -275,7 +275,7 @@ console.log(selectedProduct);
                          alt={product.productName}
                          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                        />
-                   
+
                        {/* Hover Icons */}
                        <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/5">
                          <button
@@ -292,29 +292,29 @@ console.log(selectedProduct);
                          </button>
                        </div>
                      </div>
-                   
+
                      {/* Product Info */}
                      <div className="p-4">
                        <p className="text-xs text-gray-400 uppercase font-medium tracking-wide mb-1">
                          {product.category?.name || "Category"}
                        </p>
-                   
+
                        <Link
                          to={`/product/${product._id}`}
                          className="text-sm font-semibold text-gray-800 mb-1 line-clamp-2 hover:text-[#9D3089] transition-colors duration-200"
                        >
                          {product.productName}
                        </Link>
-                   
+
                        <div className="mt-2 flex items-center gap-2">
                          {product.price && product.price > product.actualPrice && (
-                           <span className="text-sm text-gray-400 line-through">₹{product.price}</span>
+                           <span className="text-sm text-gray-400 line-through"><span className="rupee">₹</span>{product.price}</span>
                          )}
-                         <span className="text-sm font-bold text-[#9D3089]">₹{product.actualPrice}</span>
+                         <span className="text-sm font-bold text-[#9D3089]"><span className="rupee">₹</span>{product.actualPrice}</span>
                        </div>
                      </div>
                    </div>
-                   
+
                     ))}
                   </div>
                 </div>
@@ -418,9 +418,9 @@ console.log(selectedProduct);
 
                 {/* Price */}
                 <div className="flex items-center space-x-3">
-                  <span className="text-3xl font-bold text-gray-900">₹{selectedProduct.actualPrice}</span>
+                  <span className="text-3xl font-bold text-gray-900"><span className="rupee">₹</span>{selectedProduct.actualPrice}</span>
                   {selectedProduct.price && selectedProduct.price !== selectedProduct.actualPrice && (
-                    <span className="text-lg text-gray-400 line-through">₹{selectedProduct.price}</span>
+                    <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{selectedProduct.price}</span>
                   )}
                 </div>
 
