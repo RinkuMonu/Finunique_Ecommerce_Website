@@ -270,7 +270,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
 
             {/* Zoom Preview Box */}
             {isZooming && (
-              <div className="hidden lg:block absolute top-0 right-[-320px] w-[300px] h-[300px] border-2 border-[#83225c]/30 rounded-xl overflow-hidden bg-white shadow-inner z-10">
+              <div className="hidden lg:block absolute top-5 right-[-320px] w-[300px] h-[300px] border-2 border-[#83225c]/30 rounded-xl overflow-hidden bg-white shadow-inner z-10">
                 <div
                   className="absolute w-full h-full bg-no-repeat bg-cover"
                   style={{

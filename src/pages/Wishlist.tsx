@@ -127,11 +127,11 @@ const Wishlist = () => {
               .map((item: any, index: number) => (
                 <div
                   key={item?.product?._id}
-                  className="flex mx-auto w-full items-center gap-4 bg-white backdrop-blur-sm border border-white/50 shadow-lg rounded-xl py-6 px-4 transition-all duration-300 hover:shadow-xl"
+                  className="sm:flex mx-auto w-full items-center gap-4 bg-white backdrop-blur-sm border border-white/50 shadow-lg rounded-xl py-6 px-4 transition-all duration-300 hover:shadow-xl"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Product Image */}
-                  <div className="relative w-36 h-36 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50 border-2 border-[#384D89]/20">
+                  <div className="relative md:w-36 md:h-36 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50 border-2 border-[#384D89]/20">
                     <img
                       src={
                         item?.product?.images?.[0]
@@ -139,7 +139,7 @@ const Wishlist = () => {
                           : "/diverse-products-still-life.png"
                       }
                       alt={item?.product?.productName || "No image"}
-                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+                      className="w-full h-48 md:h-full object-contain transition-transform duration-300 hover:scale-105"
                     />
                     {item?.product?.discount && (
                       <div
@@ -198,10 +198,12 @@ const Wishlist = () => {
                     </Link>
                     <button
                       onClick={() => handleRemove(item?.product?._id)}
-                      className="flex items-center gap-1 px-3 py-1.5 border border-[#384D89]/30  text-[#384D89]  font-semibold rounded-md hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md transition-all group"
+                      className="flex w-full items-center gap-1 px-3 py-1.5 border border-[#384D89]/30  text-[#384D89]  font-semibold rounded-md hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md transition-all group"
                     >
+                      <div className="mx-auto inline-flex items-center">
                       <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
                       Remove
+                    </div>
                     </button>
                   </div>
                 </div>

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 
 const FeaturedSections = () => {
+  const slugify = (text) =>
+    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
   const [groupedCategories, setGroupedCategories] = useState({});
@@ -92,7 +94,7 @@ const FeaturedSections = () => {
                     .flat()
                     .map((item) => (
                       <Link
-                        to={`/category/${item?.name}`}
+                        to={`/category/${slugify(item?.name)}`}
                         key={item._id}
                         className="flex-shrink-0 w-36 sm:w-44 bg-white rounded-[8px] p-4 text-center hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-200 shadow-sm "
                       >
@@ -143,7 +145,7 @@ const FeaturedSections = () => {
         {/* Main Banner Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
           {/* Left Banner (Large) */}
-          <Link to={`/category/Smart Watches`}>
+          <Link to={`/category/${slugify("Smart Watches")}`}>
             <div className="lg:col-span-1 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
               <img
                 src="./Digiimage/banner-1_900x.webp"
@@ -179,7 +181,7 @@ const FeaturedSections = () => {
                     , no Promo Code Needed
                   </p>
                   <Link
-                    to={`/category/Smart Home Devices`}
+                    to={`/category/${slugify("Smart Home Devices")}`}
                     className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 w-fit"
                   >
                     Shop Now
@@ -226,7 +228,7 @@ const FeaturedSections = () => {
                     4K Projector
                   </h3>
                   <Link
-                    to={`/category/Printers & Inks`}
+                    to={`/category/${slugify("Printers & Inks")}`}
                     className="inline-flex items-center bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-md font-medium text-sm transition-colors"
                   >
                     Shop Now

@@ -240,14 +240,27 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (searchQuery) {
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-        setSearchQuery("");
-        setSearchOpen(false);
+
+      const filtered = categories.filter((cat) =>
+        cat.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      if (filtered.length > 0) {
+        // Use first suggestion
+        const firstSuggestion = filtered[0];
+        handleCategorySelect(firstSuggestion);
+        navigate(`/category/${encodeURIComponent(firstSuggestion)}`);
+      } else if (searchQuery) {
+        // Fallback to raw query
+        navigate(`/category/${encodeURIComponent(searchQuery)}`);
       }
+
+      setSearchQuery("");
+      setSearchOpen(false);
     },
-    [searchQuery, navigate]
+    [searchQuery, navigate, categories]
   );
+
 
   const handleCategorySelect = useCallback(
     (category: string) => {
@@ -965,10 +978,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
                       onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
                     >
-                   
+
                       More Product <ChevronDown size={18} />
                       {hoveredSubcategory === "more" && (
-                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{ height: "80vh", overflowY: "auto" }}>
                           <div className="p-4">
                             <ul className="space-y-4">
                               {Object.entries(groupedCategories)

@@ -29,7 +29,7 @@ export default function Footer() {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
         if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name));
+          setCategories(data.website.categories);
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -37,6 +37,9 @@ export default function Footer() {
     };
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
+
+
+  console.log("Categories:", categories);
 
   const trustFeatures = [
     { icon: <Shield size={20} />, text: "Secure Shopping", color: "#10B981" },
@@ -48,6 +51,10 @@ export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
+
+
+   const slugify = (text) =>
+    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
 
   return (
     <footer className="bg-gradient-to-br from-[#872d67] to-[#2a4172] text-white border-t border-gray-700">
@@ -87,7 +94,7 @@ export default function Footer() {
                 width={251}
                 height={6}
                 className="hover:scale-105 transition-transform duration-300"
-                style={{backgroundColor:"white", borderRadius:"5px", padding:"7px"}}
+                style={{ backgroundColor: "white", borderRadius: "5px", padding: "7px" }}
               />
             </Link>
 
@@ -96,7 +103,7 @@ export default function Footer() {
                 <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
                   <Mail size={16} className="text-[#C1467F]" />
                   <a href="mailto:info@digihub.com" className="hover:underline">
-                    info@digihub.com
+                    info@digihubtech.in
                   </a>
                 </div>
 
@@ -124,29 +131,39 @@ export default function Footer() {
               Categories
             </h3>
             <div className="space-y-3">
-              {categories.slice(0, 6).map((category, index) => (
+              {categories.slice(0, 10).map((category, index) => (
                 <Link
-                  key={index}
-                  to={`/category/${encodeURIComponent(category).toLowerCase()}`}
+                  key={category._id}
+                  to={`/category/${encodeURIComponent(slugify(category.name))}`}
                   className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
-                  {category}
+                  {category.name}
                 </Link>
               ))}
-              {categories.length > 6 && (
-                <button
-                  className="inline-flex items-center text-sm text-[#C1467F] hover:text-white font-medium mt-2"
-                  onClick={scrollToTop}
+          
+            </div>
+          </div>
+
+           <div className="space-y-6 md:pl-16">
+            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+              Collections
+            </h3>
+            <div className="space-y-3">
+              {categories.slice(11, 20).map((category, index) => (
+                <Link
+                  key={category._id}
+                  to={`/category/${encodeURIComponent(slugify(category.name))}`}
+                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
-                  View All Categories
-                  <ArrowRight size={14} className="ml-1" />
-                </button>
-              )}
+                  {category.name}
+                </Link>
+              ))}
+            
             </div>
           </div>
 
           {/* Subcategories */}
-          <div className="space-y-6 md:pl-16">
+          {/* <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
               Subcategories
             </h3>
@@ -167,7 +184,7 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Company */}
           <div className="space-y-6 md:pl-16">
@@ -198,10 +215,10 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
 
           <div className="text-center pb-4">
-              <p className="text-sm text-white/80">
-                © {new Date().getFullYear()} DigiHub. All rights reserved.
-              </p>
-            </div>
+            <p className="text-sm text-white/80">
+              © {new Date().getFullYear()} DigiHub. All rights reserved.
+            </p>
+          </div>
 
 
           <div className="flex flex-col items-center">

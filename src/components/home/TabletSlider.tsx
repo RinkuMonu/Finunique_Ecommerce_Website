@@ -74,7 +74,7 @@ const TabletSlider = () => {
           <h2 className="text-2xl font-bold">Best Selling Tablets</h2>
           <p className="text-sm text-gray-600">Starting at Rs. 9999*</p>
         </div>
-        <a href="/category/Tablets%20&%20eReaders" className="text-sm text-indigo-600 font-semibold hover:underline">View All →</a>
+        <a href={`/category/Tablets-and-eReaders`} className="text-sm text-indigo-600 font-semibold hover:underline">View All →</a>
       </div>
 
       <Swiper

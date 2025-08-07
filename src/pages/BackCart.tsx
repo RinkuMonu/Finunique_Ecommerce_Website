@@ -21,13 +21,13 @@ const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
   const dispatch = useDispatch();
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
-  
+
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
   const totalAfterDiscount = Math.max(0, total - discount);
-  
+
   const handleIncrement = (id: string) => {
     const item = cartItems.find((i) => i.id === id);
     if (item) {
@@ -56,9 +56,9 @@ const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
     }
   };
 
-if (cartItems.length === 0) {
+  if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 relative overflow-hidden">
+      <div className="min-h-screen bg-gray-50 py-12 relative ">
         {/* Subtle background pattern */}
         <div
           className="absolute inset-0 z-0 opacity-10"
@@ -89,7 +89,7 @@ if (cartItems.length === 0) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-50 py-8 relative ">
       {/* Subtle background pattern */}
       <div
         className="absolute inset-0 z-0 opacity-10"
@@ -100,7 +100,7 @@ if (cartItems.length === 0) {
         }}
       ></div>
 
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+      <div className="container mx-auto px-1 md:px-4 max-w-7xl relative z-10">
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-[#384D89]/10">
           <div className="flex items-center gap-4 mb-6">
@@ -123,24 +123,24 @@ if (cartItems.length === 0) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 min-h-screen">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 ">
             {cartItems.map((item, index) => (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 transform hover:-translate-y-1 group"
+                className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300  border border-gray-100 transform hover:-translate-y-1 group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="p-6">
                   <div className="flex flex-col sm:flex-row gap-6">
                     {/* Product Image */}
                     <div className="flex-shrink-0">
-                      <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden bg-gradient-to-br from-[#f8f9ff] to-[#f0f2ff] border border-gray-200 shadow-sm">
+                      <div className=" md:w-36 md::h-36 rounded-xl  bg-gradient-to-br from-[#f8f9ff] to-[#f0f2ff] border border-gray-200 shadow-sm">
                         <img
                           src={item?.image}
                           alt={item.name}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          className="md:w-full md:h-full object-cover flex justify-center hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     </div>
@@ -227,8 +227,8 @@ if (cartItems.length === 0) {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 sticky top-8 overflow-hidden">
+          <div className="lg:col-span-1 ">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 sticky top-24">
               <div className="bg-gradient-to-r from-[#384D89] to-[#2A4172] p-6 rounded-t-3xl">
                 <h2 className="text-xl font-bold text-white">Order Summary</h2>
               </div>
