@@ -215,12 +215,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     const icon = (iconMap as any)[key] || iconMap.default;
 
     return (
-      <div
-        className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]
-          }`}
-      >
-        {icon}
-      </div>
+      <></>
+      // <div
+      //   className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass.split(" ")[1]
+      //     }`}
+      // >
+      //   {icon}
+      // </div>
     );
   };
 
@@ -709,6 +710,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               key={itemIndex}
               className="flex items-center space-x-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
             >
+              <img src={item.image} className="w-10 h-10 rounded-full"></img>
               {getDropdownIcon(item.name, itemIndex)}
               <div className="flex-1">
                 <div className="font-medium  text-[#ca6296] transition-colors duration-200 text-sm lg:text-base">
@@ -1012,7 +1014,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           </div>
         </div>
       </div>
-
       {menuOpen && renderMobileMenu()}
     </>
   );
