@@ -67,7 +67,7 @@ const FeaturedSections = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={scrollLeft}
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  className="p-2 rounded-full bg-white hover:bg-gray-200 transition-colors"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft className="w-5 h-5 text-gray-600" />
@@ -94,7 +94,7 @@ const FeaturedSections = () => {
                       <Link
                         to={`/category/${item?.name}`}
                         key={item._id}
-                        className="flex-shrink-0 w-36 sm:w-44 bg-gray-100 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-200 shadow-md "
+                        className="flex-shrink-0 w-36 sm:w-44 bg-white rounded-[8px] p-4 text-center hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-200 shadow-sm "
                       >
                         {item?.image ? (
                           <img

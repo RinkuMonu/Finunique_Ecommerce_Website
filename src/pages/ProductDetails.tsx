@@ -717,22 +717,24 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
+          `${baseUrl}/product/getproduct/${id}?referenceWebsite=${referenceWebsite}`
         );
         const data = await res.json();
-        if (Array.isArray(data.products)) {
-          setAllProducts(data?.products);
-          const matched = data?.products.find(
-            (item: Product) => item._id === id
-          );
-          setProduct(matched || null);
-          console.log(matched);
+        // if (Array.isArray(data.products)) {
+        //   setAllProducts(data?.products);
+        //   const matched = data?.products.find(
+        //     (item: Product) => item._id === id
+        //   );
+        setProduct(data?.product || null);
 
-          if (matched && matched.images && matched.images.length > 0) {
-            setMainImage(`${matched.images[0]}`);
-          } else {
-            setMainImage("/placeholder.svg?height=600&width=600");
-          }
+        if (
+          data?.product &&
+          data?.product?.images &&
+          data?.product?.images?.length > 0
+        ) {
+          setMainImage(`${data?.product?.images[0]}`);
+        } else {
+          setMainImage("/placeholder.svg?height=600&width=600");
         }
       } catch (err) {
         console.error("Error loading product:", err);
@@ -860,7 +862,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="mt-6 w-full">
             <div className="flex space-x-3 pb-2 overflow-x-auto snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#A13C78]/30 scrollbar-track-gray-100/50 ">
               {product?.images?.length > 0
-                ? product.images.map((img, index) => (
+                ? product?.images.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setMainImage(img)}
@@ -925,7 +927,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                 {renderStars(product?.rating || 4)}
               </div>
               <span className="text-sm text-[#2A4172] ml-1">
-                ({review.length} Reviews)
+                ({review?.length} Reviews)
               </span>
               <span className="mx-2 text-gray-300">|</span>
               <span className="text-sm font-medium text-[#3ae698] flex items-center">
@@ -938,22 +940,22 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="bg-[#F5F7FA] rounded-xl p-5 mb-4">
             <div className="flex flex-wrap items-baseline gap-3">
               <span className="text-3xl font-bold text-[#A13C78]">
-                ₹ {product.actualPrice.toFixed()}
+                ₹ {product?.actualPrice.toFixed()}
               </span>
-              {product.price !== product.actualPrice && (
+              {product?.price !== product?.actualPrice && (
                 <span className="text-xl text-[#2A4172] line-through">
-                  ₹{product.price}
+                  ₹{product?.price}
                 </span>
               )}
-              {product.discount && (
+              {product?.discount && (
                 <span className="ml-2 px-3 py-1 bg-[#A13C78]/10 text-[#A13C78] rounded-full text-sm font-bold">
-                  Save {product.discount}%
+                  Save {product?.discount}%
                 </span>
               )}
             </div>
-            {product.price !== product.actualPrice && (
+            {product?.price !== product?.actualPrice && (
               <div className="mt-2 text-sm text-[#2A4172]">
-                You save: ₹{(product.price - product.actualPrice).toFixed(2)}
+                You save: ₹{(product?.price - product?.actualPrice).toFixed(2)}
               </div>
             )}
           </div>
@@ -961,22 +963,22 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           {/* Highlights */}
 
           {/* Variants */}
-          {product.variants && (
+          {product?.variants && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-[#1B2E4F] mb-3">
                 Available Options
               </h3>
               <div className="flex flex-wrap gap-2">
-                {product.variants.map((variant) => (
+                {product?.variants?.map((variant) => (
                   <button
                     key={variant.id}
                     className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-                      variant.selected
+                      variant?.selected
                         ? "bg-[#1B2E4F] text-white border-[#1B2E4F]"
                         : "bg-white text-[#2A4172] border-gray-300 hover:border-[#1B2E4F]"
                     }`}
                   >
-                    {variant.name}
+                    {variant?.name}
                   </button>
                 ))}
               </div>
@@ -1002,7 +1004,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               </span>
               <button
                 onClick={handleIncrease}
-                disabled={quantity >= product.stock}
+                disabled={quantity >= product?.stock}
                 className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition-colors text-[#2A4172] text-lg font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Increase quantity"
               >
@@ -1062,7 +1064,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                     key={i}
                     href="#"
                     className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-[#2A4172] hover:text-[#A13C78] hover:scale-110 transition-all"
-                    style={{ backgroundColor: `rgba(${Social.color}, 0.1)` }}
+                    style={{ backgroundColor: `rgba(${Social?.color}, 0.1)` }}
                   >
                     <Social.icon className="w-4 h-4" />
                   </a>
@@ -1120,7 +1122,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               <h3 className="text-2xl font-bold mb-5 text-[#1B2E4F]">
                 Product Overview
               </h3>
-              <p className="mb-5">{product.description}</p>
+              <p className="mb-5">{product?.description}</p>
               <p className="mb-5">
                 This cutting-edge electronic device is engineered with precision
                 and designed for optimal performance. It integrates seamlessly
@@ -1140,11 +1142,11 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               <h3 className="text-2xl font-bold mb-5 text-[#1B2E4F]">
                 Customer Reviews
               </h3>
-              {review.length > 0 ? (
+              {review?.length > 0 ? (
                 <div className="space-y-8">
-                  {review.map((reviewItem: any) => (
+                  {review?.map((reviewItem: any) => (
                     <div
-                      key={reviewItem.id}
+                      key={reviewItem?.id}
                       className="border-b border-[#2A4172]/20 pb-6 last:border-b-0 last:pb-0"
                     >
                       <div className="flex flex-col sm:flex-row items-start sm:items-center mb-2 gap-3">
@@ -1154,14 +1156,14 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                           {reviewItem?.user?.lastName}
                         </span>
                         <div className="flex">
-                          {renderStars(reviewItem.rating)}
+                          {renderStars(reviewItem?.rating)}
                         </div>
                       </div>
                       <p className="text-sm text-[#2A4172]/80 mb-3">
-                        {reviewItem.date}
+                        {reviewItem?.date}
                       </p>
                       <p className="text-[#2A4172] leading-relaxed">
-                        {reviewItem.comment}
+                        {reviewItem?.comment}
                       </p>
                     </div>
                   ))}
@@ -1195,7 +1197,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="flex-grow">
             <span className="text-sm font-semibold">Product Added to Cart</span>
             <p className="mt-1 text-xs text-gray-600">
-              {addedProduct.productName}
+              {addedProduct?.productName}
             </p>
           </div>
           <button

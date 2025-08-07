@@ -1,6 +1,6 @@
 // components/DealsSection.tsx
 
-import React from "react";
+import { Link } from "react-router-dom";
 
 const deals = [
   {
@@ -38,7 +38,7 @@ const DealsSection = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {deals.map((item, index) => (
-          <div
+          <Link  to={'/product'}
             key={index}
             className=""
           >
@@ -47,7 +47,7 @@ const DealsSection = () => {
             <div className="">
               <img
                 src={item.image}
-                alt={item.title}
+                // alt={item.title}
                 className=""
               />
             </div>
@@ -56,7 +56,7 @@ const DealsSection = () => {
             {item.note && (
               <p className="text-xs text-gray-700 font-medium">{item.note}</p>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </section>
