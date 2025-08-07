@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import footerLogo from "/digihub_footer.png";
 import { useEffect, useState } from "react";
+import { px } from "framer-motion";
 
 export default function Footer() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -37,53 +38,27 @@ export default function Footer() {
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
 
-  const socialLinks = [
-    {
-      icon: <Facebook className="h-5 w-5" />,
-      link: "#",
-      name: "Facebook",
-      color: "#1877F2",
-    },
-    {
-      icon: <Twitter className="h-5 w-5" />,
-      link: "#",
-      name: "Twitter",
-      color: "#1DA1F2",
-    },
-    {
-      icon: <Instagram className="h-5 w-5" />,
-      link: "#",
-      name: "Instagram",
-      color: "#E4405F",
-    },
-    {
-      icon: <Youtube className="h-5 w-5" />,
-      link: "#",
-      name: "YouTube",
-      color: "#FF0000",
-    },
-  ];
-
   const trustFeatures = [
     { icon: <Shield size={20} />, text: "Secure Shopping", color: "#10B981" },
     { icon: <Truck size={20} />, text: "Free Shipping", color: "#3B82F6" },
     { icon: <Award size={20} />, text: "Quality Guarantee", color: "#8B5CF6" },
     { icon: <CreditCard size={20} />, text: "Easy Returns", color: "#F59E0B" },
   ];
+
   const scrollToTop = () => {
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-gradient-to-br from-[#872d67] to-[#2a4172] text-white border-t border-gray-700">
       {/* Trust Features Bar */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="bg-gradient-to-r from-[#C1467F] to-[#8E2DE2] py-6">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {trustFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
+                className="flex items-center space-x-3 p-4 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
@@ -91,7 +66,7 @@ export default function Footer() {
                 >
                   {feature.icon}
                 </div>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-white">
                   {feature.text}
                 </span>
               </div>
@@ -102,40 +77,38 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Company Info */}
           <div className="space-y-6">
             <Link to="/" className="inline-block">
               <img
                 src={footerLogo || "/placeholder.svg"}
                 alt="Company Logo"
-                className="h-16 w-auto"
+                width={251}
+                height={6}
+                className="hover:scale-105 transition-transform duration-300"
+                style={{backgroundColor:"white", borderRadius:"5px", padding:"7px"}}
               />
             </Link>
 
-            <div className="space-y-4">
-              {/* <p className="text-sm leading-relaxed text-gray-600">
-                Your trusted partner for premium quality products. We deliver
-                excellence with every purchase.
-              </p> */}
-
+            <div className="">
               <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
-                  <Mail size={16} className="text-gray-400" />
+                <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                  <Mail size={16} className="text-[#C1467F]" />
                   <a href="mailto:info@digihub.com" className="hover:underline">
                     info@digihub.com
                   </a>
                 </div>
 
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
-                  <Phone size={16} className="text-gray-400" />
+                <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                  <Phone size={16} className="text-[#C1467F]" />
                   <a href="tel:01414511098" className="hover:underline">
                     0141-4511098
                   </a>
                 </div>
 
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
-                  <MapPin size={46} className="text-gray-400" />
+                <div className="flex items-start space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                  <MapPin size={28} className="text-[#C1467F] mt-1" />
                   <span>
                     Plot No. 97, Dakshinpuri-I, Shrikishanpura, Sanganer,
                     Jagatpura, Jaipur – 302017, Rajasthan
@@ -146,21 +119,24 @@ export default function Footer() {
           </div>
 
           {/* Categories */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
+          <div className="space-y-6 md:pl-16">
+            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+              Categories
+            </h3>
             <div className="space-y-3">
               {categories.slice(0, 6).map((category, index) => (
                 <Link
                   key={index}
                   to={`/category/${encodeURIComponent(category).toLowerCase()}`}
-                  className="block text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
                   {category}
                 </Link>
               ))}
               {categories.length > 6 && (
-                <button className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
-                onClick={scrollToTop}
+                <button
+                  className="inline-flex items-center text-sm text-[#C1467F] hover:text-white font-medium mt-2"
+                  onClick={scrollToTop}
                 >
                   View All Categories
                   <ArrowRight size={14} className="ml-1" />
@@ -169,25 +145,23 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Customer Service */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Customer Service
+          {/* Subcategories */}
+          <div className="space-y-6 md:pl-16">
+            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+              Subcategories
             </h3>
             <div className="space-y-3">
               {[
-                { title: "Shipping Policy", path: "/shipping" },
-                { title: "Return & Exchanges", path: "/return-and-exchanges" },
-                { title: "Terms & Condition", path: "/terms-and-condition" },
-                { title: "Privacy Policy", path: "/privacy-policy" },
-                { title: "Cancellation Policy", path: "/cancellation-policy" },
-
-                { title: "Cookie Policy", path: "/cookies" },
+                { title: "Mobiles", path: "/category/Mobiles" },
+                { title: "Tablets & eReaders", path: "/category/Tablets%20&%20eReaders" },
+                { title: "Accessories", path: "/category/Accessories" },
+                { title: "Laptops & Desktops", path: "/category/Laptops%20&%20Desktops" },
+                { title: "Headphones & Earbuds", path: "/category/Headphones%20&%20Earbuds" },
               ].map((item, index) => (
                 <Link
                   key={index}
                   to={item.path}
-                  className="block text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
                   {item.title}
                 </Link>
@@ -196,22 +170,22 @@ export default function Footer() {
           </div>
 
           {/* Company */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">Company</h3>
+          <div className="space-y-6 md:pl-16">
+            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+              Company
+            </h3>
             <div className="space-y-3">
               {[
                 { title: "Home", path: "/" },
                 { title: "About Us", path: "/about" },
                 { title: "WishList", path: "/wishlist" },
-                // { title: "Press", path: "/press" },
-                // { title: "Stories", path: "/stories" },
                 { title: "Contact Us", path: "/contact-us" },
                 { title: "Track Order", path: "/profile" },
               ].map((item, index) => (
                 <Link
                   key={index}
                   to={item.path}
-                  className="block text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                 >
                   {item.title}
                 </Link>
@@ -220,91 +194,47 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Newsletter Section */}
-        {/* <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Stay Updated
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Subscribe to our newsletter for exclusive offers, new arrivals,
-                and style tips.
+        {/* Bottom Section */}
+        <div className="mt-12 pt-8 border-t border-[#C1467F]">
+
+          <div className="text-center pb-4">
+              <p className="text-sm text-white/80">
+                © {new Date().getFullYear()} DigiHub. All rights reserved.
               </p>
             </div>
-            <div className="flex space-x-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              />
-              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div> */}
 
-        {/* Social Media & Reviews */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600 mr-2">Follow us:</span>
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:text-white hover:border-transparent transition-all duration-200"
-                  style={{
-                    hover: { backgroundColor: social.color },
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = social.color;
-                    e.currentTarget.style.color = "white";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#6B7280";
-                  }}
-                >
-                  {social.icon}
-                </a>
-              ))}
+
+          <div className="flex flex-col items-center">
+            {/* Policy Links */}
+            <div className="w-full">
+              <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-6 text-sm ">
+                {[
+                  { title: "Shipping Policy", path: "/shipping" },
+                  { title: "Return & Exchanges", path: "/return-and-exchanges" },
+                  { title: "Terms & Conditions", path: "/terms-and-condition" },
+                  { title: "Privacy Policy", path: "/privacy-policy" },
+                  { title: "Cancellation Policy", path: "/cancellation-policy" },
+                  { title: "Cookie Policy", path: "/cookies" },
+                ].map((item, index) => (
+                  <li key={index} className="relative">
+                    <Link
+                      to={item.path}
+                      className="text-white/80 hover:text-[#C1467F] transition-colors duration-200 px-1"
+                    >
+                      {item.title}
+                    </Link>
+                    {index < 5 && (
+                      <span className="hidden sm:inline-block text-white md:pl-3">|</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex items-center space-x-6 text-sm text-gray-600">
-              {/* <div className="flex items-center space-x-2">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      className="fill-yellow-400 stroke-yellow-400"
-                    />
-                  ))}
-                </div>
-                <span>4.8/5 Rating</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Users size={16} className="text-gray-400" />
-                <span>50K+ Customers</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Package size={16} className="text-gray-400" />
-                <span>100K+ Orders</span>
-              </div> */}
-              <p className="text-sm text-gray-600">
-                © {new Date().getFullYear()} Your Company. All rights reserved.
-              </p>
-            </div>
+            {/* Copyright */}
+
           </div>
         </div>
-
-        {/* Bottom Bar */}
       </div>
     </footer>
   );
