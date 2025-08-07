@@ -3,7 +3,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import QRCode from "react-qr-code"
 import { ChevronLeft, Wallet, Check, CreditCard, Clock, Shield } from "lucide-react"
-import logo from "/DigiLogo.jpg"
+import logo from "/digihub_footer.png"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
@@ -405,7 +405,7 @@ function AddressShipping({ cartItems }) {
   return (
     <>
       <div className="min-h-screen">
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto md:px-4 py-12">
           {/* Header Section */}
           <nav className="flex px-5 mb-4 text-sm text-gray-500 space-x-2">
             <Link to="/" className="hover:text-purple-700 transition-colors cursor-pointer">Home</Link>
@@ -418,7 +418,7 @@ function AddressShipping({ cartItems }) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Order Details */}
             <div className="lg:col-span-2 px-4">
-              <div className="bg-white rounded-lg shadow-sm border-2 border-gray-100 p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-sm border-2 border-gray-100 p-3  md:p-6 mb-6">
                 {/* Logo */}
                 <div className="mb-6">
                   <img src={logo || "/placeholder.svg"} alt="logo" className="w-32 h-auto" />
@@ -648,8 +648,10 @@ function AddressShipping({ cartItems }) {
                   <div className="space-y-3">
                     <div className="grid md:grid-cols-2 gap-3">
                       <label
-                        className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
-                        ${selectedPayment === "upi1"
+
+                        className={`flex items-start gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+        ${selectedPayment === "upi1"
+
                             ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
                             : "border-gray-200 hover:bg-gray-50"
                           }`}
@@ -839,14 +841,16 @@ function AddressShipping({ cartItems }) {
                     <p className="text-sm text-[#872D67] italic">Shipping fees will be calculated at checkout</p>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="space-y-4">
-                    <Link
-                      to="/address"
-                      className="block w-full py-4 px-6 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white text-center font-semibold rounded-lg hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
-                    >
-                      Proceed to Checkout
-                    </Link>
+
+      {/* Action Buttons */}
+      <div className="space-y-4">
+        {/* <Link
+          to="/address"
+          className="block w-full py-4 px-6 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white text-center font-semibold rounded-lg hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
+        >
+          Proceed to Checkout
+        </Link> */}
+
 
                     <Link
                       to="/products"
