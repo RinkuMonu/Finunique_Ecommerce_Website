@@ -28,8 +28,15 @@ export default function Faq() {
         },
         {
             question: "What is Digihub's cancellation policy?",
-            answer:
-            "You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Digihub Website or Mobile site. This applies to sale items as well. Any amount paid will be refunded to the original payment method used."
+                   answer:
+             (
+    <>
+    You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Digihub Website . Click here to view our full Cancellation Policy  {" "}
+      <a href="/cancellation-policy" className="text-blue-600 underline">
+       cancellation-policy
+      </a>
+    </>
+  ),
         },
         {
             question: "How do I cancel the order I have placed?",
@@ -44,16 +51,16 @@ export default function Faq() {
         {
             question: "I have created a return request. When will I get the refund?",
             answer:
-            `Refund will be initiated after the returned item is successfully picked up and verified. The refund timelines are as follows:
+           
 
-        - Debit Card / Credit Card / Net Banking / EMI: 7 business days  
-        - UPI: 5 business days  
-        - Digihub Credit / Super Coins / Gift Card / LP: Instant (up to 2 days in case of delay)  
-        - Wallets (e.g., PhonePe, PayZap): Instant (up to 2 days in case of delay)  
-        - Simple PayLater & Pay in 3: Instant (up to 5 days in case of delay)  
-        - LazyPay: Instant (up to 5 days in case of delay)  
-
-        Note: You can save up to five bank accounts for NEFT/IMPS refunds. A single bank account can be linked to up to five Digihub accounts. To add a new bank account beyond this limit, please delete an existing one.`
+ (
+    <>
+      Refund will be initiated after the returned item is successfully picked up and verified. Click here to view our full Return & Exchange Policy  {" "}
+      <a href="/return-and-exchanges" className="text-blue-600 underline">
+        return-policy
+      </a>
+    </>
+  ),
         },
         {
             question: "Can I modify the shipping address of my order after it has been placed?",
@@ -67,7 +74,7 @@ export default function Faq() {
             question: "What is Digihub's Return and Exchange Policy? How does it work?",
             answer:  (
     <>
-      We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy → {" "}
+      We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy  {" "}
       <a href="/return-and-exchanges" className="text-blue-600 underline">
         return-policy
       </a>
