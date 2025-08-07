@@ -54,7 +54,7 @@ const Premium = () => {
           {/* <p className="text-sm text-gray-600">Starting at Rs. 9999*</p> */}
         </div>
         <a
-          href="/category/Smart%20Watches"
+          href="/category/Smart-Watches"
           className="text-sm text-indigo-600 font-semibold hover:underline"
         >
           View All →
