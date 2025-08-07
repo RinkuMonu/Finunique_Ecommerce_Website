@@ -87,8 +87,8 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
     <LimitedTimeDeals />
 
       {/* <HowItWorks /> */}
-      <DeliveryFeatures />
-      <Newsletter />
+      {/* <DeliveryFeatures /> */}
+      {/* <Newsletter /> */}
     </>
   );
 }
