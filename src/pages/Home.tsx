@@ -10,6 +10,11 @@ import axios from "axios";
 import { useEffect } from "react";
 import FeaturedSections from "../components/home/featured-sections";
 import DealsOfTheDay from "../components/home/deals-of-the-day";
+import DealsSection from "../components/home/DealsSection";
+import TabletSlider from "../components/home/TabletSlider";
+import LimitedTimeDeals from "../components/home/LimitedTimeDeals";
+import Commitments from "../components/home/Commitments";
+import Premium from "../components/home/Premium";
 
 interface HomeProps {
   addToCart: (product: Product) => void;
@@ -71,12 +76,17 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
     <>
       <Banner />
       <FeaturedSections />
+      <Premium />
       <TrendingProducts addToCart={addToCart} /> 
+      <TabletSlider />
+      <Commitments />
       <DealsOfTheDay />
+      <DealsSection />
       {/* <Arrivals addToCart={addToCart} />
       <TopCategories /> */}
+    <LimitedTimeDeals />
 
-      <HowItWorks />
+      {/* <HowItWorks /> */}
       <DeliveryFeatures />
       <Newsletter />
     </>

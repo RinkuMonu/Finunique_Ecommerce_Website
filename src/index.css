@@ -43,6 +43,26 @@ body{
 .scroll-wrapper:hover .scroll-content {
   animation-play-state: paused;
 }
+.category-hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 15px);
+  height: 100%;
+  border-radius: 100px;
+  background-color: #fff;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.08); /* fallback */
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.25s linear;
+}
+
+.category-hover:hover::before {
+  opacity: 1;
+  box-shadow: 4px 4px 6px rgba(var(--color-shadow-rgb), 0.08);
+
+}
 
 /* neW coLOR */
 /* Custom scrollbar for category bar */
