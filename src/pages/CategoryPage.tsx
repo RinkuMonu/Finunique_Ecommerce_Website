@@ -8,7 +8,10 @@ export default function CategoryPage() {
   let initialMinPrice = 0
   let initialMaxPrice = 50000
   const { category } = useParams()
-  const catagory1 = category?.replace("-", " ")
+  const catagory1 = category
+  ?.replace(/-/g, " ")      // step 1: replace all hyphens with space
+  .replace(/\band\b/g, "&"); // step 2: replace 'and' (as a full word) with '&'
+
   const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
@@ -18,6 +21,8 @@ export default function CategoryPage() {
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+console.log("category = ",category);
+console.log("catagory1 = ",catagory1);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -220,7 +225,7 @@ export default function CategoryPage() {
                     {catagory1 || "All Products"}
                   </h1>
                   <p className="text-gray-600 text-sm">
-                    Showing <span className="text-purple-700 font-semibold">{filteredProducts.length}</span> curated pieces
+                    Showing <span className="text-purple-700 font-semibold">{filteredProducts.length}</span> accurated pieces
                   </p>
                 </div>
                 <div className="flex justify-end mb-6">
