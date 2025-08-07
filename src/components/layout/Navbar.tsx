@@ -353,6 +353,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  const slugify = (text) =>
+    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
 
   // Component render functions
   const renderSearchResults = () => (
@@ -656,7 +658,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                     (item: any, index: number) => (
                       <Link
                         key={index}
-                        to={`/category/${item.name}`}
+                        to={`/category/${slugify(item.name)}`}
                         className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
                         onClick={() => setIsCollectionOpen(false)}
                       >
@@ -719,7 +721,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         <div className="flex flex-col space-y-3 lg:space-y-4">
           {items.slice(0, 8).map((item: any, itemIndex: number) => (
             <Link
-              to={`/category/${item.name}`}
+              to={`/category/${slugify(item.name)}`}
               key={itemIndex}
               className="flex items-center space-x-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
             >
@@ -1003,7 +1005,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                                     >
                                       <Link
                                         to={`/category/${encodeURIComponent(
-                                          item.name.toLowerCase()
+                                         slugify(item.name).toLowerCase()
                                         )}`}
                                         className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                                       >
