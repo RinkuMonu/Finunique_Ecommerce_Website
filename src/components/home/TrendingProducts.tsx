@@ -237,8 +237,9 @@ const TrendingProducts = ({
   const Image_BaseURL = import.meta.env.VITE_API_BASE_URL_IMAGE
 
   return (
+    <>
     <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl  mx-16">
         {/* Modern Header */}
         <div className="flex justify-between align-middle">
           <div className="text-left mb-12">
@@ -302,7 +303,7 @@ const TrendingProducts = ({
                           className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
                         >
                           {/* Product Image Container */}
-                          <div className="group relative w-full max-w-xs bg-white border-b border-gray-200 rounded-sm p-4 text-left hover:shadow-md transition-all duration-300 overflow-hidden">
+                          <div className="group relative w-full max-w-xs bg-white rounded-sm p-4 text-left hover:shadow-md transition-all duration-300 overflow-hidden">
                             <Link
                               to={`/product/${product._id}`}
                               className="block text-gray-900 font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors duration-200 leading-5"
@@ -595,7 +596,23 @@ const TrendingProducts = ({
           <Login1 />
         </LoginModal>
       )}
+
+
+
+
+       <div className="row mx-16 mt-3">
+        <div className="grid grid-cols-1">
+          <img
+            src="./Digiimage/tp-banner.jpg"
+            alt="Special Offer Banner"
+            className="w-full h-auto rounded-3xl transition"
+          />
+        </div>
+      </div>
     </section>
+
+
+    </>
   )
 }
 
