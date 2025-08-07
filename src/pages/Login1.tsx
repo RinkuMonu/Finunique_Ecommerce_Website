@@ -507,9 +507,9 @@ export default function Login1() {
               </p>
             </motion.div>
             <img
-              src="./LOGIN1.png"
+              src="/LOGIN1.png"
               alt="Security"
-              className="w-full max-w-md object-contain mt-10 hidden md:block"
+              className="w-full h-auto object-contain md:block hidden"
             />
           </div>
 

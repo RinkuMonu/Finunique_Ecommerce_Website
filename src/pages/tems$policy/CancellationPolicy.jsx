@@ -231,8 +231,8 @@ const CancellationPolicy = () => {
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F]">
                     <p className="text-gray-700 leading-relaxed">
                       If you have any questions about this Privacy Policy, You can contact us via email at{" "}
-                      <a href="mailto:info@digihub.com" className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">
-                        info@digihub.com
+                      <a href="mailto:info@digihubtech.in." className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">
+                        info@digihubtech.in.
                       </a>{" "}
                       and call us at{" "}
                       <a href="tel:=01414511098" className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">

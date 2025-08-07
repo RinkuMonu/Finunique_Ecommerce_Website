@@ -178,7 +178,7 @@ console.log("catagory1 = ",catagory1);
               </div>
 
               {/* Size Filter */}
-              <div>
+              {/* <div>
                 <div
                   onClick={() => toggleSection("sizes")}
                   className="flex justify-between items-center cursor-pointer mb-3"
@@ -203,7 +203,7 @@ console.log("catagory1 = ",catagory1);
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* Reset Button */}
               <button
