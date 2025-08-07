@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ShoppingCart,
@@ -185,14 +185,38 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       <Star
         key={i}
         size={18}
-        className={`${
-          i < Math.floor(rating)
+        className={`${i < Math.floor(rating)
             ? "fill-yellow-400 stroke-yellow-400"
             : "stroke-gray-400"
-        }`}
+          }`}
       />
     ));
   };
+
+  const [isZooming, setIsZooming] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+
+  const zoomTimeoutRef = useRef(null);
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomPosition({ x, y });
+  };
+
+  const handleMouseEnter = () => {
+    if (zoomTimeoutRef.current) clearTimeout(zoomTimeoutRef.current);
+    setIsZooming(true);
+  };
+
+  const handleMouseLeave = () => {
+    zoomTimeoutRef.current = setTimeout(() => {
+      setIsZooming(false);
+    }, 80); // delay removes flicker
+  };
+
+
+
 
   let relatedProductsFiltered = allProducts.filter(
     (p) => p._id !== id && p.category?._id === product?.category?._id
@@ -219,52 +243,76 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
     <div className="container mx-auto px-4 py-16 min-h-screen max-w-7xl">
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2fr] gap-8 lg:gap-12 items-start">
         {/* Product Image Gallery */}
-        <div className="sticky top-4 flex flex-col items-center p-4">
+        <div className="md:sticky top-4 flex flex-col items-center p-4">
           {/* Main Image with Zoom Effect */}
-          <div className="relative w-full max-w-xl rounded-2xl overflow-hidden border-2 border-[#2A4172]/20 bg-white  shadow-sm transition-all duration-500 hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.3)] hover:border-[#2A4172]/30 group">
-            <div className="relative overflow-hidden rounded-sm aspect-square ">
-              <img
-                src={mainImage || "/placeholder.svg?height=600&width=600"}
-                alt={product?.productName}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              {product.discount && (
-                <div className="absolute top-4 right-4 bg-[#A13C78] text-white px-3 py-1 rounded-full text-sm font-bold shadow-md animate-pulse">
-                  {product.discount}% OFF
-                </div>
-              )}
+          <div className="flex gap-6 w-full max-w-6xl">
+            {/* Main Image Container */}
+            <div
+              className="relative w-full max-w-xl rounded-2xl overflow-hidden border-2 border-[#2A4172]/20 bg-white shadow-sm group"
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="relative flex gap-6 w-full max-w-6xl">
+
+                <img
+                  src={mainImage || "/placeholder.svg?height=600&width=600"}
+                  alt={product?.productName}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 p-4"
+                />
+                {product.discount && (
+                  <div className="absolute top-4 right-4 bg-[#A13C78] text-white px-3 py-1 rounded-full text-sm font-bold shadow-md animate-pulse">
+                    {product.discount}% OFF
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Zoom Preview Box */}
+            {isZooming && (
+              <div className="hidden lg:block absolute top-0 right-[-320px] w-[300px] h-[300px] border-2 border-[#83225c]/30 rounded-xl overflow-hidden bg-white shadow-inner z-10">
+                <div
+                  className="absolute w-full h-full bg-no-repeat bg-cover"
+                  style={{
+                    backgroundImage: `url(${mainImage || "/placeholder.svg?height=600&width=600"})`,
+                    backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                    backgroundSize: '200%',
+                  }}
+                />
+              </div>
+            )}
+
           </div>
+
 
           {/* Thumbnail Gallery */}
           <div className="mt-6 w-full">
             <div className="flex space-x-3 pb-2 overflow-x-auto snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#A13C78]/30 scrollbar-track-gray-100/50 ">
               {product?.images?.length > 0
                 ? product?.images.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setMainImage(img)}
-                      className={`flex-shrink-0 w-20 h-20 m-2 rounded-lg overflow-hidden border-3 transition-all duration-300 snap-center ${
-                        mainImage === img
-                          ? "border-[#380d27] ring-2 ring-[#83225c]"
-                          : "border-gray-200 hover:border-[#C1467F]"
+                  <button
+                    key={index}
+                    onClick={() => setMainImage(img)}
+                    className={`flex-shrink-0 w-20 h-20 m-2 rounded-lg overflow-hidden border-3 transition-all duration-300 snap-center ${mainImage === img
+                        ? "border-[#380d27] ring-2 ring-[#83225c]"
+                        : "border-gray-200 hover:border-[#C1467F]"
                       }`}
-                    >
-                      <img
-                        src={img}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover hover:opacity-90"
-                      />
-                    </button>
-                  ))
+                  >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover hover:opacity-90"
+                    />
+                  </button>
+                ))
                 : Array.from({ length: 3 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400"
-                    >
-                      <ImageIcon className="w-6 h-6" />
-                    </div>
-                  ))}
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400"
+                  >
+                    <ImageIcon className="w-6 h-6" />
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -350,11 +398,10 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                 {product?.variants?.map((variant) => (
                   <button
                     key={variant.id}
-                    className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-                      variant?.selected
+                    className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${variant?.selected
                         ? "bg-[#1B2E4F] text-white border-[#1B2E4F]"
                         : "bg-white text-[#2A4172] border-gray-300 hover:border-[#1B2E4F]"
-                    }`}
+                      }`}
                   >
                     {variant?.name}
                   </button>
@@ -428,26 +475,24 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       </div>
 
       {/* Tabs Section */}
-      <div className="mt-20 p-8 md:p-10 rounded-xl border-2 border-[#2A4172]/20 shadow-inner bg-white">
-        <div className="flex flex-wrap border-b-2 border-[#2A4172]/20 mb-8">
+      <div className="mt-20 p-6 rounded-xl border-2 border-[#2A4172]/20 shadow-inner bg-white">
+        <div className="flex flex-wrap border-b-2 border-[#2A4172]/20 ">
           <button
             onClick={() => setActiveTab("description")}
-            className={`px-8 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
-              activeTab === "description"
+            className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "description"
                 ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
                 : "text-[#2A4172] hover:text-[#A13C78]"
-            }`}
+              }`}
           >
             Description
           </button>
           <div className="flex justify-between gap-6 w-full sm:w-auto sm:flex-grow">
             <button
               onClick={() => setActiveTab("reviews")}
-              className={`px-8 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
-                activeTab === "reviews"
+              className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "reviews"
                   ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
                   : "text-[#2A4172] hover:text-[#A13C78]"
-              }`}
+                }`}
             >
               Reviews
             </button>
@@ -471,17 +516,17 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         <div className="py-8 text-[#2A4172] text-lg leading-relaxed">
           {activeTab === "description" ? (
             <div>
-              <h3 className="text-2xl font-bold mb-5 text-[#1B2E4F]">
+              <h3 className="text-xl font-bold mb-5 text-[#1B2E4F]">
                 Product Overview
               </h3>
-              <p className="mb-5">{product?.description}</p>
-              <p className="mb-5">
+              <p className="mb-5 text-sm">{product?.description}</p>
+              <p className="mb-5 text-sm">
                 This cutting-edge electronic device is engineered with precision
                 and designed for optimal performance. It integrates seamlessly
                 into your digital lifestyle, offering unparalleled efficiency
                 and reliability.
               </p>
-              <ul className="list-disc list-inside space-y-3 text-[#2A4172]">
+              <ul className="list-disc list-inside space-y-3 text-sm text-[#2A4172]">
                 <li>High-performance processor for demanding tasks</li>
                 <li>Durable and sleek design with premium finishes</li>
                 <li>Intuitive user interface for effortless navigation</li>
@@ -491,11 +536,11 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             </div>
           ) : (
             <div>
-              <h3 className="text-2xl font-bold mb-5 text-[#1B2E4F]">
+              <h3 className=" font-bold mb-5 text-xl text-[#1B2E4F]">
                 Customer Reviews
               </h3>
               {review?.length > 0 ? (
-                <div className="space-y-8">
+                <div className="space-y-8 text-sm">
                   {review?.map((reviewItem: any) => (
                     <div
                       key={reviewItem?.id}
@@ -521,7 +566,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                   ))}
                 </div>
               ) : (
-                <p className="text-[#2A4172]">
+                <p className="text-[#2A4172] text-sm">
                   No reviews yet. Be the first to share your experience!
                 </p>
               )}

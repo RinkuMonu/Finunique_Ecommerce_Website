@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaSpinner, FaBox, FaChevronRight } from "react-icons/fa";
+import { FaSpinner, FaBox, FaChevronRight, FaShoppingBag } from "react-icons/fa";
 import { FiPackage, FiCalendar, FiDollarSign, FiHash } from "react-icons/fi";
 
 const statusColors = {
@@ -80,63 +80,63 @@ export default function OrdersPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-        <div className="max-w-md p-6 bg-white rounded-lg shadow-md">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-              <svg
-                className="w-8 h-8 text-red-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Error loading orders
-            </h3>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+  //       <div className="max-w-md p-6 bg-white rounded-lg shadow-md">
+  //         <div className="flex flex-col items-center text-center">
+  //           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+  //             <svg
+  //               className="w-8 h-8 text-red-500"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               viewBox="0 0 24 24"
+  //             >
+  //               <path
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //                 strokeWidth={2}
+  //                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+  //               />
+  //             </svg>
+  //           </div>
+  //           <h3 className="text-lg font-medium text-gray-900 mb-2">
+  //             Error loading orders
+  //           </h3>
+  //           <p className="text-gray-600 mb-4">{error}</p>
+  //           <button
+  //             onClick={() => window.location.reload()}
+  //             className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+  //           >
+  //             Try Again
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (orders.length === 0) {
+  if (orders.length === 0 || error) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-        <div className="max-w-md p-8 text-center">
-          <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FaBox className="text-3xl text-indigo-600" />
-          </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            No orders yet
-          </h2>
-          <p className="text-gray-500 mb-6">
-            You haven't placed any orders. Start shopping to see your orders here.
-          </p>
-          <button
-            onClick={() => (window.location.href = "/products")}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Browse Products
-          </button>
+    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] bg-gradient-to-b from-white via-indigo-50 to-white">
+      <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-lg text-center border border-gray-200">
+        <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+          <FaBox className="text-3xl text-indigo-600" />
         </div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          No Orders Yet
+        </h2>
+        <p className="text-gray-500 mb-6">
+          You haven't placed any orders. Start shopping to see your orders here.
+        </p>
+        <button
+          onClick={() => (window.location.href = "/products")}
+          className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium shadow hover:shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+        >
+          Browse Products
+        </button>
       </div>
+    </div>
     );
   }
 
@@ -184,11 +184,18 @@ export default function OrdersPage() {
                           key={index}
                           className="relative h-12 w-12 rounded-md border-2 border-white shadow-sm"
                         >
-                          <img
-                            src={item.product?.images}
-                            alt={item.product?.productName || "Product"}
-                            className="h-full w-full object-cover rounded-md"
-                          />
+                         {item.product?.images ? (
+  <img
+    src={item.product.images}
+    alt={item.product.productName || "Product"}
+    className="h-full w-full object-cover rounded-md"
+  />
+) : (
+  <div className="flex items-center justify-center h-full w-full bg-gray-100 rounded-md">
+    <FaShoppingBag className="w-5 h-5 text-blue-600" />
+  </div>
+)}
+
                         </div>
                       ))}
                       {order.products?.length > 3 && (

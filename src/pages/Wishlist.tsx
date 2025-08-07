@@ -10,6 +10,7 @@ const Wishlist = () => {
   const { items: wishlistItems, loading } = useSelector((state: any) => state.wishlist)
   const dispatch = useDispatch<any>()
 
+  console.log("wishlist " , wishlistItems)
   useEffect(() => {
     dispatch(fetchWishlist())
   }, [dispatch])
@@ -21,23 +22,23 @@ const Wishlist = () => {
   }
 
   const handleClear = () => {
-  if (wishlistItems.length > 0) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to clear your entire wishlist?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, clear it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(clearWishlist());
-        Swal.fire('Cleared!', 'Your wishlist has been cleared.', 'success');
-      }
-    });
-  }
-};
+    if (wishlistItems.length > 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to clear your entire wishlist?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, clear it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearWishlist());
+          Swal.fire('Cleared!', 'Your wishlist has been cleared.', 'success');
+        }
+      });
+    }
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
@@ -49,7 +50,7 @@ const Wishlist = () => {
     ))
   }
 
- return (
+  return (
     <div className="min-h-screen bg-gray-50 pb-12 relative overflow-hidden">
       {/* Subtle background pattern */}
       <div
@@ -120,92 +121,91 @@ const Wishlist = () => {
 
         {/* Wishlist Items */}
         {!loading && wishlistItems && wishlistItems.length > 0 && (
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {wishlistItems
               .filter((item: any) => item?.product)
               .map((item: any, index: number) => (
                 <div
                   key={item?.product?._id}
-                  className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-white/50 p-6 transform hover:-translate-y-1"
+                  className="flex mx-auto w-full items-center gap-4 bg-white backdrop-blur-sm border border-white/50 shadow-lg rounded-xl py-6 px-4 transition-all duration-300 hover:shadow-xl"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Product Image */}
-                    <div className="flex-shrink-0">
-                      <div className="relative w-full lg:w-56 h-56 rounded-xl overflow-hidden bg-gray-50 p-4 border-2 border-[#384D89]/20 shadow-inner">
-                        <img
-                          src={
-                            item?.product?.images?.[0]
-                              ? item?.product.images[0]
-                              : "/diverse-products-still-life.png"
-                          }
-                          alt={item?.product?.productName || "No image"}
-                          className="w-full h-full object-contain rounded-md hover:scale-105 transition-transform duration-300"
-                        />
-                        {item?.product?.discount && (
-                          <div
-                            className="absolute top-4 left-4 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-md"
-                            style={{ background: "#A13C78" }}
-                          >
-                            {item.product.discount}% OFF
-                          </div>
-                        )}
+                  {/* Product Image */}
+                  <div className="relative w-36 h-36 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50 border-2 border-[#384D89]/20">
+                    <img
+                      src={
+                        item?.product?.images?.[0]
+                          ? item?.product.images[0]
+                          : "/diverse-products-still-life.png"
+                      }
+                      alt={item?.product?.productName || "No image"}
+                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+                    />
+                    {item?.product?.discount && (
+                      <div
+                        className="absolute top-1 left-1 text-white text-[10px] font-medium px-2 py-0.5 rounded shadow"
+                        style={{ background: "#A13C78" }}
+                      >
+                        {item.product.discount}% OFF
                       </div>
+                    )}
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex flex-col flex-grow min-w-0">
+                    <h3 className="text-base font-semibold text-[#14263F] truncate">
+                      {item?.product?.productName || "Unnamed Product"}
+                    </h3>
+                    <p className=" text-[#2A4172] line-clamp-2 mb-1">
+                      {item?.product?.description ||
+                        "Premium quality traditional wear crafted with authentic techniques and finest materials."}
+                    </p>
+
+                    <div className="flex items-center gap-1 mb-1">
+                      <div className="flex">{renderStars(item?.product?.rating || 4)}</div>
+                      <span className="text-[11px] text-[#2A4172]/70">(Reviews)</span>
                     </div>
-                    {/* Product Details */}
-                    <div className="flex-grow">
-                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
-                        <div className="flex-grow">
-                          <h3 className="text-xl font-bold mb-2 text-[#14263F]">
-                            {item?.product?.productName || "Unnamed Product"}
-                          </h3>
-                          <p className="text-[#2A4172] mb-3 line-clamp-2 text-sm">
-                            {item?.product?.description ||
-                              "Premium quality traditional wear crafted with authentic techniques and finest materials."}
-                          </p>
-                          {/* Rating */}
-                          <div className="flex items-center mb-3">
-                            <div className="flex mr-2">{renderStars(item?.product?.rating || 4)}</div>
-                            <span className="text-sm text-[#2A4172]/70">(Reviews)</span>
-                          </div>
-                          {/* Price */}
-                          <div className="flex items-center mb-4">
-                            <span className="text-2xl font-bold mr-2 bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
-                              ₹{item?.product?.actualPrice || "N/A"}
-                            </span>
-                            {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
-                              <span className="text-base text-[#2A4172]/60 line-through">₹{item.product.price}</span>
-                            )}
-                          </div>
-                          {/* Category */}
-                          <div className="mb-4">
-                            <span className="text-sm text-[#2A4172]">Category: </span>
-                            <span className="font-medium text-[#A13C78]">
-                              {item?.product?.category?.name || "Traditional Wear"}
-                            </span>
-                          </div>
-                          {/* Action Buttons */}
-                          <div className="flex flex-col sm:flex-row gap-3">
-                            <Link
-                              to={`/product/${item?.product?._id}`}
-                              className="flex-1 flex items-center justify-center gap-2 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#A13C78] to-[#872D67] hover:from-[#872D67] hover:to-[#681853] shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm"
-                            >
-                              <Eye size={16} />
-                              <span>View Product</span>
-                            </Link>
-                            <button
-                              onClick={() => handleRemove(item?.product?._id)}
-                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-[#384D89]/20 rounded-xl font-semibold transition-all duration-300 text-[#384D89] hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md text-sm group"
-                            >
-                              <Trash2 size={16} className="group-hover:scale-110 transition-transform" />
-                              <span>Remove</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
+                        ₹{item?.product?.actualPrice || "N/A"}
+                      </span>
+                      {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
+                        <span className=" text-[#2A4172]/60 line-through">
+                          ₹{item.product.price}
+                        </span>
+                      )}
                     </div>
+{/* 
+                    <p className="text-[11px] text-[#2A4172]">
+                      Category:{" "}
+                      <span className="font-medium text-[#A13C78]">
+                        {item?.product?.category?.name || "Traditional Wear"}
+                      </span>
+                    </p> */}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col items-end gap-2">
+                    <Link
+                      to={`/product/${item?.product?._id}`}
+                      className="flex items-center gap-1 w-full text-white  font-semibold px-3 py-1.5 rounded-md bg-gradient-to-r from-[#A13C78] to-[#872D67] hover:from-[#872D67] hover:to-[#681853] shadow hover:shadow-md transition-all"
+                    >
+                    <div className="mx-auto inline-flex items-center">
+                        <Eye size={14}  className="text-md me-1"/>
+                      View
+                    </div>
+                    </Link>
+                    <button
+                      onClick={() => handleRemove(item?.product?._id)}
+                      className="flex items-center gap-1 px-3 py-1.5 border border-[#384D89]/30  text-[#384D89]  font-semibold rounded-md hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md transition-all group"
+                    >
+                      <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
+                      Remove
+                    </button>
                   </div>
                 </div>
+
               ))}
           </div>
         )}
