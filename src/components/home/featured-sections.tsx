@@ -89,7 +89,7 @@ const FeaturedSections = () => {
                 ref={scrollContainerRef}
                 className="overflow-x-auto whitespace-nowrap scrollbar-hide pb-4 -mx-4 px-4"
               >
-                <div className="inline-flex space-x-4">
+                <div className="inline-flex space-x-4 ">
                   {Object.values(groupedCategories)
                     .flat()
                     .map((item) => (
@@ -125,8 +125,8 @@ const FeaturedSections = () => {
               </div>
 
               {/* Gradient fade effects for mobile */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent"></div>
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent"></div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-10"></div>
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 "></div>
             </div>
 
             {/* View All Button for mobile */}
@@ -218,14 +218,14 @@ const FeaturedSections = () => {
               {/* 4K Projector Banner */}
               <div className="relative rounded-2xl overflow-hidden min-h-[200px]">
                 <img
-                  src="./Digiimage/banner-3_580x.jpg"
+                  src="./Digiimage/banner-4_580x.jpg"
                   alt="4K Projector"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30"></div>
                 <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
                   <h3 className="text-xl sm:text-2xl text-white font-semibold mb-3">
-                    4K Projector
+                  Bestselling Printers
                   </h3>
                   <Link
                     to={`/category/${slugify("Printers & Inks")}`}

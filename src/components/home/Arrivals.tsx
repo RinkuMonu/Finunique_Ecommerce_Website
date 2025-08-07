@@ -205,7 +205,7 @@ console.log(selectedProduct);
       <div className="max-w-7xl mx-auto">
         {/* Modern Header */}
         <div className="text-left mb-12">
-          <div className="flex justify-between">
+          <div className="md:flex justify-between">
             <div className="right">
             <h2 className="text-xl font-bold text-gray-900">Latest Products</h2>
           <p className="text-md text-gray-600 max-w-2xl">
@@ -215,7 +215,7 @@ console.log(selectedProduct);
        
           <Link
             to="/products"
-            className="inline-flex items-center space-x-2  text-black underline font-medium px-6 py-3 rounded-md transition-colors duration-200"
+            className="inline-flex items-center space-x-2  text-black underline font-medium md:px-6 py-3 rounded-md transition-colors duration-200"
           >
             <span>View All Products</span>
             <ChevronRight size={16} />

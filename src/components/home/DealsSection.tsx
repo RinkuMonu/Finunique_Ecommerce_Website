@@ -33,14 +33,15 @@ const deals = [
 
 const DealsSection = () => {
   return (
+    <>
     <section className="bg-gray-50 py-10 px-4 lg:px-8">
       <h2 className="text-2xl lg:text-3xl font-bold mb-6">Great Deals on Electronics</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 align-baseline">
         {deals.map((item, index) => (
           <Link  to={'/product'}
             key={index}
-            className=""
+            className="flex justify-center "
           >
 
             {/* Image */}
@@ -59,7 +60,25 @@ const DealsSection = () => {
           </Link>
         ))}
       </div>
+
+
+
+       <div className="row mx-16 mt-3">
+        <div className="grid grid-cols-1">
+          <img
+            src="./Digiimage/gd-banner.jpg"
+            alt="Special Offer Banner"
+            className="w-full h-auto rounded-3xl transition"
+          />
+        </div>
+      </div>
     </section>
+
+
+
+
+
+    </>
   );
 };
 

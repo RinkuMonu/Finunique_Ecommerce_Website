@@ -1,9 +1,5 @@
 "use client";
 import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
   Mail,
   Phone,
   MapPin,
@@ -16,7 +12,6 @@ import {
 import { Link } from "react-router-dom";
 import footerLogo from "/digihub_footer.png";
 import { useEffect, useState } from "react";
-import { px } from "framer-motion";
 
 export default function Footer() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -127,7 +122,7 @@ export default function Footer() {
 
           {/* Categories */}
           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+            <h3 className="text-lg uppercase font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
               Categories
             </h3>
             <div className="space-y-3">
@@ -146,7 +141,7 @@ export default function Footer() {
 
            <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Collections
+            POPULAR SEARCHES
             </h3>
             <div className="space-y-3">
               {categories.slice(11, 20).map((category, index) => (
@@ -165,7 +160,7 @@ export default function Footer() {
           {/* Subcategories */}
           {/* <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Subcategories
+              Popular Searchs
             </h3>
             <div className="space-y-3">
               {[
@@ -188,7 +183,7 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+            <h3 className="text-lg font-semibold uppercase text-white border-b border-[#C1467F] pb-2 inline-block">
               Company
             </h3>
             <div className="space-y-3">
@@ -216,10 +211,10 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
 
           <div className="text-center pb-4">
-            <p className="text-sm text-white/80">
-              © {new Date().getFullYear()} DigiHub. All rights reserved.
-            </p>
-          </div>
+              <p className="text-sm text-white/80">
+                © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private Limited. All rights reserved.
+              </p>
+            </div>
 
 
           <div className="flex flex-col items-center">

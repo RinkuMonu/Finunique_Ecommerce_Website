@@ -492,37 +492,32 @@ export default function Login1() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] p-2">
-        <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
-          {/* Left Panel - Updated with new colors */}
-          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#2A4172] to-[#384D89] p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
-            <motion.div className="max-w-md">
-              <h2 className="text-4xl font-bold text-white mb-4">
-                {isLogin ? "Welcome back!" : "Create your account"}
-              </h2>
-              <p className="text-white text-lg">
-                {isLogin
-                  ? "Sign in to access your personalized dashboard."
-                  : "Join our community to unlock exclusive features."}
-              </p>
-            </motion.div>
-            <img
-              src="/LOGIN1.png"
-              alt="Security"
-              className="w-full h-auto object-contain md:block hidden"
-            />
-          </div>
+    <div className="flex items-center justify-center bg-[#f0f4ff] p-4">
+  <div className="w-full max-w-5xl flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl bg-white">
+    {/* Left Panel */}
+    <div className="w-full md:w-2/5 bg-gradient-to-br from-[#2A4172] to-[#384D89] p-8 flex flex-col">
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold text-white">
+          {isLogin ? "Welcome back!" : "Create your account"}
+        </h2>
+        <p className="text-white text-sm mt-2">
+          {isLogin ? "Sign in to access your dashboard." : "Join our community."}
+        </p>
+      </div>
+      <img
+        src="/LOGIN1.png"
+        alt="Security"
+        className="w-full h-auto max-h-[200px] object-contain mt-4"
+      />
+    </div>
 
-          {/* Right Panel - Updated with new colors */}
-          <div
-            className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto"
-            style={{ height: "calc(100vh - 30px)" }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <AnimatePresence mode="wait">
+    {/* Right Panel - Removed fixed height */}
+    <div className="w-full md:w-3/5 p-6 md:p-8 bg-white" style={{overflowY:"auto", height:"calc(100vh - 106px)"}}>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+       <AnimatePresence mode="wait">
                 {showResetPassword ? (
                   <motion.div
                     key="reset-password"
@@ -1081,10 +1076,10 @@ export default function Login1() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </motion.div>
-          </div>
-        </div>
-      </div>
+      </motion.div>
+    </div>
+  </div>
+</div>
     </>
   );
 }

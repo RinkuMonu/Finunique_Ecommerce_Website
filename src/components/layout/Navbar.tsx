@@ -240,7 +240,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-
+      const slugify = (text) =>
+        text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
       const filtered = categories.filter((cat) =>
         cat.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -249,18 +250,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         // Use first suggestion
         const firstSuggestion = filtered[0];
         handleCategorySelect(firstSuggestion);
-        navigate(`/category/${encodeURIComponent(firstSuggestion)}`);
+        navigate(`/category/${encodeURIComponent(slugify(firstSuggestion))}`);
       } else if (searchQuery) {
         // Fallback to raw query
-        navigate(`/category/${encodeURIComponent(searchQuery)}`);
+        navigate(`/category/${encodeURIComponent(slugify(searchQuery))}`);
       }
-
-      setSearchQuery("");
-      setSearchOpen(false);
     },
-    [searchQuery, navigate, categories]
+    [searchQuery, navigate]
   );
-
 
   const handleCategorySelect = useCallback(
     (category: string) => {
@@ -898,7 +895,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
+      <div className="bg-gradient-to-br from-[#2a4172] to-[#dd45a8] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
@@ -911,7 +908,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 onClick={() =>
                   isMobileView && setIsCollectionOpen(!isCollectionOpen)
                 }
-                className="w-full text-white bg-[#c7588cc9] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C] transition-all duration-200 flex items-center justify-between"
+                className="w-full text-white bg-[#88438e] p-3 lg:p-4 cursor-pointer hover:bg-[#a345ac] transition-all duration-200 flex items-center justify-between"
               >
                 <div className="flex items-center space-x-3">
                   {/* <ListFilter size={20} /> */}
@@ -978,10 +975,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
                       onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
                     >
-
+                   
                       More Product <ChevronDown size={18} />
                       {hoveredSubcategory === "more" && (
-                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{ height: "80vh", overflowY: "auto" }}>
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
                           <div className="p-4">
                             <ul className="space-y-4">
                               {Object.entries(groupedCategories)
@@ -1005,7 +1002,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                                     >
                                       <Link
                                         to={`/category/${encodeURIComponent(
-                                         slugify(item.name).toLowerCase()
+                                          slugify(item.name).toLowerCase()
                                         )}`}
                                         className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                                       >
