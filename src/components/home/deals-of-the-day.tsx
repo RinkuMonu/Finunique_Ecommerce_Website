@@ -197,8 +197,8 @@ const DealsOfTheDay = () => {
                 </div>
               </div>
 
-              <div className="text-xs font-semibold text-gray-500 mb-2">{deal.category}</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{deal.productName}</h3>
+              {/* <div className="text-xs font-semibold text-gray-500 mb-2">{deal.category}</div> */}
+              {/* <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{deal.productName}</h3> */}
               <div className="flex items-center mb-4">
                 <div className="flex mr-2">{renderStars(4)}</div>
                 <span className="text-sm text-gray-500">(4.0)</span>
@@ -206,20 +206,20 @@ const DealsOfTheDay = () => {
 
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-red-600">₹{deal.actualPrice.toFixed(2)}</span>
-                  <span className="text-lg text-gray-400 line-through">₹{deal.price.toFixed(2)}</span>
+                  {/* <span className="text-2xl font-bold text-red-600">₹{deal.actualPrice.toFixed(2)}</span> */}
+                  {/* <span className="text-lg text-gray-400 line-through">₹{deal.price.toFixed(2)}</span> */}
                 </div>
-                <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div>
+                {/* <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div> */}
               </div>
 
               <div className="space-y-3">
-                <button
-                  onClick={(e) => handleAddToCart(e, deal)}
+                {/* <button
+                  // onClick={(e) => handleAddToCart(e, deal)}
                   className="w-full bg-[#9D3089]  text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart size={18} />
                   <span>QUICK ADD</span>
-                </button>
+                </button> */}
 
                 {/* <div className="flex space-x-3">
                   <button className="flex-1 border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center space-x-2">
