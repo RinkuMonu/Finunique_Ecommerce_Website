@@ -16,14 +16,26 @@ import {
 import { Link } from "react-router-dom";
 import footerLogo from "/digihub_footer.png";
 import { useEffect, useState } from "react";
-import { px } from "framer-motion";
 
 export default function Footer() {
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState([]);
+  // const [subcategories, setSubcategories] = useState([]);
+  const staticSubcategories = [
+    { name: "Mobile & Tablet", slug: "mobiles" },
+    { name: "Computer & Peripherals", slug: "laptops-and-desktops" },
+    { name: "Audio & Smart Home", slug: "headphones-and-earbuds" },
+    { name: "Camera & Musical", slug: "camera" },
+    { name: "Grooming Appliances", slug: "Grooming%20Appliances" },
+    { name: "Home Appliances", slug: "fans-and-air-coolers" },
+    { name: "Wearbles & Smart Tech", slug: "irons-and-steamers" },
+    { name: "Kichen Appliances", slug: "chimneys-and-hobs" },
+  ];
+
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
   useEffect(() => {
+    // ✅ Existing: fetch categories for the website
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
@@ -35,11 +47,33 @@ export default function Footer() {
         console.error("Failed to fetch categories:", error);
       }
     };
+
+    // ✅ NEW: fetch all unique subcategories
+    const fetchSubcategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/categories`);
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const seen = new Set();
+          const uniqueSubcategories = data.filter((item) => {
+            if (item.subcategory && !seen.has(item.subcategory)) {
+              seen.add(item.subcategory);
+              return true;
+            }
+            return false;
+          });
+
+          // setSubcategories(uniqueSubcategories);
+        }
+      } catch (error) {
+        console.error("Failed to fetch subcategories:", error);
+      }
+    };
+
     fetchCategories();
+    fetchSubcategories(); // <-- ✅ Added here
   }, [baseUrl, referenceWebsite]);
-
-
-  console.log("Categories:", categories);
 
   const trustFeatures = [
     { icon: <Shield size={20} />, text: "Secure Shopping", color: "#10B981" },
@@ -48,17 +82,17 @@ export default function Footer() {
     { icon: <CreditCard size={20} />, text: "Easy Returns", color: "#F59E0B" },
   ];
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 400, behavior: "smooth" });
-  };
+  const slugify = (text) =>
+    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
+  const getCategoryAllProducts = async (categoryId) => {
+    const res = await fetch(`${baseUrl}/website/${categoryId}`);
+    console.log("Category ID:", res);
 
-   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
-
+  }
   return (
     <footer className="bg-gradient-to-br from-[#872d67] to-[#2a4172] text-white border-t border-gray-700">
-      {/* Trust Features Bar */}
+      {/* Trust Features */}
       <div className="bg-gradient-to-r from-[#C1467F] to-[#8E2DE2] py-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -82,7 +116,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main Footer Content */}
+      {/* Footer Main */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Company Info */}
@@ -94,33 +128,35 @@ export default function Footer() {
                 width={251}
                 height={6}
                 className="hover:scale-105 transition-transform duration-300"
-                style={{ backgroundColor: "white", borderRadius: "5px", padding: "7px" }}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "5px",
+                  padding: "7px",
+                }}
               />
             </Link>
 
-            <div className="">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
-                  <Mail size={16} className="text-[#C1467F]" />
-                  <a href="mailto:info@digihub.com" className="hover:underline">
-                    info@digihubtech.in
-                  </a>
-                </div>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                <Mail size={16} className="text-[#C1467F]" />
+                <a href="mailto:info@digihub.com" className="hover:underline">
+                  info@digihubtech.in
+                </a>
+              </div>
 
-                <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
-                  <Phone size={16} className="text-[#C1467F]" />
-                  <a href="tel:01414511098" className="hover:underline">
-                    0141-4511098
-                  </a>
-                </div>
+              <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                <Phone size={16} className="text-[#C1467F]" />
+                <a href="tel:01414511098" className="hover:underline">
+                  0141-4511098
+                </a>
+              </div>
 
-                <div className="flex items-start space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
-                  <MapPin size={28} className="text-[#C1467F] mt-1" />
-                  <span>
-                    Plot No. 97, Dakshinpuri-I, Shrikishanpura, Sanganer,
-                    Jagatpura, Jaipur – 302017, Rajasthan
-                  </span>
-                </div>
+              <div className="flex items-start space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
+                <MapPin size={28} className="text-[#C1467F] mt-1" />
+                <span>
+                  Plot No. 97, Dakshinpuri-I, Shrikishanpura, Sanganer,
+                  Jagatpura, Jaipur – 302017, Rajasthan
+                </span>
               </div>
             </div>
           </div>
@@ -128,10 +164,10 @@ export default function Footer() {
           {/* Categories */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Categories
+              Sub Categories
             </h3>
             <div className="space-y-3">
-              {categories.slice(0, 10).map((category, index) => (
+              {categories.slice(0, 10).map((category) => (
                 <Link
                   key={category._id}
                   to={`/category/${encodeURIComponent(slugify(category.name))}`}
@@ -140,53 +176,32 @@ export default function Footer() {
                   {category.name}
                 </Link>
               ))}
-          
-            </div>
-          </div>
-
-           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Collections
-            </h3>
-            <div className="space-y-3">
-              {categories.slice(11, 20).map((category, index) => (
-                <Link
-                  key={category._id}
-                  to={`/category/${encodeURIComponent(slugify(category.name))}`}
-                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            
             </div>
           </div>
 
           {/* Subcategories */}
-          {/* <div className="space-y-6 md:pl-16">
+          <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Subcategories
+              categories
             </h3>
-            <div className="space-y-3">
-              {[
-                { title: "Mobiles", path: "/category/Mobiles" },
-                { title: "Tablets & eReaders", path: "/category/Tablets%20&%20eReaders" },
-                { title: "Accessories", path: "/category/Accessories" },
-                { title: "Laptops & Desktops", path: "/category/Laptops%20&%20Desktops" },
-                { title: "Headphones & Earbuds", path: "/category/Headphones%20&%20Earbuds" },
-              ].map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className="block text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
-                >
-                  {item.title}
+            <div className="space-y-3 ">
+              {staticSubcategories.map((sub) => (
+                <Link to={`/category/${sub.slug}`}>
+                  <button
+                    key={sub._id}
+                    onClick={() => getCategoryAllProducts(sub._id)}
+                    className="block mt-5 text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
+                  >
+                    {sub.name}
+                  </button>
                 </Link>
               ))}
             </div>
-          </div> */}
 
-          {/* Company */}
+
+          </div>
+
+          {/* Company Links */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
               Company
@@ -211,20 +226,17 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
-
           <div className="text-center pb-4">
             <p className="text-sm text-white/80">
               © {new Date().getFullYear()} DigiHub. All rights reserved.
             </p>
           </div>
 
-
           <div className="flex flex-col items-center">
-            {/* Policy Links */}
             <div className="w-full">
-              <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-6 text-sm ">
+              <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-6 text-sm">
                 {[
                   { title: "Shipping Policy", path: "/shipping" },
                   { title: "Return & Exchanges", path: "/return-and-exchanges" },
@@ -241,15 +253,14 @@ export default function Footer() {
                       {item.title}
                     </Link>
                     {index < 5 && (
-                      <span className="hidden sm:inline-block text-white md:pl-3">|</span>
+                      <span className="hidden sm:inline-block text-white md:pl-3">
+                        |
+                      </span>
                     )}
                   </li>
                 ))}
               </ul>
             </div>
-
-            {/* Copyright */}
-
           </div>
         </div>
       </div>
