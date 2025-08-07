@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22527
           source: "dist.tar.gz"
-          target: "/home/websited/"
+          target: "/home/digihubt/"
 
       - name: Unzip files on Server via SSH
         uses: appleboy/ssh-action@master
@@ -45,7 +45,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22527
           script: |
-            rm -rf /home/websited/public_html/*
-            mkdir -p /home/websited/public_html
-            tar -xzvf /home/websited/dist.tar.gz -C /home/websited/public_html
-            rm /home/websited/dist.tar.gz
+            rm -rf /home/digihubt/public_html/*
+            mkdir -p /home/digihubt/public_html
+            tar -xzvf /home/digihubt/dist.tar.gz -C /home/digihubt/public_html
+            rm /home/digihubt/dist.tar.gz
