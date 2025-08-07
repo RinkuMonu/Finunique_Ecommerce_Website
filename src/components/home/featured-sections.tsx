@@ -89,7 +89,7 @@ const FeaturedSections = () => {
                 ref={scrollContainerRef}
                 className="overflow-x-auto whitespace-nowrap scrollbar-hide pb-4 -mx-4 px-4"
               >
-                <div className="inline-flex space-x-4">
+                <div className="inline-flex space-x-4 ">
                   {Object.values(groupedCategories)
                     .flat()
                     .map((item) => (
@@ -125,8 +125,8 @@ const FeaturedSections = () => {
               </div>
 
               {/* Gradient fade effects for mobile */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent"></div>
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent"></div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-10"></div>
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 "></div>
             </div>
 
             {/* View All Button for mobile */}

@@ -239,16 +239,16 @@ const TrendingProducts = ({
   return (
     <>
     <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-7xl  mx-16">
+      <div className="  md:mx-16">
         {/* Modern Header */}
-        <div className="flex justify-between align-middle">
+        <div className="md:flex justify-between align-middle">
           <div className="text-left mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Popular Electronics</h2>
             <p className="text-md text-gray-600">
               Discover the most popular electronics and gadgets loved by our customers
             </p>
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center md:mt-12 mb-3 mb:mb-0">
             <Link
               to="/products"
               className="inline-flex items-center gap-2 underline text-blue-900 rounded-lg transition-colors duration-200"
@@ -600,12 +600,12 @@ const TrendingProducts = ({
 
 
 
-       <div className="row mx-16 mt-3">
+       <div className="row md:mx-16 mt-3">
         <div className="grid grid-cols-1">
           <img
             src="./Digiimage/tp-banner.jpg"
             alt="Special Offer Banner"
-            className="w-full h-auto rounded-3xl transition"
+            className="w-full h-auto md:h-[200px] rounded-3xl transition"
           />
         </div>
       </div>
