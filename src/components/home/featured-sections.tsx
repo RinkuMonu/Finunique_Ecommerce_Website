@@ -218,14 +218,14 @@ const FeaturedSections = () => {
               {/* 4K Projector Banner */}
               <div className="relative rounded-2xl overflow-hidden min-h-[200px]">
                 <img
-                  src="./Digiimage/banner-3_580x.jpg"
+                  src="./Digiimage/banner-4_580x.jpg"
                   alt="4K Projector"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30"></div>
                 <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
                   <h3 className="text-xl sm:text-2xl text-white font-semibold mb-3">
-                    4K Projector
+                  Bestselling Printers
                   </h3>
                   <Link
                     to={`/category/${slugify("Printers & Inks")}`}

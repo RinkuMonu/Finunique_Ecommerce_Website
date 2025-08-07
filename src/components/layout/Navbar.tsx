@@ -908,7 +908,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 onClick={() =>
                   isMobileView && setIsCollectionOpen(!isCollectionOpen)
                 }
-                className="w-full text-white bg-[#c7588cc9] p-3 lg:p-4 cursor-pointer hover:bg-[#C7588C] transition-all duration-200 flex items-center justify-between"
+                className="w-full text-white bg-[#88438e] p-3 lg:p-4 cursor-pointer hover:bg-[#a345ac] transition-all duration-200 flex items-center justify-between"
               >
                 <div className="flex items-center space-x-3">
                   {/* <ListFilter size={20} /> */}
