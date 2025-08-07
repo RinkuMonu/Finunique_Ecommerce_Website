@@ -342,7 +342,7 @@ const TrendingProducts = ({
                           >
                             <button
                               onClick={() => handleAddToCart(product)}
-                              className="w-full bg-white text-gray-900 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2"
+                              className="w-full bg-[#9D3089]  text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
                             >
                               <Plus size={16} />
                               Quick Add
@@ -438,7 +438,15 @@ const TrendingProducts = ({
         </div>
 
         {/* View All Button */}
-       
+        <div className="text-center mt-12">
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 bg-[#9D3089] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+          >
+            View All Products
+            <ArrowRight size={16} />
+          </Link>
+        </div>
       </div>
 
       {/* Success Popups */}

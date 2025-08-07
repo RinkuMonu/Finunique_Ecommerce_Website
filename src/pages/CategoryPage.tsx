@@ -173,7 +173,7 @@ export default function CategoryPage() {
               </div>
 
               {/* Size Filter */}
-              <div>
+              {/* <div>
                 <div
                   onClick={() => toggleSection("sizes")}
                   className="flex justify-between items-center cursor-pointer mb-3"
@@ -198,7 +198,7 @@ export default function CategoryPage() {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* Reset Button */}
               <button
