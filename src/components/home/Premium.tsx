@@ -10,6 +10,17 @@ const Premium = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [products, setProducts] = useState<any[]>([]);
   const [mainImage, setMainImage] = useState<string>("");
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
+  const calculateSavings = (originalPrice: number, actualPrice: number) => {
+    return originalPrice - actualPrice
+  }
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -43,7 +54,7 @@ const Premium = () => {
           {/* <p className="text-sm text-gray-600">Starting at Rs. 9999*</p> */}
         </div>
         <a
-          href="/category/Smart%20Watches"
+          href="/category/Smart-Watches"
           className="text-sm text-indigo-600 font-semibold hover:underline"
         >
           View All →
@@ -102,10 +113,18 @@ const Premium = () => {
                   {item?.productName}
                 </h3>
                 <div className="flex items-center gap-2 text-lg font-bold text-black">
-                  {item?.actualPrice}
+                  ₹ {Math.floor(item?.actualPrice)}
                 </div>
+                {item?.price && item?.price !== item?.actualPrice && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-green-600 font-medium">
+                      Save {formatPrice(calculateSavings(item?.price, item?.actualPrice))}
+                    </span>
+                    <span className="text-xs text-gray-500">({item?.discount}% off)</span>
+                  </div>
+                )}
                 <div className="text-sm text-gray-500 line-through mt-1">
-                  {item?.price}
+                  ₹ {Math.floor(item?.price)}
                 </div>
               </div>
             </Link>

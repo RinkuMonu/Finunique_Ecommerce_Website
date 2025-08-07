@@ -53,7 +53,7 @@ const ContactPage = () => {
     {
       question: "How do I contact customer support?",
       answer:
-        "You can reach us via email at info@digihub.com or call us at 01414511098 during business hours.",
+        "You can reach us via email at info@digihubtech.in. or call us at 01414511098 during business hours.",
     },
   ];
 
@@ -226,8 +226,8 @@ const ContactPage = () => {
                   <div className="bg-white/10 p-2 rounded-full">
                     <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
                   </div>
-                  <a href="mailto:info@digihub.com" className="hover:underline text-sm sm:text-base">
-                    info@digihub.com
+                  <a href="mailto:info@digihubtech.in." className="hover:underline text-sm sm:text-base">
+                    info@digihubtech.in.
                   </a>
                 </div>
                 <div className="flex items-center gap-4">
