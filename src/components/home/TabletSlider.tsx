@@ -160,7 +160,7 @@ const TabletSlider = () => {
                 {item.title}
               </h3>
               <div className="flex items-center gap-1 text-lg font-bold text-black">
-                <span className='ruppee mb-1'>₹</span>
+                <span className='ruppee mb-1'  style={{fontFamily:"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', 'Helvetica Neue'"}}>₹</span>
                 {item.price}
                 {item.discount && (
                   <span className="text-green-600 text-sm font-semibold">{item.discount}</span>

@@ -160,7 +160,7 @@ const Purefires = () => {
                             <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2">
                                 {item.title}
                             </h3>
-                            <div className="flex items-center gap-2 text-lg font-bold text-black">
+                            <div className="flex items-center gap-2 text-lg font-bold text-black"  style={{fontFamily:"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', 'Helvetica Neue'"}}>
                                 ₹ {Math.floor(item.price)}
                             </div>
                             {item?.price && item?.price !== item?.actualPrice && (

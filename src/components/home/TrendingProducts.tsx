@@ -387,7 +387,7 @@ const TrendingProducts = ({
                             {/* Price Section */}
                             <div className="mb-4">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xl font-bold text-gray-900">{formatPrice(product.actualPrice)}</span>
+                                <span className="text-xl font-bold text-gray-900" style={{fontFamily:"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', 'Helvetica Neue'"}}>{formatPrice(product.actualPrice)}</span>
                                 {product.price && product.price !== product.actualPrice && (
                                   <span className="text-sm text-gray-500 line-through">{formatPrice(product.price)}</span>
                                 )}
