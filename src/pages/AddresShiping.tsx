@@ -208,6 +208,11 @@ function AddressShipping({ cartItems }) {
       alert("Please fill all required shipping fields.");
       return;
     }
+   const isUserLoggedIn = !!localStorage.getItem("token")
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true) // Trigger login modal
+      return
+    }
 
     setIsLoading(true);
     const newRef = generateReferenceNumber();
