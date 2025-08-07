@@ -67,7 +67,7 @@ export default function Faq() {
             question: "What is Digihub's Return and Exchange Policy? How does it work?",
             answer:  (
     <>
-      We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy → {" "}
+      We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy  {" "}
       <a href="/return-and-exchanges" className="text-blue-600 underline">
         return-policy
       </a>
