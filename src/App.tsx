@@ -39,6 +39,7 @@ import TrackOrder from "./pages/track-order";
 import Products from "./pages/Products";
 import WhatsAppButton from "./pages/WhatsAppButton";
 import LoginModal from "./components/loginModal/LoginModal";
+import Faq from "./pages/Faq";
 import AboutUs from "./pages/AboutUs";
 // import ProfilePage from "./components/userProfile/userProfile";
 import Stories from "./pages/Stories";
@@ -133,6 +134,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/faqs" element={<Faq />} />
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route
             path="/product/:id"
