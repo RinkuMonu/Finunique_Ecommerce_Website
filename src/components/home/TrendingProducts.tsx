@@ -605,7 +605,7 @@ const TrendingProducts = ({
           <img
             src="./Digiimage/tp-banner.jpg"
             alt="Special Offer Banner"
-            className="w-full h-auto md:h-[200px] rounded-3xl transition"
+            className="w-full h-auto md:h-[300px] rounded-3xl transition"
           />
         </div>
       </div>

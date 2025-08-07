@@ -139,7 +139,7 @@ const Premium = () => {
           <img
             src="./Digiimage/s-banner.jpg"
             alt="Special Offer Banner"
-            className="w-full md:h-[240px] rounded-3xl transition"
+            className="w-full md:h-[300px] rounded-3xl transition"
           />
         </div>
       </div>

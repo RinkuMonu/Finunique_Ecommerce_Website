@@ -156,14 +156,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   };
 
   const sidebarIcons = {
-    "home appliance": <Wind size={20} className="text-blue-600" />,
-    "gaming gears": <Gamepad2 size={20} className="text-red-600" />,
-    "computers & laptop": <Monitor size={20} className="text-purple-600" />,
-    "computer & peripherals": <Monitor size={20} className="text-purple-600" />,
-    "smartphone & tablet": <Smartphone size={20} className="text-green-600" />,
-    "mobile & tablet": <Smartphone size={20} className="text-green-600" />,
-    "audio gears": <Headphones size={20} className="text-orange-600" />,
-    cameras: <Camera size={20} className="text-cyan-600" />,
+    "home appliances": <img src="./Digiimage/home.png" width={20} className="" />,
+    "grooming appliances":  <img src="./Digiimage/groom.png" width={20} className="" />,
+    "kichen appliances": <img src="./Digiimage/ki.png" width={20} className="" />,
+    "computer & peripherals": <img src="./Digiimage/laptop.png" width={30} className="" />,
+    "mobile & tablet": <img src="./Digiimage/mobile.png" width={20} className="" />,
+    "wearbles & smart tech":  <img src="./Digiimage/smarttech.png" width={20} className="" />,
+    "audio & smart home":  <img src="./Digiimage/audio.png" width={20} className="" />,
+    "camera & musical":  <img src="./Digiimage/camera.png" width={20} className="" />,
     default: <Cpu size={20} className="text-gray-600" />,
   };
 
@@ -908,7 +908,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 onClick={() =>
                   isMobileView && setIsCollectionOpen(!isCollectionOpen)
                 }
-                className="w-full text-white bg-[#88438e] p-3 lg:p-4 cursor-pointer hover:bg-[#a345ac] transition-all duration-200 flex items-center justify-between"
+                className="w-full text-white bg-[#88438e] p-3 lg:p-4 cursor-pointer hover:bg-[#bd60c6] transition-all duration-200 flex items-center justify-between"
               >
                 <div className="flex items-center space-x-3">
                   {/* <ListFilter size={20} /> */}
