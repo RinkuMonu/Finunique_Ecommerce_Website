@@ -28,8 +28,15 @@ export default function Faq() {
         },
         {
             question: "What is Digihub's cancellation policy?",
-            answer:
-            "You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Digihub Website or Mobile site. This applies to sale items as well. Any amount paid will be refunded to the original payment method used."
+                   answer:
+             (
+    <>
+    You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Digihub Website . Click here to view our full Cancellation Policy  {" "}
+      <a href="/cancellation-policy" className="text-blue-600 underline">
+       cancellation-policy
+      </a>
+    </>
+  ),
         },
         {
             question: "How do I cancel the order I have placed?",
@@ -44,16 +51,16 @@ export default function Faq() {
         {
             question: "I have created a return request. When will I get the refund?",
             answer:
-            `Refund will be initiated after the returned item is successfully picked up and verified. The refund timelines are as follows:
+           
 
-        - Debit Card / Credit Card / Net Banking / EMI: 7 business days  
-        - UPI: 5 business days  
-        - Digihub Credit / Super Coins / Gift Card / LP: Instant (up to 2 days in case of delay)  
-        - Wallets (e.g., PhonePe, PayZap): Instant (up to 2 days in case of delay)  
-        - Simple PayLater & Pay in 3: Instant (up to 5 days in case of delay)  
-        - LazyPay: Instant (up to 5 days in case of delay)  
-
-        Note: You can save up to five bank accounts for NEFT/IMPS refunds. A single bank account can be linked to up to five Digihub accounts. To add a new bank account beyond this limit, please delete an existing one.`
+ (
+    <>
+      Refund will be initiated after the returned item is successfully picked up and verified. Click here to view our full Return & Exchange Policy  {" "}
+      <a href="/return-and-exchanges" className="text-blue-600 underline">
+        return-policy
+      </a>
+    </>
+  ),
         },
         {
             question: "Can I modify the shipping address of my order after it has been placed?",
@@ -65,55 +72,18 @@ export default function Faq() {
         },
         {
             question: "What is Digihub's Return and Exchange Policy? How does it work?",
-            answer: `Digihub’s return and exchange policy allows you to return or exchange items purchased on our Website or Mobile Site for any reason, within the specified return/exchange period (please check the product details page for the return window).
-
-            Products will be picked up from the same address where they were delivered. You're welcome to try the product, but please ensure it remains unused and in its original condition with all tags and packaging intact. If the product comes with a seal tag, it must remain attached and undamaged to be eligible for return or exchange.
-
-            There are two ways to return a product:
-
-            1. **Pickup**: In most locations, we offer a free pickup service. You will see the pickup option when you submit a return request.
-
-            2. **Self-Ship**: If pickup is not available in your area, you can ship the product back to us. In such cases, we will reimburse the shipping cost in the form of Digihub Credits, provided the return meets our policy and you share a scanned copy of the courier receipt.
-
-            **During pickup**, our delivery partner may perform a quality check. If the pickup is successful, a refund will be initiated to the original payment method. In some locations, the refund will only be processed after the product reaches our warehouse and passes a quality check. If the item fails the quality check, it will be returned to you.
-
-            If you're exchanging an item due to a size issue or a defect, we will deliver the replacement free of cost—subject to stock availability and your area being serviceable. In case of exchange, the delivery partner will bring the new item and collect the original one.
-
-            We allow you to exchange an item for the same or a different size of the same product, or even for a different product of higher or lower value, subject to availability and serviceability.
-
-            **Exceptions and Rules:**
-
-            - The following items cannot be returned or exchanged: Precious Jewelry, Sunglasses, Socks, Briefs, Shapewear Bottoms, Lingerie Sets (including briefs), Swimwear, Mittens, Wristbands, and other hygiene-sensitive products.
-            - Certain items like fine jewelry, watches, or designer apparel may have shorter return windows or exchange-only policies (e.g., sherwanis). Please check the product details page for specifics.
-            - Some intimate products, including select innerwear, sleepwear, and lingerie, are only eligible for **self-ship returns** and cannot be exchanged.
-            - All returns and exchanges must include the original packaging and tags. For example, shoes must be returned in their original shoe box.
-
-            **Under our Exchange Policy:**
-
-            a) If you exchange a product for the same or a different size of the same item within the eligible period, we will replace it free of charge.  
-            b) If you exchange for a different item of higher value, you’ll pay the difference. If the exchanged item is of lower value, the difference will be refunded after successful pickup.  
-            c) Refunds or extra charges will be calculated based on the net amount paid (excluding instant discounts).  
-            d) Exchange-related refunds will only be processed after the original product is picked up and passes quality check.
-
-            - All exchanges are subject to stock availability and the delivery pin code being eligible.
-            - A product can only be exchanged for one item. For multiple exchanges, place separate requests.
-            - Non-returnable categories cannot be exchanged either.
-            - Platform handling fees (if any) are not applicable to exchanged orders.
-            - Digihub reserves the right to refuse returns or exchanges if the policy is misused.
-            - If a product was bought with a free gift or promotional item, you must return the gift too.
-
-            **Important Notes for Self-Ship Returns:**
-
-            - Pack items securely to avoid loss or damage in transit.
-            - Use a reliable courier and keep the receipt.
-            - Reimbursement for shipping is only processed once the return passes quality checks and the courier receipt is submitted and verified.
-            - If the quality check fails, the product will be shipped back to you.
-
-            We recommend reviewing the product details page for specific return/exchange timeframes before placing an order.`
+            answer:  (
+    <>
+      We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy  {" "}
+      <a href="/return-and-exchanges" className="text-blue-600 underline">
+        return-policy
+      </a>
+    </>
+  ),
         },
         {
-            "question": "How can I pay for my order on Digihub?",
-            "answer": "We support the following payment options on Digihub:\n\n- Credit Card\n- Debit Card\n- Net Banking\n- UPI (Google Pay, PhonePe, Paytm, etc.)\n- Wallets (e.g., Paytm, PhonePe, Mobikwik – based on availability at checkout)\n- EMI Options (on eligible products & cards)\n- Cash on Delivery (COD) – Available for selected pin codes\n\nNote: Availability of payment methods may vary based on your location and the items in your cart."
+            question: "How can I pay for my order on Digihub?",
+            answer: "We support the following payment options on Digihub:\n\n- Credit Card\n- Debit Card\n- Net Banking\n- UPI (Google Pay, PhonePe, Paytm, etc.)\n- Wallets (e.g., Paytm, PhonePe, Mobikwik – based on availability at checkout)\n- EMI Options (on eligible products & cards)\n- Cash on Delivery (COD) – Available for selected pin codes\n\nNote: Availability of payment methods may vary based on your location and the items in your cart."
         }
 
     ];

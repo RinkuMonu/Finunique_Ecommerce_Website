@@ -63,12 +63,12 @@ const DealsSection = () => {
 
 
 
-       <div className="row mx-16 mt-3">
+       <div className="row  mt-10">
         <div className="grid grid-cols-1">
           <img
             src="./Digiimage/gd-banner.jpg"
             alt="Special Offer Banner"
-            className="w-full h-auto rounded-3xl transition"
+            className="w-full h-[240px] rounded-3xl transition"
           />
         </div>
       </div>
