@@ -143,8 +143,8 @@ const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                         <div className="space-y-1">
-                          <div className="text-xl font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">₹{item.price.toLocaleString()}</div>
-                          <div className="text-sm text-[#2A4172]/60 line-through">₹{(item.price * 2.1).toLocaleString()}</div>
+                          <div className="text-xl font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent"><span className="rupee">₹</span>{item.price.toLocaleString()}</div>
+                          <div className="text-sm text-[#2A4172]/60 line-through"><span className="rupee">₹</span>{(item.price * 2.1).toLocaleString()}</div>
                         </div>
                       </div>
                     </div>
@@ -164,22 +164,22 @@ const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-[#2A4172]">Subtotal</span>
-                    <span className="font-semibold text-[#14263F]">₹{total.toLocaleString()}</span>
+                    <span className="font-semibold text-[#14263F]"><span className="rupee">₹</span>{total.toLocaleString()}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2A4172]">Discount</span>
-                      <span className="text-[#A13C78] font-semibold">-₹{discount.toLocaleString()}</span>
+                      <span className="text-[#A13C78] font-semibold">-<span className="rupee">₹</span>{discount.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
                     <span className="text-[#2A4172]">Tax</span>
-                    <span className="font-semibold text-[#14263F]">₹0.00</span>
+                    <span className="font-semibold text-[#14263F]"><span className="rupee">₹</span>0.00</span>
                   </div>
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-lg font-bold">
                       <span className="text-[#14263F]">Total</span>
-                      <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">₹{totalAfterDiscount.toLocaleString()}</span>
+                      <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent"><span className="rupee">₹</span>{totalAfterDiscount.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

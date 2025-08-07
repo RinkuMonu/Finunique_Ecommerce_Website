@@ -166,17 +166,17 @@ const Wishlist = () => {
                       <span className="text-[11px] text-[#2A4172]/70">(Reviews)</span>
                     </div>
 
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-1 mb-1">
                       <span className="text-lg font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
-                        ₹{item?.product?.actualPrice || "N/A"}
+                        <span className="rupee mb-1">₹</span>{item?.product?.actualPrice || "N/A"}
                       </span>
                       {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
                         <span className=" text-[#2A4172]/60 line-through">
-                          ₹{item.product.price}
+                          <span className="rupee">₹</span>{item.product.price}
                         </span>
                       )}
                     </div>
-{/* 
+{/*
                     <p className="text-[11px] text-[#2A4172]">
                       Category:{" "}
                       <span className="font-medium text-[#A13C78]">

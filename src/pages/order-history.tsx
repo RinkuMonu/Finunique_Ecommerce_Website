@@ -345,7 +345,7 @@ const OrderHistory = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <div className="text-right">
                         <p className="text-2xl font-bold" style={{ color: "rgb(157 48 137)" }}>
-                          ₹{order.total.toLocaleString()}
+                          <span className="rupee">₹</span>{order.total.toLocaleString()}
                         </p>
                         <p className="text-sm text-gray-500">{order.items.length} item(s)</p>
                       </div>
@@ -441,7 +441,7 @@ const OrderHistory = () => {
                                 <div className="flex justify-between items-center">
                                   <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
                                   <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
-                                    ₹{item.price.toLocaleString()}
+                                    <span className="rupee">₹</span>{item.price.toLocaleString()}
                                   </span>
                                 </div>
                               </div>
@@ -530,11 +530,11 @@ const OrderHistory = () => {
                 style={{ background: "rgba(157, 48, 137, 0.1)" }}
               >
                 <span className="text-lg font-bold" style={{ color: "rgb(157 48 137)" }}>
-                  ₹
+                  <span className="rupee">₹</span>
                 </span>
               </div>
               <p className="text-2xl font-bold text-gray-900">
-                ₹{filteredOrders.reduce((sum, order) => sum + order.total, 0).toLocaleString()}
+                <span className="rupee">₹</span>{filteredOrders.reduce((sum, order) => sum + order.total, 0).toLocaleString()}
               </p>
               <p className="text-sm text-gray-600">Total Spent</p>
             </div>

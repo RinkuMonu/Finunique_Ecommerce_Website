@@ -10,7 +10,7 @@ import {
   Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import footerLogo from "/digihub_footer.png";
+import footerLogo from "/footer-logo.png";
 import { useEffect, useState } from "react";
 
 export default function Footer() {
@@ -116,7 +116,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Company Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 md:pt-8">
             <Link to="/" className="inline-block">
               <img
                 src={footerLogo || "/placeholder.svg"}
@@ -124,11 +124,7 @@ export default function Footer() {
                 width={251}
                 height={6}
                 className="hover:scale-105 transition-transform duration-300"
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  padding: "7px",
-                }}
+                style={{ borderRadius: "5px", padding: "7px" }}
               />
             </Link>
 

@@ -5,68 +5,68 @@ import 'swiper/css';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// const tablets = [
-//   {
-//     tag: '4G Tablet with 128GB',
-//     title: 'Redmi Pad SE 22.09 cm (8.7 inch) Tablet 4 GB RAM, 128 GB...',
-//     image: './Digiimage/11.avif',
-//     price: 1500,
-//     mrp: 1800,
-//     discount: '44%',
-//     rating: 2,
-//     reviews: 10,
-//   },
-//   {
-//     tag: '₹2k Instant CB + 6m NCEMI',
-//     title: 'Apple iPad A16 11th Gen 2025 (11 inch) Wi-Fi Tablet...',
-//     image: './Digiimage/12.avif',
-//     price: 1500,
-//     mrp: 1900,
-//     discount: '7%',
-//     rating: 4,
-//     reviews: 93,
-//   },
-//   {
-//     tag: '₹2k Instant CB + 6m NCEMI',
-//     title: 'OnePlus Pad Go 11.35" 8GB RAM, 128GB...',
-//     image: './Digiimage/13.avif',
-//     price: 2100,
-//     mrp: 2400,
-//     discount: '15%',
-//     rating: 2,
-//     reviews: 34,
-//   },
-//   {
-//     tag: '5.5k Instant CB +6m NCEMI',
-//     title: 'Samsung Galaxy Tab A9+ 11" WiFi Tablet...',
-//     image: './Digiimage/14.avif',
-//     price: 1700,
-//     mrp: 2100,
-//     discount: '34%',
-//     rating: 2,
-//     reviews: 38,
-//   },
-//   {
-//     tag: '5% CB : HDFC / SBI CC',
-//     title: 'Lenovo Idea Tab Pro 12.7" WiFi Tablet with Pen...',
-//     image: './Digiimage/15.avif',
-//     price: 1900,
-//     mrp: 2200,
-//     discount: '43%',
-//     rating: 4,
-//     reviews: 102,
-//   },
-//   {
-//     tag: '5.5k Instant CB +6m NCEMI',
-//     title: 'Samsung Galaxy Tab WiFi + 5G Tablet...',
-//     image: './Digiimage/16.avif',
-//     price: 2000,
-//     mrp: 2500,
-//     discount: '35%',
-//     rating: 3,
-//     reviews: 43,
-//   },
-// ];
+const tablets = [
+  {
+    tag: '4G Tablet with 128GB',
+    title: 'Redmi Pad SE 22.09 cm (8.7 inch) Tablet 4 GB RAM, 128 GB...',
+    image: './Digiimage/11.avif',
+    price: 1500,
+    mrp: 1800,
+    discount: '44%',
+    rating: 2,
+    reviews: 10,
+  },
+  {
+    tag: '₹ 2k Instant CB + 6m NCEMI',
+    title: 'Apple iPad A16 11th Gen 2025 (11 inch) Wi-Fi Tablet...',
+    image: './Digiimage/12.avif',
+    price: 1500,
+    mrp: 1900,
+    discount: '7%',
+    rating: 4,
+    reviews: 93,
+  },
+  {
+    tag: '₹ 2k Instant CB + 6m NCEMI',
+    title: 'OnePlus Pad Go 11.35" 8GB RAM, 128GB...',
+    image: './Digiimage/13.avif',
+    price: 2100,
+    mrp: 2400,
+    discount: '15%',
+    rating: 2,
+    reviews: 34,
+  },
+  {
+    tag: '5.5k Instant CB +6m NCEMI',
+    title: 'Samsung Galaxy Tab A9+ 11" WiFi Tablet...',
+    image: './Digiimage/14.avif',
+    price: 1700,
+    mrp: 2100,
+    discount: '34%',
+    rating: 2,
+    reviews: 38,
+  },
+  {
+    tag: '5% CB : HDFC / SBI CC',
+    title: 'Lenovo Idea Tab Pro 12.7" WiFi Tablet with Pen...',
+    image: './Digiimage/15.avif',
+    price: 1900,
+    mrp: 2200,
+    discount: '43%',
+    rating: 4,
+    reviews: 102,
+  },
+  {
+    tag: '5.5k Instant CB +6m NCEMI',
+    title: 'Samsung Galaxy Tab WiFi + 5G Tablet...',
+    image: './Digiimage/16.avif',
+    price: 2000,
+    mrp: 2500,
+    discount: '35%',
+    rating: 3,
+    reviews: 43,
+  },
+];
 
 const TabletSlider = () => {
   const [tablets, setTablets] = useState()
@@ -159,8 +159,12 @@ const TabletSlider = () => {
               <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2">
                 {item.title}
               </h3>
-              <div className="flex items-center gap-2 text-lg font-bold text-black">
-                ₹ {Math.floor(item.price)}
+              <div className="flex items-center gap-1 text-lg font-bold text-black">
+                <span className='ruppee mb-1'>₹</span>
+                {item.price}
+                {item.discount && (
+                  <span className="text-green-600 text-sm font-semibold">{item.discount}</span>
+                )}
               </div>
               {item?.price && item?.price !== item?.actualPrice && (
                 <div className="flex items-center gap-2">
