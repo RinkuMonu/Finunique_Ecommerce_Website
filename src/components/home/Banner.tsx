@@ -174,7 +174,7 @@ const Banner: React.FC = () => {
                       </Link>
                       <a
                         href="/products"
-                        className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-sm font-bold rounded-full transition-all duration-300 border-2 border-white/50 backdrop-blur-sm hover:bg-white/20 bg-white/10 text-white"
+                        className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-sm font-bold rounded-full transition-all duration-300 border-2 border-[#c1467f] hover:border-[#384d89] hover:bg-[#384d89] bg-[#c1467f] text-white"
                       >
                         <span>View All Products</span>
                       </a>
