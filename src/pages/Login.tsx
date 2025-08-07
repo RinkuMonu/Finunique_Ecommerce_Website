@@ -446,10 +446,10 @@ export default function Login() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] p-2">
-        <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
-          {/* Left Panel - Updated with new colors */}
-          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#2A4172] to-[#384D89] p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
+      <div className="flex items-center justify-center bg-[#f0f4ff] p-4">
+        <div className="w-full max-w-4xl flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl bg-white">
+          {/* Left Panel - Reduced height */}
+          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#2A4172] to-[#384D89] p-6 md:p-8 flex flex-col">
             <motion.div className="max-w-md">
               <h2 className="text-4xl font-bold text-white mb-4">
                 {isLogin ? "Welcome back!" : "Create your account"}
@@ -470,7 +470,7 @@ export default function Login() {
           {/* Right Panel - Updated with new colors */}
           <div
             className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto"
-            style={{ height: "calc(100vh - 30px)" }}
+            style={{ height: "calc(100vh - 156px)" }}
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
