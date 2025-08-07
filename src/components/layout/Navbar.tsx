@@ -895,7 +895,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       </nav>
 
       {/* Category Navigation */}
-      <div className="bg-[#c7588cc9] border-b border-gray-200 p-2">
+      <div className="bg-gradient-to-br from-[#2a4172] to-[#dd45a8] border-b border-gray-200 p-2">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Browse All Collection Dropdown */}
