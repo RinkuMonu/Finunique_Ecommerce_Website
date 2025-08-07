@@ -45,13 +45,13 @@ const Premium = () => {
   }, [baseUrl, referenceWebsite]);
 
   return (
+   <>
     <div className="bg-gray-50 py-6 px-4">
       <div className="flex justify-between items-center mb-3  mx-16 mt-10">
         <div>
           <h2 className="text-2xl font-bold">
             Premium Smart Watches- Get Instant Bank Discount
           </h2>
-          {/* <p className="text-sm text-gray-600">Starting at Rs. 9999*</p> */}
         </div>
         <a
           href="/category/Smart-Watches"
@@ -131,7 +131,19 @@ const Premium = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+
+
+      <div className="row mx-16 mt-3">
+        <div className="grid grid-cols-1">
+          <img
+            src="./Digiimage/s-banner.jpg"
+            alt="Special Offer Banner"
+            className="w-full h-auto rounded-3xl transition"
+          />
+        </div>
+      </div>
     </div>
+   </>
   );
 };
 
