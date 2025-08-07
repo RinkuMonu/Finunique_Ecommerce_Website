@@ -206,8 +206,8 @@ const DealsOfTheDay = () => {
 
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
-                  {/* <span className="text-2xl font-bold text-red-600">₹{deal.actualPrice.toFixed(2)}</span> */}
-                  {/* <span className="text-lg text-gray-400 line-through">₹{deal.price.toFixed(2)}</span> */}
+                  {/* <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal.actualPrice.toFixed(2)}</span> */}
+                  {/* <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price.toFixed(2)}</span> */}
                 </div>
                 {/* <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div> */}
               </div>
@@ -244,7 +244,7 @@ const DealsOfTheDay = () => {
                </div>
                <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">DEAL</span>
              </div>
-           
+
              <div className="relative mb-6">
                <img
                  src={deal.images[0] || "/placeholder.svg"}
@@ -255,7 +255,7 @@ const DealsOfTheDay = () => {
                  -{deal.discount}%
                </div>
              </div>
-           
+
              <div className="space-y-2 mb-4">
                <div className="flex items-center space-x-2 text-sm text-gray-600">
                  <Check size={14} className="text-green-500" />
@@ -266,7 +266,7 @@ const DealsOfTheDay = () => {
                  <span>Guaranteed Genuine</span>
                </div>
              </div>
-           
+
              <div className="grid grid-cols-4 gap-2 mb-4">
                {[{ value: dealTimers[deal._id]?.days ?? 0, label: "Days" },
                  { value: dealTimers[deal._id]?.hours ?? 0, label: "Hours" },
@@ -281,7 +281,7 @@ const DealsOfTheDay = () => {
                    </div>
                  ))}
              </div>
-           
+
              <div className="mb-4">
                <div className="flex justify-between text-xs text-gray-600 mb-2">
                  <span>50% SOLD</span>
@@ -291,27 +291,27 @@ const DealsOfTheDay = () => {
                  <div className="bg-gradient-to-r from-orange-400 to-red-500 h-2 rounded-full transition-all duration-300" style={{ width: `50%` }}></div>
                </div>
              </div>
-           
+
              <div className="text-xs font-semibold text-gray-500 mb-2">{deal.category}</div>
              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{deal.productName}</h3>
              <div className="flex items-center mb-4">
                <div className="flex mr-2">{renderStars(4)}</div>
                <span className="text-sm text-gray-500">(4.0)</span>
              </div>
-           
+
              <div className="flex items-center justify-between mb-6">
                <div className="flex items-center space-x-2">
-                 <span className="text-2xl font-bold text-red-600">₹{deal.actualPrice.toFixed(2)}</span>
-                 <span className="text-lg text-gray-400 line-through">₹{deal.price.toFixed(2)}</span>
+                 <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal.actualPrice.toFixed(2)}</span>
+                 <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price.toFixed(2)}</span>
                </div>
                <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div>
              </div>
-           
+
              {/* Main content wrapper with flex-grow */}
              <div className="flex-grow mb-6">
                {/* You can add space between other components here */}
              </div>
-           
+
              {/* Add to Cart Button */}
              <div className="mt-auto">
                <button
@@ -323,7 +323,7 @@ const DealsOfTheDay = () => {
                </button>
              </div>
            </div>
-           
+
             ))}
           </div>
         </div>

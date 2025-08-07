@@ -246,9 +246,9 @@ export default function Products() {
                   <div className="space-y-4">
                     {/* Display values */}
                     <div className="flex justify-between items-center px-4 py-2 text-sm bg-gray-100 rounded-lg border text-gray-700">
-                      <span>₹{priceRange[0].toLocaleString()}</span>
+                      <span><span className="rupee">₹</span>{priceRange[0].toLocaleString()}</span>
                       <span className="text-xs text-gray-400">to</span>
-                      <span>₹{priceRange[1].toLocaleString()}</span>
+                      <span><span className="rupee">₹</span>{priceRange[1].toLocaleString()}</span>
                     </div>
 
                     {/* Range Slider */}

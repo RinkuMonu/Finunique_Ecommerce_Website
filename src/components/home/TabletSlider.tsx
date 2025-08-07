@@ -15,7 +15,7 @@ const tablets = [
     reviews: 10,
   },
   {
-    tag: '₹2k Instant CB + 6m NCEMI',
+    tag: '₹ 2k Instant CB + 6m NCEMI',
     title: 'Apple iPad A16 11th Gen 2025 (11 inch) Wi-Fi Tablet...',
     image: './Digiimage/12.avif',
     price: 1500,
@@ -25,7 +25,7 @@ const tablets = [
     reviews: 93,
   },
   {
-    tag: '₹2k Instant CB + 6m NCEMI',
+    tag: '₹ 2k Instant CB + 6m NCEMI',
     title: 'OnePlus Pad Go 11.35" 8GB RAM, 128GB...',
     image: './Digiimage/13.avif',
     price: 2100,
@@ -119,7 +119,8 @@ const TabletSlider = () => {
               <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2">
                 {item.title}
               </h3>
-              <div className="flex items-center gap-2 text-lg font-bold text-black">
+              <div className="flex items-center gap-1 text-lg font-bold text-black">
+                <span className='ruppee mb-1'>₹</span>
                 {item.price}
                 {item.discount && (
                   <span className="text-green-600 text-sm font-semibold">{item.discount}</span>
@@ -131,7 +132,7 @@ const TabletSlider = () => {
         ))}
       </Swiper>
     </div>
-  );    
+  );
 };
 
 export default TabletSlider;

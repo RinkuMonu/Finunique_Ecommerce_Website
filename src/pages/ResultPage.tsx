@@ -30,7 +30,7 @@ const ResultPage = () => {
 
         <div className="bg-gray-50 p-4 rounded-lg text-left text-sm font-mono text-gray-700 mb-4">
           <p><strong>Transaction ID:</strong> {txnId}</p>
-          {amount && <p><strong>Amount:</strong> ₹{amount}</p>}
+          {amount && <p><strong>Amount:</strong> <span className="rupee">₹</span>{amount}</p>}
           <p><strong>Status:</strong> {status}</p>
         </div>
 

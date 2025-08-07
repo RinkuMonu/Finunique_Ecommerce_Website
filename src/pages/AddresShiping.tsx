@@ -78,8 +78,8 @@ const coupons: CouponCode[] = [
   },
   {
     code: "FLAT500",
-    discount: "₹500",
-    description: "Flat ₹500 off on all orders",
+    discount: "500",
+    description: "Flat 500 off on all orders",
   },
 ]
 
@@ -615,7 +615,7 @@ function AddressShipping({ cartItems }) {
 
                         <label
                           key={method.id}
-                          className={`flex items-start gap-4 p-2 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+                          className={`flex items-start gap-4 p-2 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
                           ${selectedShipping === method.id
                               ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
                               : "border-gray-200 hover:bg-gray-50"
@@ -631,7 +631,7 @@ function AddressShipping({ cartItems }) {
                           />
                           <div className="flex-1">
                             <span className="block text-base font-semibold text-gray-800">
-                              {method.name} {method.price > 0 && <span className="text-gray-600">– ₹{method.price}</span>}
+                              {method.name} {method.price > 0 && <span className="text-gray-600">– <span className="rupee">₹</span>{method.price}</span>}
                             </span>
                             <p className="text-sm text-gray-500 mt-1">{method.description}</p>
                           </div>
@@ -649,7 +649,7 @@ function AddressShipping({ cartItems }) {
                     <div className="grid md:grid-cols-2 gap-3">
                       <label
 
-                        className={`flex items-start gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+                        className={`flex items-start gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
         ${selectedPayment === "upi1"
 
                             ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
@@ -671,7 +671,7 @@ function AddressShipping({ cartItems }) {
                         </div>
                       </label>
                       <label
-                        className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer 
+                        className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
                         ${selectedPayment === "upi2"
                             ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
                             : "border-gray-200 hover:bg-gray-50"
@@ -800,7 +800,7 @@ function AddressShipping({ cartItems }) {
                           <h4 className="font-medium text-[#14263F] text-sm">{item?.name}</h4>
                           <p className="text-xs text-gray-500">Qty: {item?.quantity}</p>
                           <p className="font-semibold text-[#384D89] text-sm">
-                            ₹{Math.trunc(item.price * item.quantity).toLocaleString()}
+                            <span className="rupee">₹</span>{Math.trunc(item.price * item.quantity).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -811,26 +811,26 @@ function AddressShipping({ cartItems }) {
                   <div className="space-y-4">
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2A4172]">Subtotal</span>
-                      <span className="font-semibold text-[#14263F]">₹{Math.trunc(subtotal).toLocaleString()}</span>
+                      <span className="font-semibold text-[#14263F]"><span className="rupee">₹</span>{Math.trunc(subtotal).toLocaleString()}</span>
                     </div>
 
                     {/* {discount > 0 && (
           <div className="flex justify-between text-sm">
             <span className="text-[#2A4172]">Discount</span>
-            <span className="text-[#A13C78] font-semibold">-₹{Math.trunc(discount).toLocaleString()}</span>
+            <span className="text-[#A13C78] font-semibold">-<span className="rupee">₹</span>{Math.trunc(discount).toLocaleString()}</span>
           </div>
         )} */}
 
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2A4172]">Shipping</span>
-                      <span className="font-semibold text-[#14263F]">{shipping === 0 ? 'Free' : `₹${Math.trunc(shipping)}`}</span>
+                      <span className="font-semibold text-[#14263F]">{shipping === 0 ? 'Free' : `<span className="rupee">₹</span>${Math.trunc(shipping)}`}</span>
                     </div>
 
                     <div className="border-t border-gray-200 pt-4">
                       <div className="flex justify-between text-lg font-bold">
                         <span className="text-[#14263F]">Total</span>
                         <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
-                          ₹{Math.trunc(total).toLocaleString()}
+                          <span className="rupee">₹</span>{Math.trunc(total).toLocaleString()}
                         </span>
                       </div>
                     </div>
