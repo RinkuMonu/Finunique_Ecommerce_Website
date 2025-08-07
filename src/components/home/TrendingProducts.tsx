@@ -303,7 +303,7 @@ const TrendingProducts = ({
                           className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
                         >
                           {/* Product Image Container */}
-                          <div className="group relative w-full max-w-xs bg-white border-b border-gray-200 rounded-sm p-4 text-left hover:shadow-md transition-all duration-300 overflow-hidden">
+                          <div className="group relative w-full max-w-xs bg-white rounded-sm p-4 text-left hover:shadow-md transition-all duration-300 overflow-hidden">
                             <Link
                               to={`/product/${product._id}`}
                               className="block text-gray-900 font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors duration-200 leading-5"
