@@ -9,8 +9,8 @@ export default function CategoryPage() {
   let initialMaxPrice = 50000
   const { category } = useParams()
   const catagory1 = category
-  ?.replace(/-/g, " ")      // step 1: replace all hyphens with space
-  .replace(/\band\b/g, "&"); // step 2: replace 'and' (as a full word) with '&'
+    ?.replace(/-/g, " ")      // step 1: replace all hyphens with space
+    .replace(/\band\b/g, "&"); // step 2: replace 'and' (as a full word) with '&'
 
   const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
@@ -21,8 +21,7 @@ export default function CategoryPage() {
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-console.log("category = ",category);
-console.log("catagory1 = ",catagory1);
+
 
   useEffect(() => {
     const fetchProducts = async () => {

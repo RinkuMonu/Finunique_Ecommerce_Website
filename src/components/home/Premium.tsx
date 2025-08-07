@@ -1,6 +1,7 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import "swiper/css/autoplay";
 import "swiper/css";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -45,13 +46,13 @@ const Premium = () => {
   }, [baseUrl, referenceWebsite]);
 
   return (
+   <>
     <div className="bg-gray-50 py-6 px-4">
-      <div className="flex justify-between items-center mb-3  mx-16 mt-10">
+      <div className="md:flex justify-between items-center mb-3  md:mx-16 mt-10">
         <div>
           <h2 className="text-2xl font-bold">
             Premium Smart Watches- Get Instant Bank Discount
           </h2>
-          {/* <p className="text-sm text-gray-600">Starting at Rs. 9999*</p> */}
         </div>
         <a
           href="/category/Smart-Watches"
@@ -60,21 +61,20 @@ const Premium = () => {
           View All →
         </a>
       </div>
-
+<div className="relative">
+   
       <Swiper
-        modules={[Autoplay]}
-        spaceBetween={3}
-        loop={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
+            modules={[Autoplay]}
+  autoplay={{ delay: 2500, disableOnInteraction: false }}
+  loop={true}
+      spaceBetween={10}
+      slidesPerView={2}
         breakpoints={{
           0: {
-            slidesPerView: 1.3,
+            slidesPerView: 1,
           },
           480: {
-            slidesPerView: 1.6,
+            slidesPerView: 1,
           },
           640: {
             slidesPerView: 2,
@@ -89,7 +89,7 @@ const Premium = () => {
             slidesPerView: 5,
           },
         }}
-        className=" mx-16"
+        className="md:mx-16"
       >
         {products.map((item, index) => (
           <SwiperSlide key={index}>
@@ -131,7 +131,20 @@ const Premium = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+</div>
+
+
+      <div className="row md:mx-16 mt-3">
+        <div className="grid grid-cols-1">
+          <img
+            src="./Digiimage/s-banner.jpg"
+            alt="Special Offer Banner"
+            className="w-full md:h-[240px] rounded-3xl transition"
+          />
+        </div>
+      </div>
     </div>
+   </>
   );
 };
 

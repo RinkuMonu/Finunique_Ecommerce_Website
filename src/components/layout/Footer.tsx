@@ -1,9 +1,5 @@
 "use client";
 import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
   Mail,
   Phone,
   MapPin,
@@ -164,7 +160,7 @@ export default function Footer() {
           {/* Categories */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Sub Categories
+               Categories
             </h3>
             <div className="space-y-3">
               {categories.slice(0, 10).map((category) => (
@@ -182,7 +178,7 @@ export default function Footer() {
           {/* Subcategories */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              categories
+              Populer categories
             </h3>
             <div className="space-y-3 ">
               {staticSubcategories.map((sub) => (
@@ -203,11 +199,12 @@ export default function Footer() {
 
           {/* Company Links */}
           <div className="space-y-6 md:pl-16">
-            <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
+            <h3 className="text-lg font-semibold uppercase text-white border-b border-[#C1467F] pb-2 inline-block">
               Company
             </h3>
             <div className="space-y-3">
               {[
+                { title :"FAQ",path:"/faqs"},
                 { title: "Home", path: "/" },
                 { title: "About Us", path: "/about" },
                 { title: "WishList", path: "/wishlist" },
@@ -229,10 +226,10 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
           <div className="text-center pb-4">
-            <p className="text-sm text-white/80">
-              © {new Date().getFullYear()} DigiHub. All rights reserved.
-            </p>
-          </div>
+              <p className="text-sm text-white/80">
+                © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private Limited. All rights reserved.
+              </p>
+            </div>
 
           <div className="flex flex-col items-center">
             <div className="w-full">

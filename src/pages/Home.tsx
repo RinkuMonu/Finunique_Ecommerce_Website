@@ -15,6 +15,10 @@ import TabletSlider from "../components/home/TabletSlider";
 import LimitedTimeDeals from "../components/home/LimitedTimeDeals";
 import Commitments from "../components/home/Commitments";
 import Premium from "../components/home/Premium";
+import Speakers from "../components/home/speacker";
+import Kitchen from "../components/home/kitchen";
+import Laptops from "../components/home/laptops";
+import Purefires from "../components/home/purefire";
 
 interface HomeProps {
   addToCart: (product: Product) => void;
@@ -79,12 +83,16 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
       <Premium />
       <TrendingProducts addToCart={addToCart} /> 
       <TabletSlider />
+      <Speakers />
+      <Purefires/>
       <Commitments />
+      <Kitchen />
+      <Laptops/>
       <DealsOfTheDay />
       <DealsSection />
       {/* <Arrivals addToCart={addToCart} />
       <TopCategories /> */}
-    <LimitedTimeDeals />
+      <LimitedTimeDeals />
 
       {/* <HowItWorks /> */}
       {/* <DeliveryFeatures /> */}
