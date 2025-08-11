@@ -43,7 +43,7 @@ const Privacy = () => {
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-[#14263F] mb-1">Privacy Policy for DIGIHUB UNIQUE TECH SOLUTIONS PRIVATE LIMITED</h3>
+                      <h3 className="text-2xl font-bold text-[#14263F] mb-1">Privacy Policy for DIGIHUBUNIQUE TECH SOLUTIONS PRIVATE LIMITED</h3>
                       <div className="w-16 h-1 bg-gradient-to-r from-[#C1467F] to-[#A13C78] rounded-full"></div>
                     </div>
                   </div>

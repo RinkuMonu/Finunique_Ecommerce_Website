@@ -84,7 +84,7 @@ export default function ShippingPolicy() {
                   <div className="bg-gradient-to-r from-[#2A4172] to-[#384D89] p-6 rounded-xl text-white mb-6">
                     <div className="flex items-center">
                       <Shield className="w-6 h-6 mr-3" />
-                      <h2 className="text-xl font-bold">DIGIHUB UNIQUE TECH SOLUTIONS PRIVATE LIMITED - Service Terms & Conditions</h2>
+                      <h2 className="text-xl font-bold">DIGIHUBUNIQUE TECH SOLUTIONS PRIVATE LIMITED - Service Terms & Conditions</h2>
                     </div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export default function ShippingPolicy() {
                     </div>
                     <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F]">
                       <p className="text-gray-700 leading-relaxed">
-                        Welcome to DIGIHUB UNIQUE TECH SOLUTIONS PRIVATE LIMITED Services. By signing the Service Form and handing over your product(s) for service, you agree to abide by these Terms and Conditions. These terms govern the service and repair of your product(s) by Digital Services Centers through its after-sales service, operated by an independent third party. If you do not agree to these terms and conditions, please do not submit the Form or hand over your product(s) for service.
+                        Welcome to DIGIHUBUNIQUE TECH SOLUTIONS PRIVATE LIMITED Services. By signing the Service Form and handing over your product(s) for service, you agree to abide by these Terms and Conditions. These terms govern the service and repair of your product(s) by Digital Services Centers through its after-sales service, operated by an independent third party. If you do not agree to these terms and conditions, please do not submit the Form or hand over your product(s) for service.
                       </p>
                     </div>
                   </section>
