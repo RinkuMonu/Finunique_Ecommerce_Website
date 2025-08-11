@@ -92,7 +92,7 @@ export default function   Home({ addToCart, onCartClick }: HomeProps) {
       {/* <DealsSection /> */}
       {/* <Arrivals addToCart={addToCart} />
       <TopCategories /> */}
-      <LimitedTimeDeals />
+      {/* <LimitedTimeDeals /> */}
 
       {/* <HowItWorks /> */}
       {/* <DeliveryFeatures /> */}
