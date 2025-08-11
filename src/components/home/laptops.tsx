@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-import { CheckCircle, Plus } from "lucide-react";
+import { CheckCircle, Plus, ShoppingCart } from "lucide-react";
 
 const Laptops = () => {
   const [tablets, setTablets] = useState([]);
@@ -165,10 +165,10 @@ const Laptops = () => {
                         e.preventDefault();
                         handleAddToCart(item);
                       }}
-                      className="w-full bg-white text-gray-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-gray-100 flex items-center justify-center gap-2 transition-colors"
+                      className="w-full bg-[#BE457E]  font-medium py-2 px-4 rounded-lg text-white flex items-center justify-center gap-2"
                     >
-                      <Plus size={16} />
-                      Quick Add
+                      <ShoppingCart size={16} />
+                       Add to Cart
                     </button>
                   </div>
                 </div>
