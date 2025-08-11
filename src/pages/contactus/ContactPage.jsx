@@ -211,7 +211,7 @@ const ContactPage = () => {
               </h1>
               <p className="text-base sm:text-lg text-[#e9c1d9] mb-8 sm:mb-12">
                 Feel free to contact us? submit your queries here and we will
-                get back to you as soon as possibleee.
+                get back to you as soon as possibleeeee.
               </p>
               <div className="space-y-4 sm:mt-12 lg:mt-56  text-gray-500">
                 <div className="flex items-center gap-4">
