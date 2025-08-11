@@ -156,14 +156,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   };
 
   const sidebarIcons = {
-    "home appliances": <img src="./Digiimage/home.png" width={20} className="" />,
-    "grooming appliances":  <img src="./Digiimage/groom.png" width={20} className="" />,
-    "kichen appliances": <img src="./Digiimage/ki.png" width={20} className="" />,
-    "computer & peripherals": <img src="./Digiimage/laptop.png" width={30} className="" />,
-    "mobile & tablet": <img src="./Digiimage/mobile.png" width={20} className="" />,
-    "wearbles & smart tech":  <img src="./Digiimage/smarttech.png" width={20} className="" />,
-    "audio & smart home":  <img src="./Digiimage/audio.png" width={20} className="" />,
-    "camera & musical":  <img src="./Digiimage/camera.png" width={20} className="" />,
+    "home appliances": <img src="../Digiimage/home.png" width={20} className="" />,
+    "grooming appliances":  <img src="../Digiimage/groom.png" width={20} className="" />,
+    "kichen appliances": <img src="../Digiimage/ki.png" width={20} className="" />,
+    "computer & peripherals": <img src="../Digiimage/laptop.png" width={30} className="" />,
+    "mobile & tablet": <img src="../Digiimage/mobile.png" width={20} className="" />,
+    "wearbles & smart tech":  <img src="../Digiimage/smarttech.png" width={20} className="" />,
+    "audio & smart home":  <img src="../Digiimage/audio.png" width={20} className="" />,
+    "camera & musical":  <img src="../Digiimage/camera.png" width={20} className="" />,
     default: <Cpu size={20} className="text-gray-600" />,
   };
 
@@ -179,6 +179,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     const key = categoryName.toLowerCase();
     return (
       sidebarIcons[key as keyof typeof sidebarIcons] || sidebarIcons.default
+      
     );
   };
 
