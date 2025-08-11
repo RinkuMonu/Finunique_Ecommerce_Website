@@ -1,59 +1,61 @@
-"use client"
-import { useState } from "react"
-import type React from "react"
-import { Check, Heart, ShoppingCart, Star, Zap } from "lucide-react"
-import { useDispatch } from "react-redux"
-import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
-import { addItemToCart } from "../../reduxslice/CartSlice"
-import LoginModal from "../loginModal/LoginModal"
-import Login1 from "../../pages/Login1"
+"use client";
+import { useState } from "react";
+import type React from "react";
+import { Check, Heart, ShoppingCart, Star, Zap } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
+import { addItemToCart } from "../../reduxslice/CartSlice";
+import LoginModal from "../loginModal/LoginModal";
+import Login1 from "../../pages/Login1";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 interface Product {
-  _id: string
-  productName: string
-  description: string
-  images: string[]
-  actualPrice: number
-  price?: number
-  discount?: number
-  size?: string
-  brand?: string
+  _id: string;
+  productName: string;
+  description: string;
+  images: string[];
+  actualPrice: number;
+  price?: number;
+  discount?: number;
+  size?: string;
+  brand?: string;
   category: {
-    _id: string
-    name: string
-  }
-  rating?: number
+    _id: string;
+    name: string;
+  };
+  rating?: number;
 }
 
 interface ProductCardProps {
-  product: Product
-  listView?: boolean
+  product: Product;
+  listView?: boolean;
 }
 
 const ProductCard = ({ product, listView }: ProductCardProps) => {
   console.log("product images = ", product);
-  const [isPopupVisible, setIsPopupVisible] = useState(false)
-  const [addedProduct, setAddedProduct] = useState<any>(null)
-
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [addedProduct, setAddedProduct] = useState<any>(null);
+  const [isHovered, setIsHovered] = useState(false);
   const imageUrl = import.meta.env.VITE_API_BASE_URL_IMAGE;
   // const [isHovered, setIsHovered] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
-  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false)
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null)
-  const [imageLoaded, setImageLoaded] = useState(false)
-  const dispatch = useDispatch()
-  const [isInWishlist, setIsInWishlist] = useState(false)
-  const [isInCart, setIsInCart] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
+  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const dispatch = useDispatch();
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const token = localStorage.getItem("token")
+    e.preventDefault();
+    e.stopPropagation();
+    const token = localStorage.getItem("token");
     const cartItem = {
       id: product._id,
       name: product.productName,
@@ -61,62 +63,72 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
       category: product.category?.name || "Uncategorized",
       price: product.actualPrice,
       quantity: 1,
-    }
+    };
     if (!token) {
       // Guest user: Use localStorage
-      const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]")
-      const existingIndex = existingCart.findIndex((item: any) => item.id === product._id)
+      const existingCart = JSON.parse(
+        localStorage.getItem("addtocart") || "[]"
+      );
+      const existingIndex = existingCart.findIndex(
+        (item: any) => item.id === product._id
+      );
       if (existingIndex !== -1) {
-        existingCart[existingIndex].quantity += 1
+        existingCart[existingIndex].quantity += 1;
       } else {
-        existingCart.push(cartItem)
+        existingCart.push(cartItem);
       }
-      localStorage.setItem("addtocart", JSON.stringify(existingCart))
-      window.dispatchEvent(new Event("guestCartUpdated"))
+      localStorage.setItem("addtocart", JSON.stringify(existingCart));
+      window.dispatchEvent(new Event("guestCartUpdated"));
     } else {
       // Logged-in user: Use Redux
-      dispatch(addItemToCart(cartItem))
+      dispatch(addItemToCart(cartItem));
     }
-    setAddedProduct(product)
-    setIsPopupVisible(true)
-    setIsInCart(true)
+    setAddedProduct(product);
+    setIsPopupVisible(true);
+    setIsInCart(true);
     setTimeout(() => {
-      setIsPopupVisible(false)
-    }, 2000)
-  }
+      setIsPopupVisible(false);
+    }, 2000);
+  };
 
   const handleAddToWishlist = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const isUserLoggedIn = !!localStorage.getItem("token")
+    e.preventDefault();
+    e.stopPropagation();
+    const isUserLoggedIn = !!localStorage.getItem("token");
     if (!isUserLoggedIn) {
-      setShowLoginModal(true) // Trigger login modal
-      return
+      setShowLoginModal(true); // Trigger login modal
+      return;
     }
 
-    dispatch(addItemToWishlist(product._id))
-    setWishlistProduct(product)
-    setIsWishlistPopupVisible(true)
-    setIsInWishlist(true)
+    dispatch(addItemToWishlist(product._id));
+    setWishlistProduct(product);
+    setIsWishlistPopupVisible(true);
+    setIsInWishlist(true);
     setTimeout(() => {
-      setIsWishlistPopupVisible(false)
-    }, 3000)
-  }
+      setIsWishlistPopupVisible(false);
+    }, 3000);
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         size={14}
-        className={`${i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "fill-gray-200 stroke-gray-300"} transition-colors duration-200`}
+        className={`${
+          i < Math.floor(rating)
+            ? "fill-yellow-400 stroke-yellow-400"
+            : "fill-gray-200 stroke-gray-300"
+        } transition-colors duration-200`}
       />
-    ))
-  }
+    ));
+  };
 
   const discountPercentage =
     product.price && product.actualPrice
-      ? Math.round(((product.price - product.actualPrice) / product.price) * 100)
-      : product.discount || 0
+      ? Math.round(
+          ((product.price - product.actualPrice) / product.price) * 100
+        )
+      : product.discount || 0;
 
   if (listView) {
     return (
@@ -130,10 +142,11 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
                 </div>
                 <div>
                   <span className="font-bold">Added to Cart!</span>
-                  <p className="text-sm opacity-90">{addedProduct.productName}</p>
+                  <p className="text-sm opacity-90">
+                    {addedProduct.productName}
+                  </p>
                 </div>
               </div>
-
             </div>
           </div>
         )}
@@ -165,7 +178,9 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
                       <img
                         src={img}
                         alt={`${product.productName} ${index}`}
-                        className={` object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                        className={` object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${
+                          imageLoaded ? "opacity-100" : "opacity-0"
+                        }`}
                         onLoad={() => setImageLoaded(true)}
                       />
                     </div>
@@ -182,7 +197,10 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
               onClick={handleAddToWishlist}
               className="absolute top-1 right-1 sm:top-2 sm:right-2 w-6 h-6 sm:w-8 sm:h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:scale-110 transition-all duration-300"
             >
-              <Heart size={12} className="sm:w-4 sm:h-4 text-gray-600 hover:text-red-500 transition-colors" />
+              <Heart
+                size={12}
+                className="sm:w-4 sm:h-4 text-gray-600 hover:text-red-500 transition-colors"
+              />
             </button>
           </div>
 
@@ -197,16 +215,24 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
               </p>
               <div className="flex items-center gap-1">
                 {renderStars(product.rating || 4)}
-                <span className="text-[10px] sm:text-xs text-gray-500 ml-1">({product.rating || 4.0})</span>
+                <span className="text-[10px] sm:text-xs text-gray-500 ml-1">
+                  ({product.rating || 4.0})
+                </span>
               </div>
             </div>
 
             {/* Price + Cart Button */}
             <div className="flex items-center justify-between mt-2 sm:mt-3 gap-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                <span className="font-bold text-[#9D3089] text-sm sm:text-base"><span className="rupee">₹</span>{Math.floor(product?.actualPrice)}</span>
+                <span className="font-bold text-[#9D3089] text-sm sm:text-base">
+                  <span className="rupee">₹</span>
+                  {Math.floor(product?.actualPrice)}
+                </span>
                 {product.price && product.price > product.actualPrice && (
-                  <span className="text-[10px] sm:text-xs text-gray-400 line-through"><span className="rupee">₹</span>{Math.floor(product?.price)}</span>
+                  <span className="text-[10px] sm:text-xs text-gray-400 line-through">
+                    <span className="rupee">₹</span>
+                    {Math.floor(product?.price)}
+                  </span>
                 )}
               </div>
               <button
@@ -215,7 +241,9 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
               >
                 <span className="relative z-10 flex items-center gap-1 sm:gap-2">
                   <ShoppingCart size={12} className="sm:w-3.5 sm:h-3.5" />
-                  <span className="hidden xs:inline sm:inline">Add to Cart</span>
+                  <span className="hidden xs:inline sm:inline">
+                    Add to Cart
+                  </span>
                   <span className="xs:hidden sm:hidden">Add</span>
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#7c226b] to-[#9D3089] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
@@ -227,17 +255,22 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           {isWishlistPopupVisible && (
             <div className="fixed top-5 right-5 bg-green-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-slide-in">
               <Heart size={14} className="sm:w-4 sm:h-4 fill-current" />
-              <span className="text-xs sm:text-sm font-medium">Added to wishlist!</span>
+              <span className="text-xs sm:text-sm font-medium">
+                Added to wishlist!
+              </span>
             </div>
           )}
         </div>
         {showLoginModal && (
-          <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+          <LoginModal
+            isOpen={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+          >
             <Login1 />
           </LoginModal>
         )}
       </>
-    )
+    );
   }
 
   // Default Grid View
@@ -256,7 +289,6 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
                 <p className="text-sm opacity-90">{addedProduct.productName}</p>
               </div>
             </div>
-
           </div>
         </div>
       )}
@@ -267,12 +299,17 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
         {/* Discount Badge */}
         {discountPercentage > 0 && (
           <div className="absolute rounded-sm top-3 left-3 bg-orange-100 text-orange-500 text-xs z-10 font-semibold px-2 py-0.5 ">
-            -<span className="rupee">₹</span>{Math.floor(product.price - product.actualPrice)}
+            <span className="rupee">₹</span>
+            {Math.floor(product.price - product.actualPrice)}
           </div>
         )}
 
         {/* Image with Center Hover Icons */}
-        <div className="relative w-full flex items-center justify-center mb-4">
+        <div
+          className="relative w-full flex items-center justify-center mb-4 "
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <img
             src={product.images?.[0]}
             alt={product.productName}
@@ -280,31 +317,47 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           />
 
           {/* Center Hover Icons */}
-          <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
+          <div
+            className={`absolute top-3 -right-2 flex flex-col gap-2 transition-all duration-300 ${
+              isHovered
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-2"
+            }`}
+          >
             {/* Wishlist */}
-            <button
-              onClick={handleAddToWishlist}
-              className="w-9 h-9 bg-[#dd67c7] text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
-            >
-              <Heart
-                size={16}
-                className={`transition-colors ${isInWishlist ? "fill-red-500 stroke-red-500" : "text-white hover:text-red-500"}`}
-              />
-            </button>
+            <Tippy content="Wishlist" placement="right">
+              <button
+                onClick={handleAddToWishlist}
+                className="w-9 h-9 bg-[#dd67c7] text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
+              >
+                <Heart
+                  size={16}
+                  className={`transition-colors ${
+                    isInWishlist
+                      ? "fill-red-500 stroke-red-500"
+                      : "text-white hover:text-red-500"
+                  }`}
+                />
+              </button>
+            </Tippy>
 
             {/* Cart */}
-            <button
-              onClick={handleAddToCart}
-              className="w-9 h-9 bg-[#dd67c7] text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
-            >
-              {isInCart ? (
-                <Check size={16} className="text-green-200" />
-              ) : (
-                <ShoppingCart size={16} className="text-white hover:text-[#9D3089]" />
-              )}
-            </button>
+            <Tippy content="Add to Cart" placement="right">
+              <button
+                onClick={handleAddToCart}
+                className="w-9 h-9 bg-[#dd67c7] text-white rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
+              >
+                {isInCart ? (
+                  <Check size={16} className="text-green-200" />
+                ) : (
+                  <ShoppingCart
+                    size={16}
+                    className="text-white hover:text-[#9D3089]"
+                  />
+                )}
+              </button>
+            </Tippy>
           </div>
-
         </div>
 
         {/* Text Section */}
@@ -322,24 +375,29 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
           {/* Price */}
           <div className="flex items-center gap-1">
             {product.price && product.price > product.actualPrice && (
-              <span className="text-sm text-gray-400 line-through"><span className="rupee mb-1">₹</span>{Math.floor(product.price)}</span>
+              <span className="text-sm text-gray-400 line-through">
+                <span className="rupee mb-1">₹</span>
+                {Math.floor(product.price)}
+              </span>
             )}
             <span className="text-sm font-bold text-[#9D3089]">
-              <span className="rupee">₹</span>{Math.floor(product.actualPrice)}
+              <span className="rupee">₹</span>
+              {Math.floor(product.actualPrice)}
             </span>
           </div>
         </div>
       </Link>
 
-
       {showLoginModal && (
-        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
           <Login1 />
         </LoginModal>
       )}
     </>
-  )
+  );
+};
 
-}
-
-export default ProductCard
+export default ProductCard;
