@@ -4,7 +4,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, CheckCircle } from "lucide-react";
+import { Plus, CheckCircle, ShoppingCart } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../reduxslice/CartSlice";
 
@@ -176,10 +176,10 @@ const Kitchen = () => {
                         e.preventDefault();
                         handleAddToCart(item);
                       }}
-                      className="w-full bg-white text-gray-900 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center justify-center gap-2"
+                      className="w-full bg-[#BE457E]  font-medium py-2 px-4 rounded-lg text-white flex items-center justify-center gap-2"
                     >
-                      <Plus size={16} />
-                      Quick Add
+                      <ShoppingCart size={16} />
+                       Add to Cart
                     </button>
                   </div>
                 </div>
