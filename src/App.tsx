@@ -46,7 +46,7 @@ import Stories from "./pages/Stories";
 import StoriesDetails from "./pages/Stories-details";
 import ContactPage from "./pages/contactus/ContactPage";
 
- import ProfilePage from "./components/userProfile/userProfile";
+import ProfilePage from "./components/userProfile/userProfile";
 
 function App() {
   const location = useLocation();
@@ -56,9 +56,9 @@ function App() {
   const shouldHide = hideNavbarFooter.includes(location.pathname);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
-   const cartData = JSON.parse(localStorage.getItem("addtocart") || "[]");
+  const cartData = JSON.parse(localStorage.getItem("addtocart") || "[]");
   const cartItems = useSelector((state: RootState) => state.cart.items); // Get cart items from Redux store
-  const getCartItem = isLoggedIn? cartItems: cartData;
+  const getCartItem = isLoggedIn ? cartItems : cartData;
   // console.log(getCartItem,"Get Cart Item")
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
@@ -175,8 +175,8 @@ function App() {
           <Route path="/trackorder" element={<TrackOrder />} />
           <Route path="/products" element={<Products />} />
           <Route path="/termsandcondition" element={<Termsandcondition />} />
-   <Route path="/stories" element={<Stories/>} />
-      <Route path="/stories-details" element={<StoriesDetails/>} />
+          <Route path="/stories" element={<Stories />} />
+          <Route path="/stories-details" element={<StoriesDetails />} />
           {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
         </Routes>
       </main>
