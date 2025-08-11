@@ -26,9 +26,25 @@ export default function Footer() {
     { name: "Wearbles & Smart Tech", slug: "irons-and-steamers" },
     { name: "Kichen Appliances", slug: "chimneys-and-hobs" },
   ];
+  const menuItems = [
+    { title: "FAQ", path: "/faqs" },
+    { title: "Home", path: "/" },
+    { title: "About Us", path: "/about" },
+    { title: "WishList", path: "/wishlist" },
+    { title: "Contact Us", path: "/contact-us" },
+  ];
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // true if token exists
+  }, []);
+  if (isLoggedIn) {
+    menuItems.push({ title: "Track Order", path: "/profile" });
+  }
 
   useEffect(() => {
     // ✅ Existing: fetch categories for the website
@@ -84,8 +100,7 @@ export default function Footer() {
   const getCategoryAllProducts = async (categoryId) => {
     const res = await fetch(`${baseUrl}/website/${categoryId}`);
     console.log("Category ID:", res);
-
-  }
+  };
   return (
     <footer className="bg-gradient-to-br from-[#872d67] to-[#2a4172] text-white border-t border-gray-700">
       {/* Trust Features */}
@@ -156,7 +171,7 @@ export default function Footer() {
           {/* Categories */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-               Categories
+              Categories
             </h3>
             <div className="space-y-3">
               {categories.slice(0, 10).map((category) => (
@@ -189,8 +204,6 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-
-
           </div>
 
           {/* Company Links */}
@@ -199,14 +212,7 @@ export default function Footer() {
               Company
             </h3>
             <div className="space-y-3">
-              {[
-                { title :"FAQ",path:"/faqs"},
-                { title: "Home", path: "/" },
-                { title: "About Us", path: "/about" },
-                { title: "WishList", path: "/wishlist" },
-                { title: "Contact Us", path: "/contact-us" },
-                { title: "Track Order", path: "/profile" },
-              ].map((item, index) => (
+              {menuItems.map((item, index) => (
                 <Link
                   key={index}
                   to={item.path}
@@ -222,20 +228,27 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
           <div className="text-center pb-4">
-              <p className="text-sm text-white/80">
-                © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private Limited. All rights reserved.
-              </p>
-            </div>
+            <p className="text-sm text-white/80">
+              © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private
+              Limited. All rights reserved.
+            </p>
+          </div>
 
           <div className="flex flex-col items-center">
             <div className="w-full">
               <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-6 text-sm">
                 {[
                   { title: "Shipping Policy", path: "/shipping" },
-                  { title: "Return & Exchanges", path: "/return-and-exchanges" },
+                  {
+                    title: "Return & Exchanges",
+                    path: "/return-and-exchanges",
+                  },
                   { title: "Terms & Conditions", path: "/terms-and-condition" },
                   { title: "Privacy Policy", path: "/privacy-policy" },
-                  { title: "Cancellation Policy", path: "/cancellation-policy" },
+                  {
+                    title: "Cancellation Policy",
+                    path: "/cancellation-policy",
+                  },
                   { title: "Cookie Policy", path: "/cookies" },
                 ].map((item, index) => (
                   <li key={index} className="relative">
