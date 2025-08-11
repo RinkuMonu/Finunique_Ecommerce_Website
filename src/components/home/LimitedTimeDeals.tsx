@@ -31,7 +31,7 @@ const LimitedTimeDeals = () => {
             key={index}
             className=" relative"
           >
-            <Link to={"/product"}>
+            <Link to={"/products"}>
               <img
                 src={deal.image}
                 className="mx-auto object-contain drop-shadow-md"
