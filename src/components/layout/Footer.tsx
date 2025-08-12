@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 
 export default function Footer() {
   const [categories, setCategories] = useState([]);
-  // const [subcategories, setSubcategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const staticSubcategories = [
     { name: "Mobile & Tablet", slug: "mobiles" },
     { name: "Computer & Peripherals", slug: "laptops-and-desktops" },
@@ -61,27 +61,39 @@ export default function Footer() {
     };
 
     // ✅ NEW: fetch all unique subcategories
-    const fetchSubcategories = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/categories`);
-        const data = await res.json();
+   const fetchSubcategories = async () => {
+  try {
+    const res = await fetch(`${baseUrl}/categories`);
+    const data = await res.json();
+    console.log(data, "Category data");
 
-        if (Array.isArray(data)) {
-          const seen = new Set();
-          const uniqueSubcategories = data.filter((item) => {
-            if (item.subcategory && !seen.has(item.subcategory)) {
-              seen.add(item.subcategory);
-              return true;
-            }
-            return false;
-          });
+    if (Array.isArray(data)) {
+      const seen = new Set();
+      const uniqueSubcategories = data
+        .filter((item) => {
+          if (item.subcategory && !seen.has(item.subcategory)) {
+            seen.add(item.subcategory);
+            return true;
+          }
+          return false;
+        })
+        .map((item) => ({
+          _id: item._id,
+          name: item.subcategory,
+          slug: item.subcategory
+            .toLowerCase()
+            .replace(/&/g, "and") // Replace & with and
+            .replace(/[^a-z0-9]+/g, "-") // Replace spaces/symbols with hyphen
+            .replace(/^-+|-+$/g, ""), // Trim hyphens
+        }));
 
-          // setSubcategories(uniqueSubcategories);
-        }
-      } catch (error) {
-        console.error("Failed to fetch subcategories:", error);
-      }
-    };
+      setSubcategories(uniqueSubcategories);
+    }
+  } catch (error) {
+    console.error("Failed to fetch subcategories:", error);
+  }
+};
+
 
     fetchCategories();
     fetchSubcategories(); // <-- ✅ Added here
@@ -189,14 +201,13 @@ export default function Footer() {
           {/* Subcategories */}
           <div className="space-y-6 md:pl-16">
             <h3 className="text-lg font-semibold text-white border-b border-[#C1467F] pb-2 inline-block">
-              Populer categories
+              Popular categories
             </h3>
-            <div className="space-y-3 ">
-              {staticSubcategories.map((sub) => (
-                <Link to={`/category/${sub.slug}`}>
+            <div className="space-y-3">
+              {subcategories.map((sub) => (
+                <Link key={sub._id} to={`/categoryby/${sub.slug}`}   state={{ subcategoryName: sub.name }}>
                   <button
-                    key={sub._id}
-                    onClick={() => getCategoryAllProducts(sub._id)}
+                    
                     className="block mt-5 text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                   >
                     {sub.name}
