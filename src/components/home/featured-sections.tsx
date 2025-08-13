@@ -207,7 +207,7 @@ const FeaturedSections = () => {
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">Voice Assistant</p>
                 <Link
-                  to={`/category/Accessories`}
+                  to={`/category/bluetooth-and-smart-speakers`}
                   className="text-sm font-medium text-blue-600 hover:text-blue-800 inline-flex items-center"
                 >
                   View Collection
