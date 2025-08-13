@@ -301,8 +301,8 @@ const DealsOfTheDay = () => {
 
              <div className="flex items-center justify-between mb-6">
                <div className="flex items-center space-x-2">
-                 <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal.actualPrice.toFixed(2)}</span>
-                 <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price.toFixed(2)}</span>
+                 <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal.actualPrice?.toFixed(2)}</span>
+                 <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price?.toFixed(2)}</span>
                </div>
                <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div>
              </div>
