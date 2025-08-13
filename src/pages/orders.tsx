@@ -117,7 +117,7 @@ const OrderCard = ({ order }: { order: Order }) => (
         <div className="ml-4 flex-grow">
           <h4 className="font-medium">{item.name}</h4>
           <p className="text-gray-600">Quantity: {item.quantity}</p>
-          <p className="text-gray-800 font-medium">${item.price.toFixed(2)}</p>
+          <p className="text-gray-800 font-medium">${item.price?.toFixed(2)}</p>
         </div>
       </div>
     ))}
@@ -125,7 +125,7 @@ const OrderCard = ({ order }: { order: Order }) => (
     <div className="border-t border-gray-200 pt-4 mt-4">
       <div className="flex justify-between items-center">
         <span className="font-medium">Order Total:</span>
-        <span className="text-lg font-bold">${order.total.toFixed(2)}</span>
+        <span className="text-lg font-bold">${order.total?.toFixed(2)}</span>
       </div>
       <div className="mt-4 flex space-x-4">
         <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
