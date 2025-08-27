@@ -222,7 +222,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
                       <div className="flex items-center justify-between text-sm sm:text-base mt-auto">
                         <span className="font-semibold text-[rgb(157_48_137)]">
-                          <span className="rupee">₹</span>{item.price.toLocaleString()}
+                          <span className="rupee">₹</span>{item?.price?.toLocaleString()}
                         </span>
                         <button
                           onClick={() => handleDelete(item.id)}

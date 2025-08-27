@@ -32,7 +32,10 @@ export default function Products() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`);
+        
         const data = await res.json()
+        console.log("Fetched products ....................:", data);
+    
         if (Array.isArray(data.products)) {
           setProducts(data.products);
           setFilteredProducts(data.products); // Initialize filtered products with all products
