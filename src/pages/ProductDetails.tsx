@@ -566,7 +566,7 @@ const ProductDetails = () => {
           <div className="bg-[#F5F7FA] rounded-xl p-5 mb-4">
             <div className="flex flex-wrap items-baseline gap-1">
               <span className="text-3xl font-bold text-[#A13C78]">
-                <span className="rupee mb-1">₹</span> {Number(displayPrice || 0).toFixed()}
+                <span className="rupee mb-1">₹</span> {product?.actualPrice?.toFixed()}
               </span>
               {displayMrp > displayPrice && (
                 <span className="text-xl text-[#2A4172] line-through">
@@ -582,8 +582,7 @@ const ProductDetails = () => {
             </div>
             {displayMrp > displayPrice && (
               <div className="mt-2 text-sm text-[#2A4172]">
-                You save: <span className="rupee">₹</span>
-                {(displayMrp - displayPrice).toFixed(2)}
+                You save: <span className="rupee">₹</span>{(product?.price - product?.actualPrice)?.toFixed(2)}
               </div>
             )}
           </div>

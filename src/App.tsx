@@ -47,6 +47,7 @@ import StoriesDetails from "./pages/Stories-details";
 import ContactPage from "./pages/contactus/ContactPage";
 
 import ProfilePage from "./components/userProfile/userProfile";
+import CategoryByProduct from "./pages/CategoryByProduct";
 
 function App() {
   const location = useLocation();
@@ -136,6 +137,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/faqs" element={<Faq />} />
           <Route path="/category/:category" element={<CategoryPage />} />
+          <Route path="/categoryby/:slug" element={<CategoryByProduct />} />
           <Route
             path="/product/:id"
             element={<ProductDetails addToCart={handleAddToCart} />}
