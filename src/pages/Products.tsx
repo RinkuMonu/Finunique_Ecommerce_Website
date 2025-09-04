@@ -478,7 +478,7 @@ export default function CategoryPage() {
                       <input
                         type="range"
                         min={0}
-                        max={5_000_000}
+                        max={30000}
                         value={priceRange[0]}
                         onChange={(e) =>
                           setPriceRange([
@@ -493,7 +493,7 @@ export default function CategoryPage() {
                       <input
                         type="range"
                         min={0}
-                        max={5_000_000}
+                        max={30000}
                         value={priceRange[1]}
                         onChange={(e) =>
                           setPriceRange([

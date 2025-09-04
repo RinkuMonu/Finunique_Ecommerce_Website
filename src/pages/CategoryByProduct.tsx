@@ -6,7 +6,7 @@ import ProductCard from "../components/products/ProductCard"
 
 export default function CategoryByProduct() {
   let initialMinPrice = 0
-  let initialMaxPrice = 50000
+  let initialMaxPrice = 30000
 
   const { slug } = useParams()
   const { state } = useLocation()
