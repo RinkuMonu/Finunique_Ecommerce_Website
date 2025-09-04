@@ -16,6 +16,7 @@ const Checkout = () => {
                 window.location.href = "/";
                 return;
             }
+            
             const cashfree = window.Cashfree({
                 mode: "production",
             });
