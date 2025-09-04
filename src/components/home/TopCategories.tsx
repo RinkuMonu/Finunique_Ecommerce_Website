@@ -135,7 +135,7 @@ export default function TopCategories() {
             return (
               <Link
                 key={name}
-                to={`/category/${name.toLowerCase()}`}
+                to={`/category/${name?.toLowerCase()}`}
                 className="group"
                 onMouseEnter={() => setHoveredCard(name)}
                 onMouseLeave={() => setHoveredCard(null)}

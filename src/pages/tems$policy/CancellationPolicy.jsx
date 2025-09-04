@@ -39,7 +39,7 @@ const CancellationPolicy = () => {
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-[#14263F] mb-1">Cancellation Policy for DigihubUnique Tech Solutions Private Limited.</h3>
+                      <h3 className="text-2xl font-bold text-[#14263F] mb-1">Cancellation Policy for Finunique Small Private Limited.</h3>
                       <div className="w-16 h-1 bg-gradient-to-r from-[#C1467F] to-[#A13C78] rounded-full"></div>
                     </div>
                   </div>
@@ -231,8 +231,8 @@ const CancellationPolicy = () => {
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-[#C1467F]">
                     <p className="text-gray-700 leading-relaxed">
                       If you have any questions about this Privacy Policy, You can contact us via email at{" "}
-                      <a href="mailto:info@digihubtech.in." className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">
-                        info@digihubtech.in.
+                      <a href="mailto:info@fin-unique.com." className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">
+                        info@fin-unique.com.
                       </a>{" "}
                       and call us at{" "}
                       <a href="tel:=01414511098" className="text-[#384D89] hover:text-[#C1467F] transition-colors duration-300">

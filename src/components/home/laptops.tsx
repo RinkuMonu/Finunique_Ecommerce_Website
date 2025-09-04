@@ -20,7 +20,7 @@ const Laptops = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {

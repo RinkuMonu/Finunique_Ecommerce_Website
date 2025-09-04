@@ -69,7 +69,7 @@ const TrendingProducts = ({
       speakers: <Speaker size={14} className="text-indigo-600" />,
       default: <Cpu size={14} className="text-gray-600" />,
     };
-    return iconMap[category.toLowerCase()] || iconMap.default;
+    return iconMap[category?.toLowerCase()] || iconMap.default;
   };
 
   // Responsive items per slide

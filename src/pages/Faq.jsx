@@ -19,19 +19,19 @@ export default function Faq() {
         {
             question: "How do I check the status of my order?",
             answer:
-            "Please go to the 'My Orders' section under the main menu on the Digihub Website or Mobile site to check the current status of your order."
+            "Please go to the 'My Orders' section under the main menu on the Finunique Website or Mobile site to check the current status of your order."
         },
         {
             question: "Why are there different prices for the same product? Is it legal?",
             answer:
-            "Digihub is an online marketplace that allows independent sellers to list and sell their products directly to buyers. The prices are decided by the sellers, and Digihub does not interfere in pricing. Hence, the same product may appear at different prices from different sellers. This is completely legal and follows all marketplace compliance rules."
+            "Finunique is an online marketplace that allows independent sellers to list and sell their products directly to buyers. The prices are decided by the sellers, and Finunique does not interfere in pricing. Hence, the same product may appear at different prices from different sellers. This is completely legal and follows all marketplace compliance rules."
         },
         {
-            question: "What is Digihub's cancellation policy?",
+            question: "What is Finunique's cancellation policy?",
                    answer:
              (
     <>
-    You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Digihub Website . Click here to view our full Cancellation Policy  {" "}
+    You can cancel your order while it is in the packed or shipped status, as long as the 'Cancel' option is available on the Finunique Website . Click here to view our full Cancellation Policy  {" "}
       <a href="/cancellation-policy" className="text-blue-600 underline">
        cancellation-policy
       </a>
@@ -41,7 +41,7 @@ export default function Faq() {
         {
             question: "How do I cancel the order I have placed?",
             answer:
-            "Orders can be cancelled before they are out for delivery. You can cancel by visiting the 'My Orders' section on the Digihub Website or Mobile site. Select the item or order you wish to cancel. If the option is unavailable, you can refuse the delivery, and your refund will be processed to the original payment method if it was prepaid."
+            "Orders can be cancelled before they are out for delivery. You can cancel by visiting the 'My Orders' section on the Finunique Website or Mobile site. Select the item or order you wish to cancel. If the option is unavailable, you can refuse the delivery, and your refund will be processed to the original payment method if it was prepaid."
         },
         {
             question: "I have created a return request. When will the product be picked up?",
@@ -64,14 +64,14 @@ export default function Faq() {
         },
         {
             question: "Can I modify the shipping address of my order after it has been placed?",
-            answer: "Yes, you can modify the shipping address of your order before it is processed (i.e., before it is packed). To do this, go to the 'My Orders' section on the Digihub Website or Mobile site and use the 'Change Address' option available for the order."
+            answer: "Yes, you can modify the shipping address of your order before it is processed (i.e., before it is packed). To do this, go to the 'My Orders' section on the Finunique Website or Mobile site and use the 'Change Address' option available for the order."
         },
         {
             question: "How do I cancel my order?",
-            answer: "Go to the 'My Orders' section under the main menu of the Digihub Website or Mobile site. Then, select the item or order you wish to cancel and click on the 'Cancel Order' option, if available."
+            answer: "Go to the 'My Orders' section under the main menu of the Finunique Website or Mobile site. Then, select the item or order you wish to cancel and click on the 'Cancel Order' option, if available."
         },
         {
-            question: "What is Digihub's Return and Exchange Policy? How does it work?",
+            question: "What is Finunique's Return and Exchange Policy? How does it work?",
             answer:  (
     <>
       We offer easy returns and hassle-free exchanges on eligible products. Click here to view our full Return & Exchange Policy  {" "}
@@ -82,8 +82,8 @@ export default function Faq() {
   ),
         },
         {
-            question: "How can I pay for my order on Digihub?",
-            answer: "We support the following payment options on Digihub:\n\n- Credit Card\n- Debit Card\n- Net Banking\n- UPI (Google Pay, PhonePe, Paytm, etc.)\n- Wallets (e.g., Paytm, PhonePe, Mobikwik – based on availability at checkout)\n- EMI Options (on eligible products & cards)\n- Cash on Delivery (COD) – Available for selected pin codes\n\nNote: Availability of payment methods may vary based on your location and the items in your cart."
+            question: "How can I pay for my order on Finunique?",
+            answer: "We support the following payment options on Finunique:\n\n- Credit Card\n- Debit Card\n- Net Banking\n- UPI (Google Pay, PhonePe, Paytm, etc.)\n- Wallets (e.g., Paytm, PhonePe, Mobikwik – based on availability at checkout)\n- EMI Options (on eligible products & cards)\n- Cash on Delivery (COD) – Available for selected pin codes\n\nNote: Availability of payment methods may vary based on your location and the items in your cart."
         }
 
     ];

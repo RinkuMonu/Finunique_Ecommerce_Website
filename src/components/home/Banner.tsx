@@ -20,7 +20,7 @@ interface APIBanner {
 
 const Banner: React.FC = () => {
   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
@@ -159,7 +159,7 @@ const Banner: React.FC = () => {
                             ? `/products?newArrival=true` 
                             : `/category/${encodeURIComponent(
                                 slugify(item?.description)
-                              ).toLowerCase()}`
+                              )?.toLowerCase()}`
                         }
                         className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         onMouseEnter={(e) => {

@@ -168,7 +168,7 @@ export default function OrdersPage() {
 
         <div className="divide-y divide-gray-200">
           {orders.map((order) => {
-            const status = order.status.toLowerCase();
+            const status = order.status?.toLowerCase();
             const statusColor = statusColors[status] || statusColors.pending;
             console.log(orders)
             return (

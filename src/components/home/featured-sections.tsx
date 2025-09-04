@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 
 const FeaturedSections = () => {
   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
   const [groupedCategories, setGroupedCategories] = useState({});
@@ -19,7 +19,7 @@ const FeaturedSections = () => {
 
         const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
-          const namesOnly = data.website.categories.map((item) => item.name);
+          const namesOnly = data?.website?.categories.map((item) => item?.name);
           console.log("Category Names:", namesOnly);
 
           data.website.categories.forEach((item) => {
@@ -95,7 +95,7 @@ const FeaturedSections = () => {
                     .map((item) => (
                       <Link
                         to={`/category/${slugify(item?.name)}`}
-                        key={item._id}
+                        key={item?._id}
                         className="flex-shrink-0 w-36 sm:w-44 bg-white rounded-[8px] p-4 text-center hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-200 shadow-sm "
                       >
                         {item?.image ? (

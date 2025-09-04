@@ -10,7 +10,7 @@ import {
   Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import footerLogo from "/footer-logo.png";
+import footerLogo from "/footer-logoo.png";
 import { useEffect, useState } from "react";
 
 export default function Footer() {
@@ -80,8 +80,7 @@ export default function Footer() {
         .map((item) => ({
           _id: item._id,
           name: item.subcategory,
-          slug: item.subcategory
-            .toLowerCase()
+          slug: item.subcategory?.toLowerCase()
             .replace(/&/g, "and") // Replace & with and
             .replace(/[^a-z0-9]+/g, "-") // Replace spaces/symbols with hyphen
             .replace(/^-+|-+$/g, ""), // Trim hyphens
@@ -107,7 +106,7 @@ export default function Footer() {
   ];
 
   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+    text?.toLowerCase()?.replace(/&/g, "and").replace(/\s+/g, "-");
 
   const getCategoryAllProducts = async (categoryId) => {
     const res = await fetch(`${baseUrl}/website/${categoryId}`);
@@ -158,8 +157,8 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
                 <Mail size={16} className="text-[#C1467F]" />
-                <a href="mailto:info@digihub.com" className="hover:underline">
-                  info@digihubtech.in
+                <a href="mailto:info@fin-unique.com" className="hover:underline">
+                  info@fin-unique.com
                 </a>
               </div>
 
@@ -240,8 +239,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
           <div className="text-center pb-4">
             <p className="text-sm text-white/80">
-              © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private
-              Limited. All rights reserved.
+              © {new Date().getFullYear()} Finunique Small Private Limited. All rights reserved.
             </p>
           </div>
 

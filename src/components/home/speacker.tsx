@@ -21,7 +21,7 @@ const Speakers = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const slugify = (text: string) =>
-    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-IN", {

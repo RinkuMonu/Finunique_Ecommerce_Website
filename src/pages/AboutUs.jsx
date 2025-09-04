@@ -40,7 +40,7 @@ const AboutPage = () => {
         
         <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            About <span className="text-[#C1467F]">DigiHub</span>
+            About <span className="text-[#C1467F]">Finunique</span>
           </h1>
           <div className="w-24 h-1 bg-[#A13C78] mb-8"></div>
           <p className="text-lg md:text-xl text-blue-100 max-w-2xl">
@@ -58,7 +58,7 @@ const AboutPage = () => {
               India's Trusted Online Destination for Electronics & Gadgets
             </h2>
             <p className="text-[#2A4172] leading-relaxed text-lg">
-              At DigiHubUnique Tech Solutions Pvt. Ltd., we're redefining how India shops for technology. From the latest gadgets to everyday accessories, we bring together quality, affordability, and customer-first service — all in one place.
+              At Finunique Small Private Limited, we're redefining how India shops for technology. From the latest gadgets to everyday accessories, we bring together quality, affordability, and customer-first service — all in one place.
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ const AboutPage = () => {
               Our journey began in 2025 with one clear mission — to bring the best of electronics, gadgets, and accessories within easy reach of every Indian household.
             </p>
             <p className="text-[#2A4172] leading-relaxed">
-              Founded by a passionate team of tech enthusiasts in Jaipur, Rajasthan, DigiHub started with just a few shelves of products and a vision to change how India experiences technology.
+              Founded by a passionate team of tech enthusiasts in Jaipur, Rajasthan, Finunique started with just a few shelves of products and a vision to change how India experiences technology.
             </p>
           </div>
           <div className="bg-[#F3F6FF] rounded-xl p-6 h-full flex items-center justify-center border border-[#384D89]/10">
@@ -120,7 +120,7 @@ const AboutPage = () => {
             viewport={{ once: true }}
             className="text-3xl font-bold text-[#384d89] mb-8 text-center"
           >
-            Why Choose DigiHub
+            Why Choose Finunique
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -172,7 +172,7 @@ const AboutPage = () => {
         {/* Additional Content */}
         <div className="mt-12 space-y-6">
           <p className="text-[#2A4172] leading-relaxed">
-            Today, DigiHub proudly serves:
+            Today, Finunique proudly serves:
             <br />
             Over 2,00,000 happy customers across India
             <br />

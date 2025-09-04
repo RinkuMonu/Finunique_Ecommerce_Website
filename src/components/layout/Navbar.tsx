@@ -34,7 +34,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
-import logo from "../../assest/logo.png";
+import logo from "/logoo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
@@ -169,14 +169,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
   // Helper functions
   const getCategoryIcon = (categoryName: string) => {
-    const key = categoryName.toLowerCase();
+    const key = categoryName?.toLowerCase();
     return (
       categoryIcons[key as keyof typeof categoryIcons] || categoryIcons.default
     );
   };
 
   const getSidebarIcon = (categoryName: string) => {
-    const key = categoryName.toLowerCase();
+    const key = categoryName?.toLowerCase();
     return (
       sidebarIcons[key as keyof typeof sidebarIcons] || sidebarIcons.default
       
@@ -212,7 +212,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       default: <Cpu size={20} className={colorClass.split(" ")[0]} />,
     };
 
-    const key = categoryName.toLowerCase();
+    const key = categoryName?.toLowerCase();
     const icon = (iconMap as any)[key] || iconMap.default;
 
     return (
@@ -242,9 +242,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     (e: React.FormEvent) => {
       e.preventDefault();
       const slugify = (text) =>
-        text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+        text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
       const filtered = categories.filter((cat) =>
-        cat.toLowerCase().includes(searchQuery.toLowerCase())
+        cat?.toLowerCase().includes(searchQuery?.toLowerCase())
       );
 
       if (filtered.length > 0) {
@@ -262,7 +262,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
   const handleCategorySelect = useCallback(
     (category: string) => {
-      navigate(`/category/${category.toLowerCase()}`);
+      navigate(`/category/${category?.toLowerCase()}`);
       setSearchQuery("");
       setMenuOpen(false);
       setIsCollectionOpen(false);
@@ -352,13 +352,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const slugify = (text) =>
-    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
 
   // Component render functions
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
       {categories
-        .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
+        .filter((cat) => cat?.toLowerCase().includes(searchQuery.toLowerCase()))
         .map((cat) => (
           <div
             key={cat}
@@ -516,7 +516,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 {categories.map((item) => (
                   <Link
                     key={item}
-                    to={`/category/${item.toLowerCase()}`}
+                    to={`/category/${item?.toLowerCase()}`}
                     className="flex items-center px-6 py-4 font-semibold transition-all hover:bg-blue-50 hover:text-blue-600 group"
                     onClick={() => setMenuOpen(false)}
                   >
@@ -737,7 +737,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         {items.length > 8 && (
           <div className="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t border-gray-200 text-center">
             <Link
-              to={`/category/${subcategory.toLowerCase()}`}
+              to={`/category/${subcategory?.toLowerCase()}`}
               className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
               View All {subcategory}
