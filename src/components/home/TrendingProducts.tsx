@@ -43,6 +43,8 @@ const TrendingProducts = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [products, setProducts] = useState<any[]>([]);
+  // console.log(products);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -69,7 +71,7 @@ const TrendingProducts = ({
       speakers: <Speaker size={14} className="text-indigo-600" />,
       default: <Cpu size={14} className="text-gray-600" />,
     };
-    return iconMap[category?.toLowerCase()] || iconMap.default;
+    return iconMap[category.toLowerCase()] || iconMap.default;
   };
 
   // Responsive items per slide
@@ -152,7 +154,7 @@ const TrendingProducts = ({
       name: product.productName,
       image: product.images?.[0] || "",
       category: product.category?.name || "Uncategorized",
-      price: product.actualPrice || product.price,
+      price: product?.variants[0]?.pricing?.price,
       quantity,
     };
 
@@ -208,11 +210,10 @@ const TrendingProducts = ({
       <Star
         key={i}
         size={12}
-        className={`${
-          i < Math.floor(rating)
-            ? "fill-yellow-400 stroke-yellow-400"
-            : "stroke-gray-300"
-        }`}
+        className={`${i < Math.floor(rating)
+          ? "fill-yellow-400 stroke-yellow-400"
+          : "stroke-gray-300"
+          }`}
       />
     ));
   };
@@ -330,12 +331,12 @@ const TrendingProducts = ({
                               </Link>
                               {/* Badges */}
                               <div className="absolute top-3 left-3 flex flex-col gap-2">
-                                {product.discount && (
+                                {product?.variants[0].pricing && (
                                   <span
                                     className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md"
                                     style={{ width: "max-content" }}
                                   >
-                                    {product.discount}%
+                                    {Math.floor((product.variants[0].pricing?.mrp - product.variants[0].pricing?.price) / product.variants[0].pricing?.mrp * 100)}%
                                   </span>
                                 )}
                               </div>
@@ -353,11 +354,10 @@ const TrendingProducts = ({
                                 </button>
                                 <button
                                   onClick={() => openProductModal(product)}
-                                  className={`w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center hover:bg-white hover:scale-110 transition-all duration-200 ${
-                                    hoveredProduct === product._id
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  }`}
+                                  className={`w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center hover:bg-white hover:scale-110 transition-all duration-200 ${hoveredProduct === product._id
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                    }`}
                                 >
                                   <Eye size={16} className="text-gray-600" />
                                 </button>
@@ -365,18 +365,17 @@ const TrendingProducts = ({
 
                               {/* Quick Add to Cart Overlay */}
                               <div
-                                className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-300 ${
-                                  hoveredProduct === product._id
-                                    ? "opacity-100 translate-y-0"
-                                    : "opacity-0 translate-y-2"
-                                }`}
+                                className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-300 ${hoveredProduct === product._id
+                                  ? "opacity-100 translate-y-0"
+                                  : "opacity-0 translate-y-2"
+                                  }`}
                               >
                                 <button
                                   onClick={() => handleAddToCart(product)}
                                   className="w-full bg-white text-gray-900 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2"
                                 >
                                   <Plus size={16} />
-                                  Quick Add
+                                  Add to Cart
                                 </button>
                               </div>
                             </div>
@@ -411,13 +410,13 @@ const TrendingProducts = ({
                               {/* Rating & Reviews */}
                               <div className="flex items-center gap-2 mb-3">
                                 <div className="flex items-center gap-1">
-                                  {renderStars(product.rating || 4)}
+                                  {renderStars(product?.rating?.avg || 4)}
                                 </div>
                                 <span className="text-xs text-gray-500 font-medium">
-                                  4.5
+                                  {product?.rating?.avg}
                                 </span>
                                 <span className="text-xs text-gray-400">
-                                  (2.1k reviews)
+                                  ({product?.rating?.count} reviews)
                                 </span>
                               </div>
 
@@ -431,29 +430,31 @@ const TrendingProducts = ({
                                         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', 'Helvetica Neue'",
                                     }}
                                   >
-                                    {formatPrice(product.actualPrice)}
+                                    {formatPrice(product.variants[0].pricing?.price)}
                                   </span>
-                                  {product.price &&
-                                    product.price !== product.actualPrice && (
+                                  {product.variants[0].pricing &&
+                                    product.variants[0].pricing?.price !== product.variants[0].pricing?.mrp && (
                                       <span className="text-sm text-gray-500 line-through">
-                                        {formatPrice(product.price)}
+                                        {formatPrice(product.variants[0].pricing?.mrp)}
                                       </span>
                                     )}
                                 </div>
-                                {product.price &&
-                                  product.price !== product.actualPrice && (
+                                {product.variants[0].pricing &&
+                                  product.variants[0].pricing?.price !== product.variants[0].pricing?.mrp && (
                                     <div className="flex items-center gap-2">
                                       <span className="text-xs text-green-600 font-medium">
                                         Save{" "}
                                         {formatPrice(
                                           calculateSavings(
-                                            product.price,
-                                            product.actualPrice
+                                            product.variants[0].pricing?.mrp,
+                                            product.variants[0].pricing?.price
                                           )
                                         )}
                                       </span>
                                       <span className="text-xs text-gray-500">
-                                        ({product.discount}% off)
+                                        (
+                                        {Math.floor((product.variants[0].pricing?.mrp - product.variants[0].pricing?.price) / product.variants[0].pricing?.mrp * 100)}%
+                                        off)
                                       </span>
                                     </div>
                                   )}
@@ -495,11 +496,10 @@ const TrendingProducts = ({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`transition-all duration-200 rounded-full ${
-                    currentSlide === index
-                      ? "w-8 h-2 bg-[#BE457E]"
-                      : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
-                  }`}
+                  className={`transition-all duration-200 rounded-full ${currentSlide === index
+                    ? "w-8 h-2 bg-[#BE457E]"
+                    : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
+                    }`}
                 />
               ))}
             </div>
@@ -560,9 +560,8 @@ const TrendingProducts = ({
             onClick={closeModal}
           >
             <div
-              className={`relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
-                isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-              }`}
+              className={`relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+                }`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
@@ -609,7 +608,7 @@ const TrendingProducts = ({
                       </span>
                       {selectedProduct.price &&
                         selectedProduct.price !==
-                          selectedProduct.actualPrice && (
+                        selectedProduct.actualPrice && (
                           <span className="text-xl text-gray-500 line-through">
                             {formatPrice(selectedProduct.price)}
                           </span>

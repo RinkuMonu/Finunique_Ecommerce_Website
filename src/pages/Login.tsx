@@ -275,13 +275,14 @@ export default function Login() {
 
       const data = res.data;
 
-      if (data && data.accessToken) {
+      if (res.status === 200 && data.accessToken) {
         // ✅ Save login data
         localStorage.setItem("userData", JSON.stringify(data.userData));
         localStorage.setItem("token", data.accessToken);
 
         // ✅ Step 1: Check for guest cart
         const guestCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+        
 
         if (guestCart.length > 0) {
           // ✅ Step 2: Send guest cart items to user's backend cart

@@ -20,7 +20,7 @@ const Laptops = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const slugify = (text) =>
-    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -34,15 +34,14 @@ const Laptops = () => {
     return originalPrice - actualPrice;
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product: any) => {
     const token = localStorage.getItem("token");
-
     const cartItem = {
       id: product._id,
       name: product.productName,
       image: product.images?.[0] || "",
       category: product.category?.name || "Uncategorized",
-      price: product.actualPrice || product.price,
+      price: product?.variants[0]?.pricing?.price,
       quantity,
     };
 
@@ -91,6 +90,13 @@ const Laptops = () => {
     };
     fetchProducts();
   }, []);
+
+
+
+  if (tablets.length == 0) {
+    return;
+  }
+
 
   return (
     <>
@@ -148,17 +154,16 @@ const Laptops = () => {
                 <div className="w-full h-48 flex items-center justify-center mb-3 relative">
                   <img
                     src={item.images[0]}
-                    alt={item.title}
+                    alt={item.productName}
                     className="max-h-full object-contain"
                   />
                   {/* Quick Add Overlay */}
                   <div
                     className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-all duration-300 ease-in-out
-    ${
-      hoveredProduct === item._id
-        ? "opacity-100 translate-y-0"
-        : "opacity-0 translate-y-4"
-    }`}
+    ${hoveredProduct === item._id
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-4"
+                      }`}
                   >
                     <button
                       onClick={(e) => {
@@ -168,7 +173,7 @@ const Laptops = () => {
                       className="w-full bg-[#BE457E]  font-medium py-2 px-4 rounded-lg text-white flex items-center justify-center gap-2"
                     >
                       <ShoppingCart size={16} />
-                       Add to Cart
+                      Add to Cart
                     </button>
                   </div>
                 </div>
@@ -179,14 +184,14 @@ const Laptops = () => {
                   </h3>
                 </Link>
                 <div className="flex items-center gap-2 text-lg font-bold text-black">
-                  ₹ {Math.floor(item.price)}
+                  {formatPrice(item.variants[0].pricing?.price)}
                 </div>
-                {item?.price && item?.price !== item?.actualPrice && (
+                {item?.variants[0].pricing && item?.variants[0].pricing?.price !== item?.variants[0].pricing?.mrp && (
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-green-600 font-medium">
                       Save{" "}
                       {formatPrice(
-                        calculateSavings(item?.price, item?.actualPrice)
+                        calculateSavings(item?.variants[0]?.pricing?.mrp, item?.variants[0].pricing?.price)
                       )}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -195,7 +200,7 @@ const Laptops = () => {
                   </div>
                 )}
                 <div className="text-sm text-gray-500 line-through mt-1">
-                  ₹ {Math.floor(item?.price)}
+                  ₹ {Math.floor(item?.variants[0].pricing?.price)}
                 </div>
               </div>
             </SwiperSlide>

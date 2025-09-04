@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 import { Check, Heart, ShoppingCart, Star, Zap } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import axios from "axios";
 interface Product {
   _id: string;
   productName: string;
@@ -51,6 +52,7 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
   const dispatch = useDispatch();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
+
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -114,11 +116,10 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
       <Star
         key={i}
         size={14}
-        className={`${
-          i < Math.floor(rating)
-            ? "fill-yellow-400 stroke-yellow-400"
-            : "fill-gray-200 stroke-gray-300"
-        } transition-colors duration-200`}
+        className={`${i < Math.floor(rating)
+          ? "fill-yellow-400 stroke-yellow-400"
+          : "fill-gray-200 stroke-gray-300"
+          } transition-colors duration-200`}
       />
     ));
   };
@@ -126,8 +127,8 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
   const discountPercentage =
     product.price && product.actualPrice
       ? Math.round(
-          ((product.price - product.actualPrice) / product.price) * 100
-        )
+        ((product.price - product.actualPrice) / product.price) * 100
+      )
       : product.discount || 0;
 
   if (listView) {
@@ -178,9 +179,8 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
                       <img
                         src={img}
                         alt={`${product.productName} ${index}`}
-                        className={` object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${
-                          imageLoaded ? "opacity-100" : "opacity-0"
-                        }`}
+                        className={` object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl ${imageLoaded ? "opacity-100" : "opacity-0"
+                          }`}
                         onLoad={() => setImageLoaded(true)}
                       />
                     </div>
@@ -226,12 +226,12 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                 <span className="font-bold text-[#9D3089] text-sm sm:text-base">
                   <span className="rupee">₹</span>
-                  {Math.floor(product?.actualPrice)}
+                  {Math.floor(product?.variants[0]?.pricing?.mrp)}
                 </span>
                 {product.price && product.price > product.actualPrice && (
                   <span className="text-[10px] sm:text-xs text-gray-400 line-through">
                     <span className="rupee">₹</span>
-                    {Math.floor(product?.price)}
+                    {Math.floor(product?.variants[0]?.pricing?.price)}
                   </span>
                 )}
               </div>
@@ -299,10 +299,10 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
         {/* Discount Badge */}
         {discountPercentage > 0 && (
           <div className="absolute rounded-sm top-3 left-3 bg-orange-100 text-orange-500 text-xs z-10 font-semibold px-2 py-0.5 ">
-            <span className="rupee">₹</span>
-            {Math.floor(product.price - product.actualPrice)}
+            {Math.round(((product?.variants[0]?.pricing?.mrp - product?.variants[0]?.pricing?.price) / product?.variants[0]?.pricing?.mrp) * 100)}% Off
           </div>
         )}
+
 
         {/* Image with Center Hover Icons */}
         <div
@@ -318,11 +318,10 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
 
           {/* Center Hover Icons */}
           <div
-            className={`absolute top-3 -right-2 flex flex-col gap-2 transition-all duration-300 ${
-              isHovered
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-2"
-            }`}
+            className={`absolute top-3 -right-2 flex flex-col gap-2 transition-all duration-300 ${isHovered
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-2"
+              }`}
           >
             {/* Wishlist */}
             <Tippy content="Wishlist" placement="right">
@@ -332,11 +331,10 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
               >
                 <Heart
                   size={16}
-                  className={`transition-colors ${
-                    isInWishlist
-                      ? "fill-red-500 stroke-red-500"
-                      : "text-white hover:text-red-500"
-                  }`}
+                  className={`transition-colors ${isInWishlist
+                    ? "fill-red-500 stroke-red-500"
+                    : "text-white hover:text-red-500"
+                    }`}
                 />
               </button>
             </Tippy>
@@ -374,15 +372,16 @@ const ProductCard = ({ product, listView }: ProductCardProps) => {
 
           {/* Price */}
           <div className="flex items-center gap-1">
-            {product.price && product.price > product.actualPrice && (
+            {/* {Math.floor((product.variants[0].pricing?.mrp - product.variants[0].pricing?.price) / product.variants[0].pricing?.mrp * 100)}% */}
+            {product?.variants[0].pricing && product?.variants[0].pricing?.price > product.variants[0].pricing?.mrp && (
               <span className="text-sm text-gray-400 line-through">
                 <span className="rupee mb-1">₹</span>
-                {Math.floor(product.price)}
+                {Math.floor(product?.variants[0]?.pricing?.price)}
               </span>
             )}
             <span className="text-sm font-bold text-[#9D3089]">
               <span className="rupee">₹</span>
-              {Math.floor(product.actualPrice)}
+              {Math.floor(product?.variants[0].pricing?.price)}
             </span>
           </div>
         </div>

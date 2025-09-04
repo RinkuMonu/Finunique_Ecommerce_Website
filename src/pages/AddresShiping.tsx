@@ -17,6 +17,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LoginModal from "../components/loginModal/LoginModal";
 import Login1 from "../pages/Login1";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 interface Address {
   id: string;
@@ -93,6 +94,7 @@ const coupons: CouponCode[] = [
 function AddressShipping({ cartItems }) {
   console.log(cartItems, "cart Item");
   const [isNewAddress, setIsNewAddress] = useState(false);
+  const [user, setUser] = useState();
   const [selectedAddress, setSelectedAddress] = useState<string>("");
   const [selectedShipping, setSelectedShipping] = useState<string>("1");
   const [selectedPayment, setSelectedPayment] = useState<string>("");
@@ -110,9 +112,50 @@ function AddressShipping({ cartItems }) {
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
     {}
   );
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const [coupons, setCoupons] = useState([]);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [discount, setDiscount] = useState(0);
+
+
+  // User and scroll effects
+  useEffect(() => {
+    const loadUser = () => {
+      try {
+        const storedUser = localStorage.getItem("userData");
+        setUser(storedUser ? JSON.parse(storedUser) : null);
+      } catch (error) {
+        console.error("Failed to parse user from localStorage:", error);
+      }
+    };
+    loadUser();
+  }, []);
+
+  // Coupons fetch
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      const { data } = await axios.get(`${baseUrl}/coupons`);
+      setCoupons(data.coupons);
+    };
+    fetchCoupons();
+  }, []);
+
+  // Filter coupons jo cart ke products ke liye valid hain
+  const applicableCoupons = coupons?.filter(c =>
+    cartItems.some(item => c.applicableProducts.includes(item.id))
+  );
+
+
+
+
+
+
+
   const [showLoginModal, setShowLoginModal] = useState(false);
   const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiYzNhNWRmMzEwODdkYTY4YzUxN2IwZTRjMGU0NGIyNmFmOWM4ODJlOWJiZWYxZDM3NmY5ZjRiOTcxM2VhZWFmYjZkOTgyMjYxMDYwOGI3ODYiLCJpYXQiOjE3NDQ3MTI2OTguMjIxMzYzLCJuYmYiOjE3NDQ3MTI2OTguMjIxMzY2LCJleHAiOjE3NzYyNDg2OTguMjE4NzY3LCJzdWIiOiIyNDkiLCJzY29wZXMiOltdfQ.VWB2ejh3M4HXA3hAO37qbOV1Ylx5wKZ_NK1GQK7PrgY0S6xAnQwE_MwcNn-ln_aPFt5cz_ZzeTmAKkLmQh9oOJbHXRmA8MFG_WcWm6HPZt_F_JqyfKdtmW9rgv27PuNtozLIpzUUTed8RMXh6ci2wjqRFVng-jVrFkb-IHJB2Ivm3OjO8wH4CHXF8yvtQVKnCCg01r3IyLdcB1KtwK6Q_Rta8iNTimKTsGxJ_FnnOjCuYPETuP1dJLVXB9F_EmxZYK59Z_Cc7NWsDn_fMmRB4sJG3TtG9eSlwl_wJ8pIy4ou8uyiedRqSHMPgHva4Pk6OY8g4lGr4gxb3ry4S5ax5aRxTtmBt64xn0Wgg5tYKxHON8A7_t0F0G-aQeWO1CxcYbF2lfU507e9X9NE8TeGzoexuVI2NGiOptJG9oRlTDNEL981hvucdkSfi6DQVG7vrD7DbFs5XvikbxpPz4ooE7JSPzNnLBPPkj7Yl17DIgWCIgSzrVgEsuW5RcuTURLVrtPRv1qX7lgiXtqxf_TrwAaoOaYnTTinZYoQmP-uyPy8krH0Sr42CtjIRYKYBNWJV0jXzgH36RXVoiOxq8w7rmdGqkbCs4CNDoX6FhJa5dSwjz0tn9t0Dt2NMogyHf4zxQDHdptkSN90sXhoAFUdYUlVRfZ7Z8UUSTXOW2j6Fsw";
+    "yJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiYzNhNWRmMzEwODdkYTY4YzUxN2IwZTRjMGU0NGIyNmFmOWM4ODJlOWJiZWYxZDM3NmY5ZjRiOTcxM2VhZWFmYjZkOTgyMjYxMDYwOGI3ODYiLCJpYXQiOjE3NDQ3MTI2OTguMjIxMzYzLCJuYmYiOjE3NDQ3MTI2OTguMjIxMzY2LCJleHAiOjE3NzYyNDg2OTguMjE4NzY3LCJzdWIiOiIyNDkiLCJzY29wZXMiOltdfQ.VWB2ejh3M4HXA3hAO37qbOV1Ylx5wKZ_NK1GQK7PrgY0S6xAnQwE_MwcNn-ln_aPFt5cz_ZzeTmAKkLmQh9oOJbHXRmA8MFG_WcWm6HPZt_F_JqyfKdtmW9rgv27PuNtozLIpzUUTed8RMXh6ci2wjqRFVng-jVrFkb-IHJB2Ivm3OjO8wH4CHXF8yvtQVKnCCg01r3IyLdcB1KtwK6Q_Rta8iNTimKTsGxJ_FnnOjCuYPETuP1dJLVXB9F_EmxZYK59Z_Cc7NWsDn_fMmRB4sJG3TtG9eSlwl_wJ8pIy4ou8uyiedRqSHMPgHva4Pk6OY8g4lGr4gxb3ry4S5ax5aRxTtmBt64xn0Wgg5tYKxHON8A7_t0F0G-aQeWO1CxcYbF2lfU507e9X9NE8TeGzoexuVI2NGiOptJG9oRlTDNEL981hvucdkSfi6DQVG7vrD7DbFs5XvikbxpPz4ooE7JSPzNnLBPPkj7Yl17DIgWCIgSzrVgEsuW5RcuTURLVrtPRv1qX7lgiXtqxf_TrwAaoOaYnTTinZYoQmP-uyPy8krH0Sr42CtjIRYKYBNWJV0jXzgH36RXVoiOxq8w7rmdGqkbCs4CNDoX6FhJa5dSwjz0tn9t0Dt2NMogyHf4zxQDHdptkSN90sXhoAFUdYUlVRfZ7Z8UUSTXOW2j6Fsw";
 
   const [userdata, setUserData] = useState({
     name: "",
@@ -123,13 +166,59 @@ function AddressShipping({ cartItems }) {
     address: "",
   });
 
+  // ✅ Coupon Apply Handler
+  const handleApplyCoupon = async (coupon) => {
+    try {
+      const applicableItem = cartItems.find(item =>
+        coupon.applicableProducts.includes(item.id)
+      );
+
+      const { data } = await axios.post(`${baseUrl}/coupons/apply`, {
+        code: coupon.code,
+        userId: user?._id,
+        productId: applicableItem?.id,
+      });
+
+      if (data.success) {
+        setAppliedCoupon(data.discount);
+        if (data.discount) {
+          if (data.discount.type === "fixed") {
+            setDiscount(data.discount.value);
+          } else if (data.discount.type === "percentage") {
+            setDiscount((subtotal * data.discount.value) / 100);
+          }
+          Swal.fire("Discount applied!", "", "success");
+        } // just save coupon info
+      } else {
+        Swal.fire(data, "", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      // alert("Failed to apply coupon");
+      Swal.fire(err?.response?.data?.message, "", "error");
+
+    }
+  };
+
+  // subtotal
   const subtotal = cartItems?.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
+  // shipping
   const shipping =
     shippingMethods.find((m) => m.id === selectedShipping)?.price || 0;
-  const total = subtotal + shipping;
+
+
+
+  console.log(discount);
+
+  // total
+  const total = subtotal + shipping - discount;
+
+
+
 
   // Validation functions
   const validateField = (fieldName: string, value: string) => {
@@ -208,7 +297,7 @@ function AddressShipping({ cartItems }) {
       alert("Please fill all required shipping fields.");
       return;
     }
-   const isUserLoggedIn = !!localStorage.getItem("token")
+    const isUserLoggedIn = !!localStorage.getItem("token")
     if (!isUserLoggedIn) {
       setShowLoginModal(true) // Trigger login modal
       return
@@ -222,14 +311,14 @@ function AddressShipping({ cartItems }) {
       // 🔧 Define per-gateway configuration
       const gatewayConfigs = {
         upi1: {
-          apiUrl: "https://api.worldpayme.com/api/v1.1/createUpiIntent",
+          apiUrl: "https://api.worldpayme.com/api/v1.1/createUpiInten",
           payload: {
             amount: total.toString(),
             reference: newRef,
             name: userdata.name,
             mobile: userdata.phone,
             email: userdata.email,
-            userId: "67b6f05e6a935705d8fc54ee", // 🔑 WorldPayMe Merchant ID
+            userId: "7b6f05e6a935705d8fc54ee", // 🔑 WorldPayMe Merchant ID
             myip: "666666",
           },
           headers: {
@@ -239,18 +328,18 @@ function AddressShipping({ cartItems }) {
           extractIntent: (res) => res.data?.data?.upiIntent,
         },
         upi2: {
-          apiUrl: "https://api.worldpayme.com/api/v1.1/createUpiIntent", // 🆕 Replace with actual
+          apiUrl: "https://api.worldpayme.com/api/v1.1/createUpiInten", // 🆕 Replace with actual
           payload: {
             amount: total.toString(),
             reference: newRef,
             name: userdata.name,
             mobile: userdata.phone,
             email: userdata.email,
-            userId: "67b6f05e6a935705d8fc54ee", // 🆕 your merchant 2 ID
+            userId: "7b6f05e6a935705d8fc54ee", // 🆕 your merchant 2 ID
             myip: "666666",
           },
           headers: {
-            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiNzE1ZDJlODJiZTYxYzdiYjk1YzZhNDA0ZTdlYTNiZDRjOTNkYWRmNWEzYmJiYmExYmFhNTI2ZGIxNzVkNjhhNmI1YmZjZWU3N2ZmMTgwMDkiLCJpYXQiOjE3NDg1MTgwNTYuMjcyNDQyLCJuYmYiOjE3NDg1MTgwNTYuMjcyNDQ0LCJleHAiOjE3ODAwNTQwNTYuMjY5OTk3LCJzdWIiOiIzMDMiLCJzY29wZXMiOltdfQ.ElJzC40DRfPxMCJn8hKPJwOQqinyzK2yRONmLIky4IElGAeDJzghUbiBQg6uVIe0qMnQZCTY66trEbVh25TJZYpWv_rEyP4LYMhFNtyHOyEothKg-RAWt99y4baqf10wp5Mfl1YdUI3lQaYHKYF1B0y8gJFtLghvj8nxsWdi5a_V7TfkzcGGWy5HtqZnaYyDWxJCSIjm41E2mfJVoDrGz5_DMHCQq50JHN8rJwlx4R6pH4uD-D-xoYZsTgdg94ogkuuyWRpNpHTPx6ku9D6AVqO4gz8pGysphatUaIUeAHciNDNVW_hU3ReHMXUc6GsySmPjoogmRZJqtrtv432N4dhVZYZM8uPH8LmI437xsiT8Pwh8eigfJeiizElf0_sMgeNL7wwfkfsIkjWiNQlai9l0tgXpkSh_B4WHwbGMlhjN-xebvWE3NmiUu8Ut9m-aHyL-TCLX_hbkGepgEBilGiyqPzbpP9oNPXO7t3Js4MxAaFQjP4M2hHyHfxMPUUCbUEboS2cdL9uQpag_X9Z7w9cQMTaC6bFjv-RuAJhwGvSMHvs3paOZqdZxRd4bwybXUyCIisqdG1FHoFgPoz5tA5bYZ8CpILbYGuxPHeCpN51c0_QhOfGcEUT5st7PUadqwiQG1WJBOQ6XHquUNAt9ZySDpB9DjLtQ4jxjQbyer6I`, // 🆕 your token
+            Authorization: `Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiNzE1ZDJlODJiZTYxYzdiYjk1YzZhNDA0ZTdlYTNiZDRjOTNkYWRmNWEzYmJiYmExYmFhNTI2ZGIxNzVkNjhhNmI1YmZjZWU3N2ZmMTgwMDkiLCJpYXQiOjE3NDg1MTgwNTYuMjcyNDQyLCJuYmYiOjE3NDg1MTgwNTYuMjcyNDQ0LCJleHAiOjE3ODAwNTQwNTYuMjY5OTk3LCJzdWIiOiIzMDMiLCJzY29wZXMiOltdfQ.ElJzC40DRfPxMCJn8hKPJwOQqinyzK2yRONmLIky4IElGAeDJzghUbiBQg6uVIe0qMnQZCTY66trEbVh25TJZYpWv_rEyP4LYMhFNtyHOyEothKg-RAWt99y4baqf10wp5Mfl1YdUI3lQaYHKYF1B0y8gJFtLghvj8nxsWdi5a_V7TfkzcGGWy5HtqZnaYyDWxJCSIjm41E2mfJVoDrGz5_DMHCQq50JHN8rJwlx4R6pH4uD-D-xoYZsTgdg94ogkuuyWRpNpHTPx6ku9D6AVqO4gz8pGysphatUaIUeAHciNDNVW_hU3ReHMXUc6GsySmPjoogmRZJqtrtv432N4dhVZYZM8uPH8LmI437xsiT8Pwh8eigfJeiizElf0_sMgeNL7wwfkfsIkjWiNQlai9l0tgXpkSh_B4WHwbGMlhjN-xebvWE3NmiUu8Ut9m-aHyL-TCLX_hbkGepgEBilGiyqPzbpP9oNPXO7t3Js4MxAaFQjP4M2hHyHfxMPUUCbUEboS2cdL9uQpag_X9Z7w9cQMTaC6bFjv-RuAJhwGvSMHvs3paOZqdZxRd4bwybXUyCIisqdG1FHoFgPoz5tA5bYZ8CpILbYGuxPHeCpN51c0_QhOfGcEUT5st7PUadqwiQG1WJBOQ6XHquUNAt9ZySDpB9DjLtQ4jxjQbyer6I`, // 🆕 your token
             "Content-Type": "application/json",
           },
           extractIntent: (res) => res.data?.data?.upiIntent || res.data?.upiUrl,
@@ -360,11 +449,10 @@ function AddressShipping({ cartItems }) {
           `https://api.worldpayme.com/api/v1.1/payinTransactionCheckStatus/${reference}`,
           {
             headers: {
-              Authorization: `Bearer ${
-                selectedPayment === "upi1"
-                  ? token
-                  : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiNzE1ZDJlODJiZTYxYzdiYjk1YzZhNDA0ZTdlYTNiZDRjOTNkYWRmNWEzYmJiYmExYmFhNTI2ZGIxNzVkNjhhNmI1YmZjZWU3N2ZmMTgwMDkiLCJpYXQiOjE3NDg1MTgwNTYuMjcyNDQyLCJuYmYiOjE3NDg1MTgwNTYuMjcyNDQ0LCJleHAiOjE3ODAwNTQwNTYuMjY5OTk3LCJzdWIiOiIzMDMiLCJzY29wZXMiOltdfQ.ElJzC40DRfPxMCJn8hKPJwOQqinyzK2yRONmLIky4IElGAeDJzghUbiBQg6uVIe0qMnQZCTY66trEbVh25TJZYpWv_rEyP4LYMhFNtyHOyEothKg-RAWt99y4baqf10wp5Mfl1YdUI3lQaYHKYF1B0y8gJFtLghvj8nxsWdi5a_V7TfkzcGGWy5HtqZnaYyDWxJCSIjm41E2mfJVoDrGz5_DMHCQq50JHN8rJwlx4R6pH4uD-D-xoYZsTgdg94ogkuuyWRpNpHTPx6ku9D6AVqO4gz8pGysphatUaIUeAHciNDNVW_hU3ReHMXUc6GsySmPjoogmRZJqtrtv432N4dhVZYZM8uPH8LmI437xsiT8Pwh8eigfJeiizElf0_sMgeNL7wwfkfsIkjWiNQlai9l0tgXpkSh_B4WHwbGMlhjN-xebvWE3NmiUu8Ut9m-aHyL-TCLX_hbkGepgEBilGiyqPzbpP9oNPXO7t3Js4MxAaFQjP4M2hHyHfxMPUUCbUEboS2cdL9uQpag_X9Z7w9cQMTaC6bFjv-RuAJhwGvSMHvs3paOZqdZxRd4bwybXUyCIisqdG1FHoFgPoz5tA5bYZ8CpILbYGuxPHeCpN51c0_QhOfGcEUT5st7PUadqwiQG1WJBOQ6XHquUNAt9ZySDpB9DjLtQ4jxjQbyer6I"
-              }`,
+              Authorization: `Bearer ${selectedPayment === "upi1"
+                ? token
+                : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiNzE1ZDJlODJiZTYxYzdiYjk1YzZhNDA0ZTdlYTNiZDRjOTNkYWRmNWEzYmJiYmExYmFhNTI2ZGIxNzVkNjhhNmI1YmZjZWU3N2ZmMTgwMDkiLCJpYXQiOjE3NDg1MTgwNTYuMjcyNDQyLCJuYmYiOjE3NDg1MTgwNTYuMjcyNDQ0LCJleHAiOjE3ODAwNTQwNTYuMjY5OTk3LCJzdWIiOiIzMDMiLCJzY29wZXMiOltdfQ.ElJzC40DRfPxMCJn8hKPJwOQqinyzK2yRONmLIky4IElGAeDJzghUbiBQg6uVIe0qMnQZCTY66trEbVh25TJZYpWv_rEyP4LYMhFNtyHOyEothKg-RAWt99y4baqf10wp5Mfl1YdUI3lQaYHKYF1B0y8gJFtLghvj8nxsWdi5a_V7TfkzcGGWy5HtqZnaYyDWxJCSIjm41E2mfJVoDrGz5_DMHCQq50JHN8rJwlx4R6pH4uD-D-xoYZsTgdg94ogkuuyWRpNpHTPx6ku9D6AVqO4gz8pGysphatUaIUeAHciNDNVW_hU3ReHMXUc6GsySmPjoogmRZJqtrtv432N4dhVZYZM8uPH8LmI437xsiT8Pwh8eigfJeiizElf0_sMgeNL7wwfkfsIkjWiNQlai9l0tgXpkSh_B4WHwbGMlhjN-xebvWE3NmiUu8Ut9m-aHyL-TCLX_hbkGepgEBilGiyqPzbpP9oNPXO7t3Js4MxAaFQjP4M2hHyHfxMPUUCbUEboS2cdL9uQpag_X9Z7w9cQMTaC6bFjv-RuAJhwGvSMHvs3paOZqdZxRd4bwybXUyCIisqdG1FHoFgPoz5tA5bYZ8CpILbYGuxPHeCpN51c0_QhOfGcEUT5st7PUadqwiQG1WJBOQ6XHquUNAt9ZySDpB9DjLtQ4jxjQbyer6I"
+                }`,
               "Content-Type": "application/json",
             },
           }
@@ -532,11 +620,10 @@ function AddressShipping({ cartItems }) {
                             <input
                               type="text"
                               name="name"
-                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${
-                                errors.name
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.name
+                                ? "border-red-500"
+                                : "border-gray-300"
+                                } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                               value={userdata.name}
                               onChange={handleonChange}
                               onBlur={() => handleBlur("name")}
@@ -555,11 +642,10 @@ function AddressShipping({ cartItems }) {
                             <input
                               type="tel"
                               name="phone"
-                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${
-                                errors.phone
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.phone
+                                ? "border-red-500"
+                                : "border-gray-300"
+                                } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                               value={userdata.phone}
                               onChange={(e) => {
                                 const val = e.target.value
@@ -589,11 +675,10 @@ function AddressShipping({ cartItems }) {
                           <input
                             type="email"
                             name="email"
-                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${
-                              errors.email
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.email
+                              ? "border-red-500"
+                              : "border-gray-300"
+                              } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                             value={userdata.email}
                             onChange={handleonChange}
                             onBlur={() => handleBlur("email")}
@@ -613,11 +698,10 @@ function AddressShipping({ cartItems }) {
                             </label>
                             <input
                               type="text"
-                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${
-                                errors.pinCode
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                              className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.pinCode
+                                ? "border-red-500"
+                                : "border-gray-300"
+                                } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                               value={pinCode}
                               onChange={handlePinCodeChange}
                               onBlur={() => handleBlur("pinCode")}
@@ -661,11 +745,10 @@ function AddressShipping({ cartItems }) {
                           </label>
                           <textarea
                             name="address"
-                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${
-                              errors.address
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                            className={`w-full rounded-xl border bg-white shadow-sm transition-all ${errors.address
+                              ? "border-red-500"
+                              : "border-gray-300"
+                              } px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                             rows={3}
                             value={userdata.address}
                             onChange={handleonChange}
@@ -720,11 +803,10 @@ function AddressShipping({ cartItems }) {
                         <label
                           key={method.id}
                           className={`flex items-start gap-4 p-2 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
-                          ${
-                            selectedShipping === method.id
+                          ${selectedShipping === method.id
                               ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
                               : "border-gray-200 hover:bg-gray-50"
-                          }`}
+                            }`}
                         >
                           <input
                             type="radio"
@@ -765,11 +847,10 @@ function AddressShipping({ cartItems }) {
                     <div className="grid md:grid-cols-2 gap-3">
                       <label
                         className={`flex items-start gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
-        ${
-          selectedPayment === "upi1"
-            ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
-            : "border-gray-200 hover:bg-gray-50"
-        }`}
+        ${selectedPayment === "upi1"
+                            ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
+                            : "border-gray-200 hover:bg-gray-50"
+                          }`}
                       >
                         <input
                           type="radio"
@@ -791,11 +872,10 @@ function AddressShipping({ cartItems }) {
                       </label>
                       <label
                         className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer
-                        ${
-                          selectedPayment === "upi2"
+                        ${selectedPayment === "upi2"
                             ? "border-purple-600 bg-purple-50 ring-2 ring-purple-300"
                             : "border-gray-200 hover:bg-gray-50"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -935,11 +1015,10 @@ function AddressShipping({ cartItems }) {
 
             {/* Right Column - Order Summary */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-3xl  shadow border border-gray-100 sticky top-24 ">
+              <div className="bg-white rounded-3xl shadow border border-gray-100 sticky top-24">
+                {/* Header */}
                 <div className="bg-gradient-to-r from-[#384D89] to-[#2A4172] p-6 rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-white">
-                    Order Summarys
-                  </h2>
+                  <h2 className="text-xl font-bold text-white">Order Summary</h2>
                 </div>
 
                 <div className="p-6 space-y-6">
@@ -959,15 +1038,8 @@ function AddressShipping({ cartItems }) {
                           <h4 className="font-medium text-[#14263F] text-sm">
                             {item?.name}
                           </h4>
-                          <p className="text-xs text-gray-500">
-                            Qty: {item?.quantity}
-                          </p>
-                          <p className="font-semibold text-[#384D89] text-sm">
-                            <span className="rupee">₹</span>
-                            {Math.trunc(
-                              item.price * item.quantity
-                            ).toLocaleString()}
-                          </p>
+                          <p className="text-xs text-gray-500">Qty: {item?.quantity}</p>
+                          <p className="text-xs text-gray-500">Qty: {item?.price}</p>
                         </div>
                       </div>
                     ))}
@@ -975,39 +1047,87 @@ function AddressShipping({ cartItems }) {
 
                   {/* Price Summary */}
                   <div className="space-y-4">
+                    {/* Subtotal */}
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2A4172]">Subtotal</span>
                       <span className="font-semibold text-[#14263F]">
-                        <span className="rupee">₹</span>
-                        {Math.trunc(subtotal).toLocaleString()}
+                        ₹{Math.trunc(subtotal).toLocaleString()}
                       </span>
                     </div>
 
-                    {/* {discount > 0 && (
-          <div className="flex justify-between text-sm">
-            <span className="text-[#2A4172]">Discount</span>
-            <span className="text-[#A13C78] font-semibold">-<span className="rupee">₹</span>{Math.trunc(discount).toLocaleString()}</span>
-          </div>
-        )} */}
+                    {/* Coupon Section */}
+                    <div className="border border-dashed border-gray-300 p-3 rounded-xl">
+                      <h3 className="font-semibold text-[#2A4172] mb-2">
+                        Available Coupons
+                      </h3>
 
+                      {applicableCoupons?.length > 0 ? (
+                        applicableCoupons.map((c) => (
+                          <div
+                            key={c._id}
+                            className="flex justify-between items-center mb-2"
+                          >
+                            <p className="text-sm text-gray-700">
+                              <span className="font-bold">{c.code}</span> -{" "}
+                              {c.discountValue}
+                              {c.discountType === "percentage" ? "%" : "₹"} OFF
+                            </p>
+                            <button
+                              onClick={() => handleApplyCoupon(c)}
+                              className="text-xs bg-[#384D89] text-white px-3 py-1 rounded-lg hover:bg-[#2A4172] transition"
+                            >
+                              Apply
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500">
+                          No coupons available for your cart
+                        </p>
+                      )}
+
+                      {/* Applied coupon message */}
+                      {appliedCoupon && (
+                        <p className="text-green-600 text-sm mt-2">
+                          {appliedCoupon.message || "Coupon Applied!"}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Discount (only if applied) */}
+                    {discount > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-[#2A4172]">Discount</span>
+                        <span className="text-[#A13C78] font-semibold">
+                          -₹{Math.trunc(discount).toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Shipping */}
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2A4172]">Shipping</span>
                       <span className="font-semibold text-[#14263F]">
                         {shipping === 0
                           ? "Free"
-                          : `<span className="rupee">₹</span>${Math.trunc(
-                              shipping
-                            )}`}
+                          : `₹${Math.trunc(shipping).toLocaleString()}`}
                       </span>
                     </div>
 
+                    {/* Final Total */}
                     <div className="border-t border-gray-200 pt-4">
                       <div className="flex justify-between text-lg font-bold">
                         <span className="text-[#14263F]">Total</span>
-                        <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
-                          <span className="rupee">₹</span>
-                          {Math.trunc(total).toLocaleString()}
-                        </span>
+                        <div className="text-right">
+                          <span className="bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
+                            ₹{Math.trunc(total).toLocaleString()}
+                          </span>
+                          {appliedCoupon && (
+                            <p className="line-through text-gray-400 text-sm">
+                              ₹{Math.trunc(subtotal + shipping).toLocaleString()}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1021,13 +1141,6 @@ function AddressShipping({ cartItems }) {
 
                   {/* Action Buttons */}
                   <div className="space-y-4">
-                    {/* <Link
-          to="/address"
-          className="block w-full py-4 px-6 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white text-center font-semibold rounded-lg hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
-        >
-          Proceed to Checkout
-        </Link> */}
-
                     <Link
                       to="/products"
                       className="block w-full py-4 px-6 border border-gray-300 text-[#384D89] text-center font-semibold rounded-lg hover:bg-[#384D89] hover:text-white transition-all duration-300"
@@ -1044,6 +1157,8 @@ function AddressShipping({ cartItems }) {
                 </div>
               </div>
             </div>
+
+
           </div>
         </div>
       </div>

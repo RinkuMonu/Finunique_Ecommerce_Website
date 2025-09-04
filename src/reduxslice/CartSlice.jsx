@@ -49,12 +49,12 @@ import {
 } from '../api/cartAPI';
 
 export const fetchCart = createAsyncThunk('cart/fetch', async () => {
-  const res = await getCartAPI();
+  const res = await getCartAPI();  
   return res.data.cart.items;
 });
 
 export const addItemToCart = createAsyncThunk('cart/add', async (product) => {
-  await addToCartAPI({ productId: product.id, quantity: product.quantity });
+  await addToCartAPI({ productId: product.id, quantity: product.quantity ,variantId:product });
   return product;
 });
 
@@ -87,12 +87,12 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCart.fulfilled, (state, action) => {
-        state.items = action.payload.map(item => ({
+      .addCase(fetchCart.fulfilled, (state, action) => {       
+        state.items = action.payload.map(item => ({          
           id: item.product._id,
           name: item.product.productName,
           image: item.product.images?.[0],
-          price: item.product.actualPrice || item.product.price,
+          price: item.price ,
           quantity: item.quantity,
         }));
       })

@@ -19,8 +19,8 @@ const FeaturedSections = () => {
 
         const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
-          const namesOnly = data?.website?.categories.map((item) => item?.name);
-          console.log("Category Names:", namesOnly);
+          const namesOnly = data.website.categories.filter((item) => item.name);
+          // console.log("Category Names:", namesOnly);
 
           data.website.categories.forEach((item) => {
             const sub = item?.subcategory;
@@ -95,7 +95,7 @@ const FeaturedSections = () => {
                     .map((item) => (
                       <Link
                         to={`/category/${slugify(item?.name)}`}
-                        key={item?._id}
+                        key={item._id}
                         className="flex-shrink-0 w-36 sm:w-44 bg-white rounded-[8px] p-4 text-center hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-200 shadow-sm "
                       >
                         {item?.image ? (
@@ -225,7 +225,7 @@ const FeaturedSections = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30"></div>
                 <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
                   <h3 className="text-xl sm:text-2xl text-white font-semibold mb-3">
-                  Bestselling Printers
+                    Bestselling Printers
                   </h3>
                   <Link
                     to={`/category/${slugify("Printers & Inks")}`}

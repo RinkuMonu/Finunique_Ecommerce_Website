@@ -20,7 +20,7 @@ interface APIBanner {
 
 const Banner: React.FC = () => {
   const slugify = (text) =>
-    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
@@ -84,37 +84,37 @@ const Banner: React.FC = () => {
     window.addEventListener("resize", checkDevice);
     return () => window.removeEventListener("resize", checkDevice);
   }, []);
-// useEffect(() => {
-//   const checkDevice = () => {
-//     const isMobile = /android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos/i
-//       .test(navigator.userAgent);
-//     setDeviceType(isMobile ? "mobile" : "desktop");
-//   };
+  // useEffect(() => {
+  //   const checkDevice = () => {
+  //     const isMobile = /android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos/i
+  //       .test(navigator.userAgent);
+  //     setDeviceType(isMobile ? "mobile" : "desktop");
+  //   };
 
-//   checkDevice();
-// }, []);
+  //   checkDevice();
+  // }, []);
 
 
   // ✅ Fetch banners based on device
- useEffect(() => {
-  const fetchBanners = async () => {
-    try {
-      const endpoint = deviceType === "mobile" ? "mobile" : "desktop";
-      const res = await fetch(
-        `${baseUrl}/banners/${endpoint}?referenceWebsite=${referenceWebsite}`
-      );
-      const data = await res.json();
-      const filtered = (data.banners || []).filter(
-        (item: APIBanner) => item.deviceType === deviceType
-      );
-      setBanners(filtered);
-    } catch (err) {
-      console.error("Failed to fetch banners", err);
-    }
-  };
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const endpoint = deviceType === "mobile" ? "mobile" : "desktop";
+        const res = await fetch(
+          `${baseUrl}/banners/${endpoint}?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
+        const filtered = (data.banners || []).filter(
+          (item: APIBanner) => item.deviceType === deviceType
+        );
+        setBanners(filtered);
+      } catch (err) {
+        console.error("Failed to fetch banners", err);
+      }
+    };
 
-  fetchBanners();
-}, [deviceType]);
+    fetchBanners();
+  }, [deviceType]);
 
 
   if (banners.length === 0) return null;
@@ -156,10 +156,10 @@ const Banner: React.FC = () => {
                       <Link
                         to={
                           item.description?.toLowerCase() === "new arrivals"
-                            ? `/products?newArrival=true` 
+                            ? `/products?newArrival=true`
                             : `/category/${encodeURIComponent(
-                                slugify(item?.description)
-                              )?.toLowerCase()}`
+                              slugify(item?.description)
+                            ).toLowerCase()}`
                         }
                         className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         onMouseEnter={(e) => {
@@ -174,12 +174,12 @@ const Banner: React.FC = () => {
                         <span>Shop {item?.description}</span>
                         <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                       </Link>
-                      <a
-                        href="/products"
+                      <Link
+                        to="/products"
                         className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-sm font-bold rounded-full transition-all duration-300 border-2 border-[#c1467f] hover:border-[#384d89] hover:bg-[#384d89] bg-[#c1467f] text-white"
                       >
                         <span>View All Products</span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

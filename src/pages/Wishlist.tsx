@@ -1,40 +1,46 @@
-"use client"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { removeItemFromWishlist, clearWishlist, fetchWishlist } from "../reduxslice/WishlistSlice"
-import { Trash2, Heart, ArrowLeft, ShoppingBag, Star, Eye } from "lucide-react"
-import { Link } from "react-router-dom"
-import Swal from "sweetalert2"
+"use client";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeItemFromWishlist,
+  clearWishlist,
+  fetchWishlist,
+} from "../reduxslice/WishlistSlice";
+import { Trash2, Heart, ArrowLeft, ShoppingBag, Star, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Wishlist = () => {
-  const { items: wishlistItems, loading } = useSelector((state: any) => state.wishlist)
-  const dispatch = useDispatch<any>()
+  const { items: wishlistItems, loading } = useSelector(
+    (state: any) => state.wishlist
+  );
+  const dispatch = useDispatch<any>();
 
-  console.log("wishlist " , wishlistItems)
+  console.log("wishlist ", wishlistItems);
   useEffect(() => {
-    dispatch(fetchWishlist())
-  }, [dispatch])
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
   const handleRemove = (id: string) => {
     dispatch(removeItemFromWishlist(id)).then(() => {
-      dispatch(fetchWishlist())
-    })
-  }
+      dispatch(fetchWishlist());
+    });
+  };
 
   const handleClear = () => {
     if (wishlistItems.length > 0) {
       Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to clear your entire wishlist?',
-        icon: 'warning',
+        title: "Are you sure?",
+        text: "Do you really want to clear your entire wishlist?",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, clear it!'
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, clear it!",
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(clearWishlist());
-          Swal.fire('Cleared!', 'Your wishlist has been cleared.', 'success');
+          Swal.fire("Cleared!", "Your wishlist has been cleared.", "success");
         }
       });
     }
@@ -45,10 +51,14 @@ const Wishlist = () => {
       <Star
         key={i}
         size={14}
-        className={`${i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}`}
+        className={`${
+          i < Math.floor(rating)
+            ? "fill-yellow-400 stroke-yellow-400"
+            : "stroke-gray-300"
+        }`}
       />
-    ))
-  }
+    ));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12 relative overflow-hidden">
@@ -71,7 +81,9 @@ const Wishlist = () => {
               Your Wishlist
             </h1>
             <p className="text-[#2A4172] text-base">
-              <span className="font-semibold text-[#A13C78]">{wishlistItems?.length || 0}</span>{" "}
+              <span className="font-semibold text-[#A13C78]">
+                {wishlistItems?.length || 0}
+              </span>{" "}
               {wishlistItems?.length === 1 ? "item" : "items"} saved for later
             </p>
           </div>
@@ -94,8 +106,12 @@ const Wishlist = () => {
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-[#384D89] to-[#2A4172] text-white animate-pulse">
               <Heart className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-bold text-[#14263F] mb-2">Loading your wishlist...</h3>
-            <p className="text-[#2A4172]">Please wait while we gather your saved items</p>
+            <h3 className="text-xl font-bold text-[#14263F] mb-2">
+              Loading your wishlist...
+            </h3>
+            <p className="text-[#2A4172]">
+              Please wait while we gather your saved items
+            </p>
           </div>
         )}
 
@@ -105,9 +121,12 @@ const Wishlist = () => {
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-[#384D89]/20 to-[#2A4172]/20 text-[#384D89]">
               <Heart className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-bold text-[#14263F] mb-2">Your wishlist is empty</h3>
+            <h3 className="text-xl font-bold text-[#14263F] mb-2">
+              Your wishlist is empty
+            </h3>
             <p className="text-[#2A4172] mb-6 max-w-md mx-auto text-sm">
-              Start adding items you love! Click the heart icon on any product to save it here for later.
+              Start adding items you love! Click the heart icon on any product
+              to save it here for later.
             </p>
             <Link
               to="/"
@@ -156,27 +175,57 @@ const Wishlist = () => {
                     <h3 className="text-base font-semibold text-[#14263F] truncate">
                       {item?.product?.productName || "Unnamed Product"}
                     </h3>
-                    <p className=" text-[#2A4172] line-clamp-2 mb-1">
-                      {item?.product?.description ||
-                        "Premium quality traditional wear crafted with authentic techniques and finest materials."}
-                    </p>
+                    {/* <p className=" text-[#2A4172] line-clamp-2 mb-1">
+                      {item?.product?.description}
+
+                    </p> */}
 
                     <div className="flex items-center gap-1 mb-1">
-                      <div className="flex">{renderStars(item?.product?.rating || 4)}</div>
-                      <span className="text-[11px] text-[#2A4172]/70">(Reviews)</span>
-                    </div>
-
-                    <div className="flex items-center gap-1 mb-1">
-                      <span className="text-lg font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
-                        <span className="rupee mb-1">₹</span>{item?.product?.actualPrice || "N/A"}
+                      <div className="flex">
+                        {renderStars(item?.product?.rating?.avg || 4)}
+                      </div>
+                      <span className="text-[11px] text-[#2A4172]/70">
+                        ({item?.product?.rating?.count})
                       </span>
-                      {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
-                        <span className=" text-[#2A4172]/60 line-through">
-                          <span className="rupee">₹</span>{item.product.price}
-                        </span>
-                      )}
                     </div>
-{/*
+
+                    <div className="flex items-start gap-1 mb-1 flex-col">
+                      {/* MRP (cut price) */}
+                      <span className="text-[13px]">
+                        {item?.product?.variants[0]?.pricing?.mrp &&
+                          item?.product?.variants[0]?.pricing?.price !==
+                            item?.product?.variants[0]?.pricing?.mrp && (
+                            <span className="text-[#2A4172]/60 line-through">
+                              <span className="rupee">₹ </span>
+                              {item?.product?.variants[0]?.pricing?.mrp}
+                            </span>
+                          )}
+                      </span>
+
+                      {/* Selling Price */}
+                      <span className="text-lg font-bold bg-gradient-to-r from-[#384D89] to-[#2A4172] bg-clip-text text-transparent">
+                        <span className="rupee mb-1">₹ </span>
+                        {item?.product?.variants[0]?.pricing?.price || "N/A"}
+                      </span>
+
+                      {/* Discount Percentage */}
+                      {item?.product?.variants[0]?.pricing?.mrp &&
+                        item?.product?.variants[0]?.pricing?.price &&
+                        item?.product?.variants[0]?.pricing?.mrp !==
+                          item?.product?.variants[0]?.pricing?.price && (
+                          <span className="text-green-600 text-[13px] font-medium">
+                            {Math.round(
+                              ((item?.product?.variants[0]?.pricing?.mrp -
+                                item?.product?.variants[0]?.pricing?.price) /
+                                item?.product?.variants[0]?.pricing?.mrp) *
+                                100
+                            )}
+                            % OFF
+                          </span>
+                        )}
+                    </div>
+
+                    {/*
                     <p className="text-[11px] text-[#2A4172]">
                       Category:{" "}
                       <span className="font-medium text-[#A13C78]">
@@ -191,23 +240,25 @@ const Wishlist = () => {
                       to={`/product/${item?.product?._id}`}
                       className="flex items-center gap-1 w-full text-white  font-semibold px-3 py-1.5 rounded-md bg-gradient-to-r from-[#A13C78] to-[#872D67] hover:from-[#872D67] hover:to-[#681853] shadow hover:shadow-md transition-all"
                     >
-                    <div className="mx-auto inline-flex items-center">
-                        <Eye size={14}  className="text-md me-1"/>
-                      View
-                    </div>
+                      <div className="mx-auto inline-flex items-center">
+                        <Eye size={14} className="text-md me-1" />
+                        View
+                      </div>
                     </Link>
                     <button
                       onClick={() => handleRemove(item?.product?._id)}
                       className="flex w-full items-center gap-1 px-3 py-1.5 border border-[#384D89]/30  text-[#384D89]  font-semibold rounded-md hover:bg-[#384D89] hover:text-white shadow-sm hover:shadow-md transition-all group"
                     >
                       <div className="mx-auto inline-flex items-center">
-                      <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
-                      Remove
-                    </div>
+                        <Trash2
+                          size={14}
+                          className="group-hover:scale-110 transition-transform"
+                        />
+                        Remove
+                      </div>
                     </button>
                   </div>
                 </div>
-
               ))}
           </div>
         )}
@@ -222,7 +273,9 @@ const Wishlist = () => {
               <span>Continue Shopping</span>
             </Link>
             <div className="text-center">
-              <p className="text-[#2A4172] mb-3 text-sm">Found something you love?</p>
+              <p className="text-[#2A4172] mb-3 text-sm">
+                Found something you love?
+              </p>
               <Link
                 to="/products"
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#A13C78] to-[#872D67] text-white font-semibold rounded-xl hover:from-[#872D67] hover:to-[#681853] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-base"
@@ -235,7 +288,7 @@ const Wishlist = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Wishlist
+export default Wishlist;

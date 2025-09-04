@@ -183,16 +183,16 @@ export default function CategoryPage() {
     qp.set("page", String(page));
     qp.set("limit", String(limit));
 
-    // const sortVal = searchParams.get("sortBy") || "newest";
-    // const sortMap: Record<string, { sortBy: string; sortOrder: "asc" | "desc" }> = {
-    //   "price-low": { sortBy: "price", sortOrder: "asc" },
-    //   "price-high": { sortBy: "price", sortOrder: "desc" },
-    //   newest: { sortBy: "createdAt", sortOrder: "desc" },
-    //   oldest: { sortBy: "createdAt", sortOrder: "asc" },
-    // };
-    // const s = sortMap[sortVal] || sortMap["newest"];
-    // qp.set("sortBy", s.sortBy);
-    // qp.set("sortOrder", s.sortOrder);
+    const sortVal = searchParams.get("sortBy") || "newest";
+    const sortMap: Record<string, { sortBy: string; sortOrder: "asc" | "desc" }> = {
+      "price-low": { sortBy: "price", sortOrder: "asc" },
+      "price-high": { sortBy: "price", sortOrder: "desc" },
+      newest: { sortBy: "createdAt", sortOrder: "desc" },
+      oldest: { sortBy: "createdAt", sortOrder: "asc" },
+    };
+    const s = sortMap[sortVal] || sortMap["newest"];
+    qp.set("sortBy", s.sortBy);
+    qp.set("sortOrder", s.sortOrder);
 
     const minPrice = Number(searchParams.get("minPrice") || priceRange[0]);
     const maxPrice = Number(searchParams.get("maxPrice") || priceRange[1]);
@@ -220,7 +220,7 @@ export default function CategoryPage() {
 
     Object.entries(selectedDynamic).forEach(([facet, values]) => {
       if (!values || !values.length) return;
-      qp.set(`features[${facet}]`, values.join(","));
+      qp.set(`[${facet}]`, values.join(","));
     });
 
     return qp;

@@ -1,123 +1,51 @@
-name: Deploy React App to CWP (DEV + PROD)
+name: Deploy React App to CWP
 
 on:
   push:
-    branches: [ develop, main ]
+    branches:
+      - main
 
 jobs:
-  deploy-dev:
-    if: github.ref == 'refs/heads/develop'
+  deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Setup Node
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install & Build
+      - name: Install Dependencies & Build
         run: |
-          npm ci
-          CI=false npm run build
-          # Auto-detect build folder (Vite=dist, CRA=build)
-          if [ -d dist ]; then echo "BUILD_DIR=dist" >> $GITHUB_ENV; else echo "BUILD_DIR=build" >> $GITHUB_ENV; fi
+          npm install --legacy-peer-deps
+          npm run build:ci
 
-      - name: Package build
-        run: tar -czvf build.tar.gz -C "$BUILD_DIR" .
+      - name: Zip build files
+        run: |
+          tar -czvf dist.tar.gz -C dist .
 
-      - name: Upload to DEV
+      - name: Copy Zip to Server via SCP
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.DEV_SSH_HOST }}
-          username: ${{ secrets.DEV_SSH_USERNAME }}
-          password: ${{ secrets.DEV_SSH_PASSWORD }}
-          port: ${{ secrets.DEV_SSH_PORT }}
-          source: "build.tar.gz"
-          target: "/home/${{ secrets.DEV_CWP_USER }}/"
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22527
+          source: "dist.tar.gz"
+          target: "/home/finuniqq/"
 
-      - name: Activate on DEV (atomic swap)
+      - name: Unzip files on Server via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_SSH_HOST }}
-          username: ${{ secrets.DEV_SSH_USERNAME }}
-          password: ${{ secrets.DEV_SSH_PASSWORD }}
-          port: ${{ secrets.DEV_SSH_PORT }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22527
           script: |
-            set -e
-            TS=$(date +%F-%H%M%S)
-            USER="${{ secrets.DEV_CWP_USER }}"
-            PKG="/home/$USER/build.tar.gz"
-            NEW="/home/$USER/public_html_new"
-            CUR="/home/$USER/public_html"
-
-            rm -rf "$NEW"
-            mkdir -p "$NEW"
-            tar -xzvf "$PKG" -C "$NEW"
-
-            if [ -d "$CUR" ]; then mv "$CUR" "${CUR}_backup_$TS"; fi
-            mv "$NEW" "$CUR"
-            rm -f "$PKG"
-
-            # keep last 3 backups only
-            ls -dt ${CUR}_backup_* 2>/dev/null | tail -n +4 | xargs -r rm -rf
-
-  deploy-prod:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install & Build
-        run: |
-          npm ci
-          CI=false npm run build
-          if [ -d dist ]; then echo "BUILD_DIR=dist" >> $GITHUB_ENV; else echo "BUILD_DIR=build" >> $GITHUB_ENV; fi
-
-      - name: Package build
-        run: tar -czvf build.tar.gz -C "$BUILD_DIR" .
-
-      - name: Upload to PROD
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.PROD_SSH_HOST }}
-          username: ${{ secrets.PROD_SSH_USERNAME }}
-          password: ${{ secrets.PROD_SSH_PASSWORD }}
-          port: ${{ secrets.PROD_SSH_PORT }}
-          source: "build.tar.gz"
-          target: "/home/${{ secrets.PROD_CWP_USER }}/"
-
-      - name: Activate on PROD (atomic swap)
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.PROD_SSH_HOST }}
-          username: ${{ secrets.PROD_SSH_USERNAME }}
-          password: ${{ secrets.PROD_SSH_PASSWORD }}
-          port: ${{ secrets.PROD_SSH_PORT }}
-          script: |
-            set -e
-            TS=$(date +%F-%H%M%S)
-            USER="${{ secrets.PROD_CWP_USER }}"
-            PKG="/home/$USER/build.tar.gz"
-            NEW="/home/$USER/public_html_new"
-            CUR="/home/$USER/public_html"
-
-            rm -rf "$NEW"
-            mkdir -p "$NEW"
-            tar -xzvf "$PKG" -C "$NEW"
-
-            if [ -d "$CUR" ]; then mv "$CUR" "${CUR}_backup_$TS"; fi
-            mv "$NEW" "$CUR"
-            rm -f "$PKG"
-
-            ls -dt ${CUR}_backup_* 2>/dev/null | tail -n +4 | xargs -r rm -rf
+            rm -rf /home/finuniqq/public_html/*
+            mkdir -p /home/finuniqq/public_html
+            tar -xzvf /home/finuniqq/dist.tar.gz -C /home/finuniqq/public_html
+            rm /home/finuniqq/dist.tar.gz

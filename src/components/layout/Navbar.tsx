@@ -157,19 +157,19 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
   const sidebarIcons = {
     "home appliances": <img src="../Digiimage/home.png" width={20} className="" />,
-    "grooming appliances":  <img src="../Digiimage/groom.png" width={20} className="" />,
+    "grooming appliances": <img src="../Digiimage/groom.png" width={20} className="" />,
     "kichen appliances": <img src="../Digiimage/ki.png" width={20} className="" />,
     "computer & peripherals": <img src="../Digiimage/laptop.png" width={30} className="" />,
     "mobile & tablet": <img src="../Digiimage/mobile.png" width={20} className="" />,
-    "wearbles & smart tech":  <img src="../Digiimage/smarttech.png" width={20} className="" />,
-    "audio & smart home":  <img src="../Digiimage/audio.png" width={20} className="" />,
-    "camera & musical":  <img src="../Digiimage/camera.png" width={20} className="" />,
+    "wearbles & smart tech": <img src="../Digiimage/smarttech.png" width={20} className="" />,
+    "audio & smart home": <img src="../Digiimage/audio.png" width={20} className="" />,
+    "camera & musical": <img src="../Digiimage/camera.png" width={20} className="" />,
     default: <Cpu size={20} className="text-gray-600" />,
   };
 
   // Helper functions
   const getCategoryIcon = (categoryName: string) => {
-    const key = categoryName?.toLowerCase();
+    const key = categoryName.toLowerCase();
     return (
       categoryIcons[key as keyof typeof categoryIcons] || categoryIcons.default
     );
@@ -179,7 +179,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     const key = categoryName?.toLowerCase();
     return (
       sidebarIcons[key as keyof typeof sidebarIcons] || sidebarIcons.default
-      
+
     );
   };
 
@@ -212,7 +212,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       default: <Cpu size={20} className={colorClass.split(" ")[0]} />,
     };
 
-    const key = categoryName?.toLowerCase();
+    const key = categoryName.toLowerCase();
     const icon = (iconMap as any)[key] || iconMap.default;
 
     return (
@@ -242,9 +242,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     (e: React.FormEvent) => {
       e.preventDefault();
       const slugify = (text) =>
-        text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+        text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
       const filtered = categories.filter((cat) =>
-        cat?.toLowerCase().includes(searchQuery?.toLowerCase())
+        cat.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
       if (filtered.length > 0) {
@@ -262,7 +262,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
 
   const handleCategorySelect = useCallback(
     (category: string) => {
-      navigate(`/category/${category?.toLowerCase()}`);
+      navigate(`/category/${category.toLowerCase()}`);
       setSearchQuery("");
       setMenuOpen(false);
       setIsCollectionOpen(false);
@@ -281,7 +281,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         const categoryList: string[] = [];
 
         if (Array.isArray(data?.website?.categories)) {
-          data.website.categories.forEach((item: any) => {
+          const newCategory = data.website.categories?.filter(data => data.name)
+          newCategory.forEach((item: any) => {
             const sub = item?.subcategory;
             if (!grouped[sub]) grouped[sub] = [];
             grouped[sub].push(item);
@@ -352,13 +353,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const slugify = (text) =>
-    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
 
   // Component render functions
   const renderSearchResults = () => (
     <div className="absolute z-20 mt-2 w-full bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 max-h-60 overflow-y-auto">
       {categories
-        .filter((cat) => cat?.toLowerCase().includes(searchQuery.toLowerCase()))
+        .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
         .map((cat) => (
           <div
             key={cat}
@@ -516,7 +517,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 {categories.map((item) => (
                   <Link
                     key={item}
-                    to={`/category/${item?.toLowerCase()}`}
+                    to={`/category/${item.toLowerCase()}`}
                     className="flex items-center px-6 py-4 font-semibold transition-all hover:bg-blue-50 hover:text-blue-600 group"
                     onClick={() => setMenuOpen(false)}
                   >
@@ -688,7 +689,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   {categories.slice(0, 6).map((categoryName, index) => (
                     <Link
                       key={index}
-                      to={`/category/${categoryName.toLowerCase()}`}
+                      to={`/category/${categoryName?.toLowerCase()}`}
                       className="group flex flex-col items-center px-2 py-4 lg:p-4 rounded-lg hover:bg-gray-50 transition-all duration-200"
                       onClick={() => setIsCollectionOpen(false)}
                     >
@@ -737,7 +738,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
         {items.length > 8 && (
           <div className="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t border-gray-200 text-center">
             <Link
-              to={`/category/${subcategory?.toLowerCase()}`}
+              to={`/category/${subcategory.toLowerCase()}`}
               className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
               View All {subcategory}
@@ -976,10 +977,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       onMouseEnter={() => !isMobileView && setHoveredSubcategory("more")}
                       onMouseLeave={() => !isMobileView && setHoveredSubcategory(null)}
                     >
-                   
+
                       More Product <ChevronDown size={18} />
                       {hoveredSubcategory === "more" && (
-                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{height:"80vh", overflowY:"auto"}}>
+                        <div className="absolute -left-[150px] top-[12px] h-92 overflow-y-auto mt-2 w-auto min-w-[200px] bg-white shadow-xl rounded-md z-50 border" style={{ height: "80vh", overflowY: "auto" }}>
                           <div className="p-4">
                             <ul className="space-y-4">
                               {Object.entries(groupedCategories)

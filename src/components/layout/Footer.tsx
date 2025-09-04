@@ -53,7 +53,9 @@ export default function Footer() {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
         if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories);
+          const newCategory = data.website?.categories.filter(data => data.name)
+
+          setCategories(newCategory);
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -61,37 +63,38 @@ export default function Footer() {
     };
 
     // ✅ NEW: fetch all unique subcategories
-   const fetchSubcategories = async () => {
-  try {
-    const res = await fetch(`${baseUrl}/categories`);
-    const data = await res.json();
-    console.log(data, "Category data");
+    const fetchSubcategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/categories`);
+        const data = await res.json();
+        console.log(data, "Category data");
 
-    if (Array.isArray(data)) {
-      const seen = new Set();
-      const uniqueSubcategories = data
-        .filter((item) => {
-          if (item.subcategory && !seen.has(item.subcategory)) {
-            seen.add(item.subcategory);
-            return true;
-          }
-          return false;
-        })
-        .map((item) => ({
-          _id: item._id,
-          name: item.subcategory,
-          slug: item.subcategory?.toLowerCase()
-            .replace(/&/g, "and") // Replace & with and
-            .replace(/[^a-z0-9]+/g, "-") // Replace spaces/symbols with hyphen
-            .replace(/^-+|-+$/g, ""), // Trim hyphens
-        }));
+        if (Array.isArray(data)) {
+          const seen = new Set();
+          const uniqueSubcategories = data
+            .filter((item) => {
+              if (item.subcategory && !seen.has(item.subcategory)) {
+                seen.add(item.subcategory);
+                return true;
+              }
+              return false;
+            })
+            .map((item) => ({
+              _id: item._id,
+              name: item.subcategory,
+              slug: item.subcategory
+                .toLowerCase()
+                .replace(/&/g, "and") // Replace & with and
+                .replace(/[^a-z0-9]+/g, "-") // Replace spaces/symbols with hyphen
+                .replace(/^-+|-+$/g, ""), // Trim hyphens
+            }));
 
-      setSubcategories(uniqueSubcategories);
-    }
-  } catch (error) {
-    console.error("Failed to fetch subcategories:", error);
-  }
-};
+          setSubcategories(uniqueSubcategories);
+        }
+      } catch (error) {
+        console.error("Failed to fetch subcategories:", error);
+      }
+    };
 
 
     fetchCategories();
@@ -106,7 +109,7 @@ export default function Footer() {
   ];
 
   const slugify = (text) =>
-    text?.toLowerCase()?.replace(/&/g, "and").replace(/\s+/g, "-");
+    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
   const getCategoryAllProducts = async (categoryId) => {
     const res = await fetch(`${baseUrl}/website/${categoryId}`);
@@ -157,8 +160,8 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-sm text-white/80 hover:text-[#C1467F] transition-colors duration-200">
                 <Mail size={16} className="text-[#C1467F]" />
-                <a href="mailto:info@fin-unique.com" className="hover:underline">
-                  info@fin-unique.com
+                <a href="mailto:info@digihub.com" className="hover:underline">
+                  info@digihubtech.in
                 </a>
               </div>
 
@@ -204,9 +207,9 @@ export default function Footer() {
             </h3>
             <div className="space-y-3">
               {subcategories.map((sub) => (
-                <Link key={sub._id} to={`/categoryby/${sub.slug}`}   state={{ subcategoryName: sub.name }}>
+                <Link key={sub._id} to={`/categoryby/${sub.slug}`} state={{ subcategoryName: sub.name }}>
                   <button
-                    
+
                     className="block mt-5 text-sm text-white/80 hover:text-[#C1467F] group transition-all duration-200 hover:pl-3 border-l-2 border-transparent hover:border-[#C1467F] pl-1"
                   >
                     {sub.name}
@@ -239,7 +242,8 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-[#C1467F]">
           <div className="text-center pb-4">
             <p className="text-sm text-white/80">
-              © {new Date().getFullYear()} Finunique Small Private Limited. All rights reserved.
+              © {new Date().getFullYear()} DigiHubUnique Tech Solutions Private
+              Limited. All rights reserved.
             </p>
           </div>
 

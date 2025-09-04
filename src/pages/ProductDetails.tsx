@@ -22,7 +22,11 @@ import { FaChevronRight } from "react-icons/fa";
 /* ================= Helpers ================= */
 const clean = (v?: any) => (v ?? "").toString().trim();
 const titleCase = (s: string) =>
-  s.toLowerCase().split(" ").map(w => (w ? w[0].toUpperCase() + w.slice(1) : "")).join(" ");
+  s
+    .toLowerCase()
+    .split(" ")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ""))
+    .join(" ");
 const canonicalKey = (k: string) => {
   const key = (k || "").toLowerCase();
   const map: Record<string, string> = {
@@ -114,7 +118,9 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [allProducts, setAllProducts] = useState<RawProduct[]>([]);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState<"description" | "reviews">("description");
+  const [activeTab, setActiveTab] = useState<"description" | "reviews">(
+    "description"
+  );
   const [mainImage, setMainImage] = useState<string>("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isRatingModalOpen, setRatingModalOpen] = useState(false);
@@ -123,8 +129,11 @@ const ProductDetails = () => {
   const [review, setReview] = useState<any[]>([]);
   const [gettoken, settoken] = useState<string | null>(null);
 
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+  // console.log(selectedVariant);
 
   /* ---------- Zoom ---------- */
   const [isZooming, setIsZooming] = useState(false);
@@ -132,14 +141,22 @@ const ProductDetails = () => {
   const zoomTimeoutRef = useRef<any>(null);
 
   const imgSrc = (u?: string) =>
-    !u ? "/placeholder.svg?height=600&width=600" : isAbsUrl(u) ? u : `${Image_BaseURL}${u}`;
+    !u
+      ? "/placeholder.svg?height=600&width=600"
+      : isAbsUrl(u)
+        ? u
+        : `${Image_BaseURL}${u}`;
 
   const renderStars = (rating: number) =>
     Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         size={18}
-        className={i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-400"}
+        className={
+          i < Math.floor(rating)
+            ? "fill-yellow-400 stroke-yellow-400"
+            : "stroke-gray-400"
+        }
       />
     ));
 
@@ -166,8 +183,10 @@ const ProductDetails = () => {
       const normalized: Variant[] = list.map((v, idx) => {
         const price = Number(v.pricing?.price ?? 0);
         const mrp = Number(v.pricing?.mrp ?? price);
-        const discountPct = mrp > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0;
-        const inStock = v?.status === "IN_STOCK" || (v?.inventory?.totalStock ?? 0) > 0;
+        const discountPct =
+          mrp > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0;
+        const inStock =
+          v?.status === "IN_STOCK" || (v?.inventory?.totalStock ?? 0) > 0;
 
         const options: Record<string, string> = {};
         Object.entries(v.options || {}).forEach(([k, val]) => {
@@ -177,7 +196,10 @@ const ProductDetails = () => {
 
         const id =
           v.sku ||
-          `${Object.entries(options).map(([k, vv]) => `${k}:${vv}`).join("|") || "var"}_${idx}`;
+          `${Object.entries(options)
+            .map(([k, vv]) => `${k}:${vv}`)
+            .join("|") || "var"
+          }_${idx}`;
 
         return {
           id,
@@ -208,7 +230,9 @@ const ProductDetails = () => {
         });
       }
 
-      const allOptionKeys = uniq(normalized.flatMap(nv => Object.keys(nv.options || {})));
+      const allOptionKeys = uniq(
+        normalized.flatMap((nv) => Object.keys(nv.options || {}))
+      );
       return { ...raw, variants: normalized, allOptionKeys };
     };
 
@@ -217,6 +241,7 @@ const ProductDetails = () => {
         // read query selections (color, storage, ram...)
         const q: Record<string, string> = {};
         searchParams.forEach((val, key) => {
+          console.log(val, key);
           const ck = canonicalKey(key);
           q[ck] = clean(val);
         });
@@ -224,11 +249,15 @@ const ProductDetails = () => {
         const qs = new URLSearchParams({
           referenceWebsite, // API ke liye
           ...(Object.keys(q).length
-            ? Object.fromEntries(Object.entries(q).map(([ck, val]) => [queryKeyFor(ck), val]))
+            ? Object.fromEntries(
+              Object.entries(q).map(([ck, val]) => [queryKeyFor(ck), val])
+            )
             : {}),
         });
 
-        const res = await fetch(`${baseUrl}/product/getproduct/${id}?${qs.toString()}`);
+        const res = await fetch(
+          `${baseUrl}/product/getproduct/${id}?${qs.toString()}`
+        );
         const data = await res.json();
         const raw: RawProduct | undefined = data?.product;
         if (!raw) {
@@ -244,17 +273,20 @@ const ProductDetails = () => {
         let base: Variant | null = null;
         if (raw.selectedVariant) {
           base =
-            np.variants.find(v => v.sku && v.sku === raw.selectedVariant?.sku) ||
-            np.variants.find(v => {
+            np.variants.find(
+              (v) => v.sku && v.sku === raw.selectedVariant?.sku
+            ) ||
+            np.variants.find((v) => {
               const rv = raw.selectedVariant!;
               return Object.entries(rv.options || {}).every(([k, val]) => {
                 const ck = canonicalKey(k);
                 return v.options?.[ck] === clean(String(val));
               });
-            }) || null;
+            }) ||
+            null;
         }
         if (!base && raw.variants?.length) {
-          const defIdx = raw.variants.findIndex(rv => rv?.isDefault);
+          const defIdx = raw.variants.findIndex((rv) => rv?.isDefault);
           base = defIdx >= 0 ? np.variants[defIdx] : null;
         }
         if (!base) base = np.variants[0] || null;
@@ -266,8 +298,10 @@ const ProductDetails = () => {
           urlSel[ck] = clean(val);
         });
         const byUrl =
-          np.variants.find(v =>
-            np.allOptionKeys.every(k => !urlSel[k] || v.options?.[k] === urlSel[k])
+          np.variants.find((v) =>
+            np.allOptionKeys.every(
+              (k) => !urlSel[k] || v.options?.[k] === urlSel[k]
+            )
           ) || null;
 
         const finalVariant = byUrl || base;
@@ -305,10 +339,10 @@ const ProductDetails = () => {
   /* ---------- Option logic ---------- */
   const getAllowedValues = (key: string): string[] => {
     if (!product) return [];
-    const otherKeys = product.allOptionKeys.filter(k => k !== key);
+    const otherKeys = product.allOptionKeys.filter((k) => k !== key);
     const allowed = new Set<string>();
-    product.variants.forEach(v => {
-      const ok = otherKeys.every(k => {
+    product.variants.forEach((v) => {
+      const ok = otherKeys.every((k) => {
         const sel = selectedOptions[k];
         return !sel || v.options?.[k] === sel;
       });
@@ -319,8 +353,8 @@ const ProductDetails = () => {
 
   const findMatchingVariant = (sel: Record<string, string>): Variant | null => {
     if (!product) return null;
-    const exact = product.variants.find(v =>
-      product.allOptionKeys.every(k => !sel[k] || v.options?.[k] === sel[k])
+    const exact = product.variants.find((v) =>
+      product.allOptionKeys.every((k) => !sel[k] || v.options?.[k] === sel[k])
     );
     if (exact) return exact;
 
@@ -336,7 +370,10 @@ const ProductDetails = () => {
   };
 
   // ---- yeh function HI sab karega: state update + URL params sync ----
-  const syncUrlFromSelection = (sel: Record<string, string>, replace = false) => {
+  const syncUrlFromSelection = (
+    sel: Record<string, string>,
+    replace = false
+  ) => {
     const nextParams = new URLSearchParams();
     Object.entries(sel).forEach(([ck, val]) => {
       if (val) nextParams.set(queryKeyFor(ck), val);
@@ -351,7 +388,7 @@ const ProductDetails = () => {
     const match = findMatchingVariant(nextSel);
     setSelectedVariant(match || null);
 
-    const img = (match?.images?.[0] || product?.images?.[0]);
+    const img = match?.images?.[0] || product?.images?.[0];
     if (img) setMainImage(imgSrc(img));
 
     // URL me saare selected options bhejo
@@ -369,14 +406,15 @@ const ProductDetails = () => {
   };
 
   /* ---------- Quantity ---------- */
-  const handleIncrease = () => setQuantity(prev => prev + 1);
-  const handleDecrease = () => quantity > 1 && setQuantity(prev => prev - 1);
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
   /* ---------- Cart ---------- */
   const handleAddToCart = (p: Product | RawProduct) => {
     const token = localStorage.getItem("token");
     const price =
-      selectedVariant?.price ?? (product?.variants?.[0]?.price || Number(p?.price ?? 0));
+      selectedVariant?.price ??
+      (product?.variants?.[0]?.price || Number(p?.price ?? 0));
     const image =
       selectedVariant?.images?.[0] ||
       product?.images?.[0] ||
@@ -394,7 +432,9 @@ const ProductDetails = () => {
     };
 
     if (!token) {
-      const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+      const existingCart = JSON.parse(
+        localStorage.getItem("addtocart") || "[]"
+      );
       const idx = existingCart.findIndex(
         (it: any) =>
           it.id === (p as any)._id &&
@@ -440,16 +480,27 @@ const ProductDetails = () => {
   };
 
   /* ---------- Derived ---------- */
-  const displayPrice = selectedVariant?.price ?? (product?.variants?.[0]?.price ?? 0);
+  const displayPrice =
+    selectedVariant?.price ?? product?.variants?.[0]?.price ?? 0;
   const displayMrp =
-    selectedVariant?.mrp ?? (product?.variants?.[0]?.mrp ?? product?.price ?? displayPrice);
+    selectedVariant?.mrp ??
+    product?.variants?.[0]?.mrp ??
+    product?.price ??
+    displayPrice;
   const displayDiscountPct =
-    displayMrp > 0 ? Math.max(0, Math.round(((displayMrp - displayPrice) / displayMrp) * 100)) : 0;
+    displayMrp > 0
+      ? Math.max(
+        0,
+        Math.round(((displayMrp - displayPrice) / displayMrp) * 100)
+      )
+      : 0;
 
   const maxStock = selectedVariant?.inventoryQty ?? product?.maxOrderQty ?? 99;
 
   /* ---------- Other variants list ---------- */
-  const otherVariants = (product?.variants || []).filter(v => v.id !== selectedVariant?.id);
+  const otherVariants = (product?.variants || []).filter(
+    (v) => v.id !== selectedVariant?.id
+  );
 
   /* ---------- Related (kept) ---------- */
   let relatedProductsFiltered = allProducts.filter(
@@ -457,9 +508,13 @@ const ProductDetails = () => {
   );
   if (relatedProductsFiltered.length < 4) {
     const otherProducts = allProducts.filter(
-      (p) => p._id !== id && !relatedProductsFiltered.some((rp) => rp._id === p._id)
+      (p) =>
+        p._id !== id && !relatedProductsFiltered.some((rp) => rp._id === p._id)
     );
-    relatedProductsFiltered = [...relatedProductsFiltered, ...otherProducts].slice(0, 4);
+    relatedProductsFiltered = [
+      ...relatedProductsFiltered,
+      ...otherProducts,
+    ].slice(0, 4);
   }
 
   if (!product)
@@ -473,59 +528,51 @@ const ProductDetails = () => {
     <div className="container mx-auto px-4 py-16 min-h-screen max-w-7xl">
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2fr] gap-8 lg:gap-12 items-start">
         {/* Left: Images */}
-        <div className="md:sticky top-4 flex flex-col items-center p-4">
-          <div className="flex gap-6 w-full max-w-6xl">
-            <div
-              className="relative w-full max-w-xl rounded-2xl overflow-hidden border-2 border-[#2A4172]/20 bg-white shadow-sm group"
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="relative flex gap-6 w-full max-w-6xl">
-                <img
-                  src={mainImage || "/placeholder.svg?height=600&width=600"}
-                  alt={product?.productName}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 p-4"
-                />
-                {displayDiscountPct > 0 && (
-                  <div className="absolute top-4 right-4 bg-[#A13C78] text-white px-3 py-1 rounded-full text-sm font-bold shadow-md animate-pulse">
-                    {displayDiscountPct}% OFF
-                  </div>
-                )}
-              </div>
+        {/* Main Image */}
+        <div>
+          <div
+            className="relative w-full max-w-xl rounded-2xl overflow-hidden border-2 border-[#2A4172]/20 bg-white shadow-sm group"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="relative flex gap-6 w-full max-w-6xl">
+              <img
+                src={
+                  mainImage ||
+                  product?.selectedVariant?.images?.[0] ||
+                  "/placeholder.svg?height=600&width=600"
+                }
+                alt={product?.productName}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 p-4"
+              />
+              {displayDiscountPct > 0 && (
+                <div className="absolute top-4 right-4 bg-[#A13C78] text-white px-3 py-1 rounded-full text-sm font-bold shadow-md animate-pulse">
+                  {displayDiscountPct}% OFF
+                </div>
+              )}
             </div>
-
-            {isZooming && (
-              <div className="hidden lg:block absolute top-5 right-[-320px] w-[300px] h-[300px] border-2 border-[#83225c]/30 rounded-xl overflow-hidden bg-white shadow-inner z-10">
-                <div
-                  className="absolute w-full h-full bg-no-repeat bg-cover"
-                  style={{
-                    backgroundImage: `url(${mainImage || "/placeholder.svg?height=600&width=600"})`,
-                    backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                    backgroundSize: "200%",
-                  }}
-                />
-              </div>
-            )}
           </div>
 
-          {/* Thumbs */}
+          {/* Thumbnails */}
           <div className="mt-6 w-full">
             <div className="flex space-x-3 pb-2 overflow-x-auto snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#A13C78]/30 scrollbar-track-gray-100/50 ">
-              {(product?.images?.length ? product.images : [mainImage]).map((img, index) => (
+              {(product?.selectedVariant?.images?.length
+                ? product.selectedVariant.images
+                : product?.images || []
+              ).map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setMainImage(imgSrc(img))}
-                  className={`flex-shrink-0 w-20 h-20 m-2 rounded-lg overflow-hidden border-3 transition-all duration-300 snap-center ${
-                    mainImage === imgSrc(img)
-                      ? "border-[#380d27] ring-2 ring-[#83225c]"
-                      : "border-gray-200 hover:border-[#C1467F]"
-                  }`}
+                  className={`flex-shrink-0 w-20 h-20 m-2 rounded-lg overflow-hidden border-3 transition-all duration-300 snap-center ${mainImage === imgSrc(img)
+                    ? "border-[#380d27] ring-2 ring-[#83225c]"
+                    : "border-gray-200 hover:border-[#C1467F]"
+                    }`}
                 >
                   <img
                     src={imgSrc(img)}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover hover:opacity-90"
+                    alt={`Thumbnail ${index}`}
+                    className="w-full h-full object-cover"
                   />
                 </button>
               ))}
@@ -538,26 +585,47 @@ const ProductDetails = () => {
           {/* Header */}
           <div className="mb-6 flex items-center">
             <ul className="space-y-2">
-              <li className="flex items-center ">
-                <span className="text-gray-800 font-medium text-[15px]">Category </span>
-                <FaChevronRight className="w-3 h-3 text-[#616664] mt-1 mx-2 flex-shrink-0" />
-                <span className="text-[#2A4172] text-[13px]">{product.category?.name}</span>
+              <li className="flex items-center justify-center ">
+                <span className="text-gray-800 font-medium text-[15px]">
+                  {product?.brand?.name?.toUpperCase()}
+                </span>
+                <FaChevronRight className="w-3 h-3 text-[#616664]  mx-2 flex-shrink-0" />
+                <span className="text-[#2A4172] text-[13px]">
+                  {product.category?.name}
+                </span>
               </li>
             </ul>
           </div>
 
           <div>
             <div className="flex justify-between items-start">
-              <h1 className="text-3xl font-bold text-[#1B2E4F] mb-2">{product.productName}</h1>
+              <h1 className="text-3xl font-bold text-[#1B2E4F] mb-2">
+                {product.productName}
+              </h1>
             </div>
 
             <div className="flex items-center mb-4">
-              <div className="flex mr-2">{renderStars(product?.rating?.avg || 4)}</div>
-              <span className="text-sm text-[#2A4172] ml-1">({review?.length} Reviews)</span>
+              <div className="flex mr-2">
+                {renderStars(product?.rating?.avg || 4)}
+              </div>
+              <span className="text-sm text-[#2A4172] ml-1">
+                ({review?.length} Reviews)
+              </span>
               <span className="mx-2 text-gray-300">|</span>
-              <span className="text-sm font-medium text-[#3ae698] flex items-center">
-                <CheckCircle className="w-4 h-4 mr-1" />{" "}
-                {selectedVariant?.inStock ? "In Stock" : "Out of Stock"}
+              <span
+                className={`font-medium ${selectedVariant?.status === "IN_STOCK"
+                  ? "text-green-600"
+                  : selectedVariant?.status === "OUT_OF_STOCK"
+                    ? "text-red-600"
+                    : selectedVariant?.status === "PREORDER"
+                      ? "text-yellow-600"
+                      : "text-gray-500"
+                  }`}
+              >
+                {selectedVariant?.status === "IN_STOCK" && "In Stock"}
+                {selectedVariant?.status === "OUT_OF_STOCK" && "Out of Stock"}
+                {selectedVariant?.status === "PREORDER" && "Preorder"}
+                {selectedVariant?.status === "DISCONTINUED" && "Discontinued"}
               </span>
             </div>
           </div>
@@ -566,7 +634,8 @@ const ProductDetails = () => {
           <div className="bg-[#F5F7FA] rounded-xl p-5 mb-4">
             <div className="flex flex-wrap items-baseline gap-1">
               <span className="text-3xl font-bold text-[#A13C78]">
-                <span className="rupee mb-1">₹</span> {product?.actualPrice?.toFixed()}
+                <span className="rupee mb-1">₹</span>{" "}
+                {Number(displayPrice || 0).toFixed()}
               </span>
               {displayMrp > displayPrice && (
                 <span className="text-xl text-[#2A4172] line-through">
@@ -582,85 +651,58 @@ const ProductDetails = () => {
             </div>
             {displayMrp > displayPrice && (
               <div className="mt-2 text-sm text-[#2A4172]">
-                You save: <span className="rupee">₹</span>{(product?.price - product?.actualPrice)?.toFixed(2)}
+                You save: <span className="rupee">₹</span>
+                {(displayMrp - displayPrice).toFixed(2)}
               </div>
             )}
           </div>
 
-          {/* Options (click => URL sync) */}
-          {product.allOptionKeys.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-[#1B2E4F] mb-3">Available Options</h3>
-
-              {product.allOptionKeys.map((optKey) => {
-                const values = uniq(
-                  product.variants.map(v => v.options?.[optKey]).filter(Boolean) as string[]
-                );
-                const allowed = getAllowedValues(optKey);
-                return (
-                  <div key={optKey} className="mb-3">
-                    <div className="text-[13px] text-[#2A4172] mb-1 font-medium">{optKey}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {values.map((val) => {
-                        const isSelected = selectedOptions[optKey] === val;
-                        const isDisabled = !allowed.includes(val);
-                        return (
-                          <button
-                            key={val}
-                            onClick={() => onSelectOption(optKey, val)}
-                            className={`px-4 py-2 rounded-full border text-sm font-medium transition-all
-                              ${isSelected
-                                ? "bg-[#1B2E4F] text-white border-[#1B2E4F]"
-                                : "bg-white text-[#2A4172] border-gray-300 hover:border-[#1B2E4F]"}
-                              ${isDisabled ? "opacity-50" : "cursor-pointer"}`}
-                            title={isDisabled ? "Not available with current selection" : val}
-                          >
-                            {val}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
           {/* Other Variants (click => send ALL params like color+storage) */}
           {otherVariants.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-[#1B2E4F] mb-3">Other Variants</h3>
+              <h3 className="text-lg font-semibold text-[#1B2E4F] mb-3">
+                Other Variants
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[selectedVariant, ...otherVariants].filter(Boolean).map((v, idx) => {
-                  const active = v?.id === selectedVariant?.id;
-                  const label = product.allOptionKeys
-                    .map(k => v?.options?.[k])
-                    .filter(Boolean)
-                    .join(" • ");
-                  return (
-                    <button
-                      key={`${v?.id}-${idx}`}
-                      onClick={() => v && handleChooseVariant(v)}
-                      className={`flex items-center gap-4 w-full text-left rounded-2xl border p-3
-                        ${active ? "border-[#1B2E4F] bg-[#F5F7FA]" : "border-gray-200 hover:border-[#1B2E4F]"}`}
-                    >
-                      <img
-                        src={imgSrc(v?.images?.[0] || product.images?.[0])}
-                        alt="variant"
-                        className="w-14 h-14 object-cover rounded-md"
-                      />
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold text-[#1B2E4F]">{label || v?.sku}</div>
-                        <div className="text-xs text-[#2A4172]">
-                          ₹{Number(v?.price || 0).toFixed()}{" "}
-                          {v && v.mrp > (v.price || 0) ? (
-                            <span className="line-through ml-1">₹{Number(v.mrp).toFixed()}</span>
-                          ) : null}
+                {[selectedVariant, ...otherVariants]
+                  .filter(Boolean)
+                  .map((v, idx) => {
+                    const active = v?.id === selectedVariant?.id;
+                    const label = product.allOptionKeys
+                      .map((k) => v?.options?.[k])
+                      .filter(Boolean)
+                      .join(" • ");
+                    return (
+                      <button
+                        key={`${v?.id}-${idx}`}
+                        onClick={() => v && handleChooseVariant(v)}
+                        className={`flex items-center gap-4 w-full text-left rounded-2xl border p-3
+                        ${active
+                            ? "border-[#1B2E4F] bg-[#F5F7FA]"
+                            : "border-gray-200 hover:border-[#1B2E4F]"
+                          }`}
+                      >
+                        <img
+                          src={imgSrc(v?.images?.[0] || product.images?.[0])}
+                          alt="variant"
+                          className="w-14 h-14 object-cover rounded-md"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-[#1B2E4F]">
+                            {label || v?.sku}
+                          </div>
+                          <div className="text-xs text-[#2A4172]">
+                            ₹{Number(v?.price || 0).toFixed()}{" "}
+                            {v && v.mrp > (v.price || 0) ? (
+                              <span className="line-through ml-1">
+                                ₹{Number(v.mrp).toFixed()}
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
               </div>
             </div>
           )}
@@ -679,7 +721,9 @@ const ProductDetails = () => {
               >
                 <Minus size={18} />
               </button>
-              <span className="px-5 py-2 text-lg font-medium text-[#1B2E4F]">{quantity}</span>
+              <span className="px-5 py-2 text-lg font-medium text-[#1B2E4F]">
+                {quantity}
+              </span>
               <button
                 onClick={handleIncrease}
                 disabled={quantity >= maxStock}
@@ -719,9 +763,12 @@ const ProductDetails = () => {
             <div className="flex items-start">
               <Truck className="w-5 h-5 text-[#A13C78] mt-0.5 mr-2 flex-shrink-0" />
               <div>
-                <h4 className="font-medium text-[#1B2E4F] mb-1">Free Delivery</h4>
+                <h4 className="font-medium text-[#1B2E4F] mb-1">
+                  Free Delivery
+                </h4>
                 <p className="text-sm text-[#2A4172]">
-                  Get free delivery on this item. Expected delivery in 2-4 business days.
+                  Get free delivery on this item. Expected delivery in 2-4
+                  business days.
                 </p>
               </div>
             </div>
@@ -734,22 +781,20 @@ const ProductDetails = () => {
         <div className="flex flex-wrap border-b-2 border-[#2A4172]/20 ">
           <button
             onClick={() => setActiveTab("description")}
-            className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
-              activeTab === "description"
-                ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
-                : "text-[#2A4172] hover:text-[#A13C78]"
-            }`}
+            className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "description"
+              ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
+              : "text-[#2A4172] hover:text-[#A13C78]"
+              }`}
           >
             Description
           </button>
           <div className="flex justify-between gap-6 w-full sm:w-auto sm:flex-grow">
             <button
               onClick={() => setActiveTab("reviews")}
-              className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
-                activeTab === "reviews"
-                  ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
-                  : "text-[#2A4172] hover:text-[#A13C78]"
-              }`}
+              className={`px-8 py-2 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "reviews"
+                ? "border-b-4 border-[#A13C78] text-[#1B2E4F]"
+                : "text-[#2A4172] hover:text-[#A13C78]"
+                }`}
             >
               Reviews
             </button>
@@ -774,16 +819,21 @@ const ProductDetails = () => {
         <div className="py-8 text-[#2A4172] text-lg leading-relaxed">
           {activeTab === "description" ? (
             <div>
-              <h3 className="text-xl font-bold mb-5 text-[#1B2E4F]">Product Overview</h3>
+              <h3 className="text-xl font-bold mb-5 text-[#1B2E4F]">
+                Product Overview
+              </h3>
               {product?.description ? (
                 <div
                   className="prose prose-sm max-w-none mb-5 text-sm text-[#2A4172]"
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               ) : null}
-              {Array.isArray(product?.keyFeatures) && product.keyFeatures.length > 0 ? (
+              {Array.isArray(product?.keyFeatures) &&
+                product.keyFeatures.length > 0 ? (
                 <ul className="list-disc list-inside space-y-3 text-sm text-[#2A4172]">
-                  {product.keyFeatures.map((f, i) => <li key={i}>{f}</li>)}
+                  {product.keyFeatures.map((f, i) => (
+                    <li key={i}>{f}</li>
+                  ))}
                 </ul>
               ) : (
                 <ul className="list-disc list-inside space-y-3 text-sm text-[#2A4172]">
@@ -797,25 +847,39 @@ const ProductDetails = () => {
             </div>
           ) : (
             <div>
-              <h3 className=" font-bold mb-5 text-xl text-[#1B2E4F]">Customer Reviews</h3>
+              <h3 className=" font-bold mb-5 text-xl text-[#1B2E4F]">
+                Customer Reviews
+              </h3>
               {review?.length > 0 ? (
                 <div className="space-y-8 text-sm">
                   {review?.map((reviewItem: any) => (
-                    <div key={reviewItem?.id} className="border-b border-[#2A4172]/20 pb-6 last:border-b-0 last:pb-0">
+                    <div
+                      key={reviewItem?.id}
+                      className="border-b border-[#2A4172]/20 pb-6 last:border-b-0 last:pb-0"
+                    >
                       <div className="flex flex-col sm:flex-row items-start sm:items-center mb-2 gap-3">
                         <span className="flex justify-center items-center gap-2 font-semibold text-[#1B2E4F] mr-3">
                           <Star size={16} className="text-[#A13C78]" />
-                          {reviewItem?.user?.firstName} {reviewItem?.user?.lastName}
+                          {reviewItem?.user?.firstName}{" "}
+                          {reviewItem?.user?.lastName}
                         </span>
-                        <div className="flex">{renderStars(reviewItem?.rating)}</div>
+                        <div className="flex">
+                          {renderStars(reviewItem?.rating)}
+                        </div>
                       </div>
-                      <p className="text-sm text-[#2A4172]/80 mb-3">{reviewItem?.date}</p>
-                      <p className="text-[#2A4172] leading-relaxed">{reviewItem?.comment}</p>
+                      <p className="text-sm text-[#2A4172]/80 mb-3">
+                        {reviewItem?.date}
+                      </p>
+                      <p className="text-[#2A4172] leading-relaxed">
+                        {reviewItem?.comment}
+                      </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-[#2A4172] text-sm">No reviews yet. Be the first to share your experience!</p>
+                <p className="text-[#2A4172] text-sm">
+                  No reviews yet. Be the first to share your experience!
+                </p>
               )}
             </div>
           )}
@@ -824,7 +888,10 @@ const ProductDetails = () => {
 
       {/* Modals + Toast */}
       {showLoginModal && (
-        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
           <Login1 />
         </LoginModal>
       )}
@@ -836,9 +903,14 @@ const ProductDetails = () => {
           <ShoppingCart size={20} className="text-green-600" />
           <div className="flex-grow">
             <span className="text-sm font-semibold">Product Added to Cart</span>
-            <p className="mt-1 text-xs text-gray-600">{addedProduct?.productName}</p>
+            <p className="mt-1 text-xs text-gray-600">
+              {addedProduct?.productName}
+            </p>
           </div>
-          <button onClick={() => setIsPopupVisible(false)} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={() => setIsPopupVisible(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
             <X size={18} />
           </button>
         </div>
@@ -846,7 +918,10 @@ const ProductDetails = () => {
 
       <Arrivals addToCart={handleAddToCart} />
       {isRatingModalOpen && (
-        <RatingModal isOpen={isRatingModalOpen} onClose={() => setRatingModalOpen(false)} />
+        <RatingModal
+          isOpen={isRatingModalOpen}
+          onClose={() => setRatingModalOpen(false)}
+        />
       )}
     </div>
   );

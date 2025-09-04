@@ -100,10 +100,9 @@ const DealsOfTheDay = () => {
       name: deal.productName,
       image: deal.images?.[0] || "",
       category: deal.category?.name || "Uncategorized",
-      price: deal.actualPrice,
+      price: deal?.variants[0]?.pricing?.price,
       quantity: 1,
     };
-
     if (!token) {
       // Guest user: Use localStorage
       const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
@@ -236,93 +235,93 @@ const DealsOfTheDay = () => {
 
             {/* Product Cards */}
             {deals.slice(currentSlide * 2, currentSlide * 2 + 2).map((deal, index) => (
-             <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-             <div className="flex items-center justify-between mb-4">
-               <div className="flex items-center space-x-2 text-green-600">
-                 <Check size={16} />
-                 <span className="text-sm font-medium">In stock</span>
-               </div>
-               <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">DEAL</span>
-             </div>
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2 text-green-600">
+                    <Check size={16} />
+                    <span className="text-sm font-medium">In stock</span>
+                  </div>
+                  <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">DEAL</span>
+                </div>
 
-             <div className="relative mb-6">
-               <img
-                 src={deal.images[0] || "/placeholder.svg"}
-                 alt={deal.productName}
-                 className="w-full h-48 object-contain bg-gray-50 rounded-xl"
-               />
-               <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                 -{deal.discount}%
-               </div>
-             </div>
+                <div className="relative mb-6">
+                  <img
+                    src={deal.images[0] || "/placeholder.svg"}
+                    alt={deal.productName}
+                    className="w-full h-48 object-contain bg-gray-50 rounded-xl"
+                  />
+                  <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                    -{deal.discount}%
+                  </div>
+                </div>
 
-             <div className="space-y-2 mb-4">
-               <div className="flex items-center space-x-2 text-sm text-gray-600">
-                 <Check size={14} className="text-green-500" />
-                 <span>Free Shipping</span>
-               </div>
-               <div className="flex items-center space-x-2 text-sm text-gray-600">
-                 <Check size={14} className="text-green-500" />
-                 <span>Guaranteed Genuine</span>
-               </div>
-             </div>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Check size={14} className="text-green-500" />
+                    <span>Free Shipping</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Check size={14} className="text-green-500" />
+                    <span>Guaranteed Genuine</span>
+                  </div>
+                </div>
 
-             <div className="grid grid-cols-4 gap-2 mb-4">
-               {[{ value: dealTimers[deal._id]?.days ?? 0, label: "Days" },
-                 { value: dealTimers[deal._id]?.hours ?? 0, label: "Hours" },
-                 { value: dealTimers[deal._id]?.minutes ?? 0, label: "Mins" },
-                 { value: dealTimers[deal._id]?.seconds ?? 0, label: "Secs" }]
-                 .map((time, i) => (
-                   <div key={i} className="text-center">
-                     <div className="bg-gray-900 text-white text-lg font-bold py-2 rounded-lg">
-                       {String(time.value).padStart(2, "0")}
-                     </div>
-                     <div className="text-xs text-gray-500 mt-1">{time.label}</div>
-                   </div>
-                 ))}
-             </div>
+                <div className="grid grid-cols-4 gap-2 mb-4">
+                  {[{ value: dealTimers[deal._id]?.days ?? 0, label: "Days" },
+                  { value: dealTimers[deal._id]?.hours ?? 0, label: "Hours" },
+                  { value: dealTimers[deal._id]?.minutes ?? 0, label: "Mins" },
+                  { value: dealTimers[deal._id]?.seconds ?? 0, label: "Secs" }]
+                    .map((time, i) => (
+                      <div key={i} className="text-center">
+                        <div className="bg-gray-900 text-white text-lg font-bold py-2 rounded-lg">
+                          {String(time.value).padStart(2, "0")}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">{time.label}</div>
+                      </div>
+                    ))}
+                </div>
 
-             <div className="mb-4">
-               <div className="flex justify-between text-xs text-gray-600 mb-2">
-                 <span>50% SOLD</span>
-                 <span>Available</span>
-               </div>
-               <div className="w-full bg-gray-200 rounded-full h-2">
-                 <div className="bg-gradient-to-r from-orange-400 to-red-500 h-2 rounded-full transition-all duration-300" style={{ width: `50%` }}></div>
-               </div>
-             </div>
+                <div className="mb-4">
+                  <div className="flex justify-between text-xs text-gray-600 mb-2">
+                    <span>50% SOLD</span>
+                    <span>Available</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-orange-400 to-red-500 h-2 rounded-full transition-all duration-300" style={{ width: `50%` }}></div>
+                  </div>
+                </div>
 
-             <div className="text-xs font-semibold text-gray-500 mb-2">{deal.category}</div>
-             <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{deal.productName}</h3>
-             <div className="flex items-center mb-4">
-               <div className="flex mr-2">{renderStars(4)}</div>
-               <span className="text-sm text-gray-500">(4.0)</span>
-             </div>
+                <div className="text-xs font-semibold text-gray-500 mb-2">{deal?.category?.name}</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{deal.productName}</h3>
+                <div className="flex items-center mb-4">
+                  <div className="flex mr-2">{renderStars(4)}</div>
+                  <span className="text-sm text-gray-500">(4.0)</span>
+                </div>
 
-             <div className="flex items-center justify-between mb-6">
-               <div className="flex items-center space-x-2">
-                 <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal.actualPrice?.toFixed(2)}</span>
-                 <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price?.toFixed(2)}</span>
-               </div>
-               <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal.discount}%</div>
-             </div>
+                <div className="flex items-center justify-between mb-6">
+                  {/* <div className="flex items-center space-x-2">
+                 <span className="text-2xl font-bold text-red-600"><span className="rupee">₹</span>{deal?.actualPrice.toFixed(2)}</span>
+                 <span className="text-lg text-gray-400 line-through"><span className="rupee">₹</span>{deal.price.toFixed(2)}</span>
+               </div> */}
+                  <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{deal?.discount}%</div>
+                </div>
 
-             {/* Main content wrapper with flex-grow */}
-             <div className="flex-grow mb-6">
-               {/* You can add space between other components here */}
-             </div>
+                {/* Main content wrapper with flex-grow */}
+                <div className="flex-grow mb-6">
+                  {/* You can add space between other components here */}
+                </div>
 
-             {/* Add to Cart Button */}
-             <div className="mt-auto">
-               <button
-                 onClick={(e) => handleAddToCart(e, deal)}
-                 className="w-full bg-[#cf769f] hover:bg-[#BE457E] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-               >
-                 <ShoppingCart size={18} />
-                 <span>QUICK ADD</span>
-               </button>
-             </div>
-           </div>
+                {/* Add to Cart Button */}
+                <div className="mt-auto">
+                  <button
+                    onClick={(e) => handleAddToCart(e, deal)}
+                    className="w-full bg-[#cf769f] hover:bg-[#BE457E] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                  >
+                    <ShoppingCart size={18} />
+                    <span>QUICK ADD</span>
+                  </button>
+                </div>
+              </div>
 
             ))}
           </div>

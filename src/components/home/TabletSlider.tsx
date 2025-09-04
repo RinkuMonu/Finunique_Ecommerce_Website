@@ -21,7 +21,7 @@ const TabletSlider = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const slugify = (text: string) =>
-    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+    text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-IN", {
@@ -34,19 +34,16 @@ const TabletSlider = () => {
   const calculateSavings = (originalPrice: number, actualPrice: number) => {
     return originalPrice - actualPrice;
   };
-
   const handleAddToCart = (product: any) => {
     const token = localStorage.getItem("token");
-
     const cartItem = {
       id: product._id,
       name: product.productName,
       image: product.images?.[0] || "",
       category: product.category?.name || "Uncategorized",
-      price: product.actualPrice || product.price,
+      price: product?.variants[0]?.pricing?.price,
       quantity,
     };
-
     if (!token) {
       // Guest cart (localStorage)
       const existingCart = JSON.parse(
@@ -97,6 +94,10 @@ const TabletSlider = () => {
     fetchProducts();
   }, []);
 
+  if (tablets.length == 0) {
+    return;
+  }
+
   return (
     <div className="bg-gray-50 py-6 px-4 relative">
       {/* Popup */}
@@ -107,7 +108,7 @@ const TabletSlider = () => {
             <p className="text-sm font-medium">
               {addedProduct.productName} added to cart!
             </p>
-           
+
           </div>
         </div>
       )}
@@ -139,80 +140,69 @@ const TabletSlider = () => {
         }}
         className="mx-20"
       >
-        {tablets?.map((item: any) => (
-          <SwiperSlide key={item._id}>
+        {tablets?.map((item, index) => (
+          <SwiperSlide key={index}>
             <div
               className="border relative rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition"
               onMouseEnter={() => setHoveredProduct(item._id)}
               onMouseLeave={() => setHoveredProduct(null)}
             >
-              <div>
-                {/* Discount tag */}
-                <div className="inline-block absolute top-0 left-0 bg-[#BE457E] text-white text-xs font-semibold px-2 py-1 rounded-tl-md rounded-b-lg z-50">
-                  {item?.discount} % save
+              {item?.discount && (
+                <div className="inline-block z-50 absolute top-0 left-0 bg-[#BE457E] text-white text-xs font-semibold px-2 py-1 rounded-tl-md rounded-b-lg">
+                  {item.discount}% save
                 </div>
+              )}
 
-                {/* Product image */}
-                <div className="w-full h-48 flex items-center justify-center mb-3 relative">
-                  <img
-                    src={item.images[0]}
-                    alt={item.productName}
-                    className="max-h-full object-contain"
-                  />
-
-                  {/* Quick Add overlay */}
-                  <div
-                    className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-300 ${
-                      hoveredProduct === item._id
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2"
+              <div className="w-full h-48 flex items-center justify-center mb-3 relative">
+                <img
+                  src={item.images[0]}
+                  alt={item.productName}
+                  className="max-h-full object-contain"
+                />
+                {/* Quick Add Overlay */}
+                <div
+                  className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-all duration-300 ease-in-out
+    ${hoveredProduct === item._id
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4"
                     }`}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleAddToCart(item);
+                    }}
+                    className="w-full bg-[#BE457E]  font-medium py-2 px-4 rounded-lg text-white flex items-center justify-center gap-2"
                   >
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleAddToCart(item);
-                      }}
-                      className="w-full bg-[#BE457E]  font-medium py-2 px-4 rounded-lg text-white flex items-center justify-center gap-2"
-                    >
-                      <ShoppingCart size={16} />
-                       Add to Cart
-                    </button>
-                  </div>
+                    <ShoppingCart size={16} />
+                    Add to Cart
+                  </button>
                 </div>
+              </div>
 
-                {/* Product name */}
-                <Link to={`/product/${item._id}`}>
-                  <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2 hover:underline truncate">
-                    {item?.productName}
-                  </h3>
-                </Link>
-
-                {/* Price */}
-                <div className="flex items-center gap-1 text-lg font-bold text-black">
-                  <span className="ruppee mb-1">₹</span>
-                  {item.actualPrice || item.price}
+              <Link to={`/product/${item._id}`}>
+                <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2 truncate hover:underline">
+                  {item.productName}
+                </h3>
+              </Link>
+              <div className="flex items-center gap-2 text-lg font-bold text-black">
+                {formatPrice(item.variants[0].pricing?.price)}
+              </div>
+              {item?.variants[0].pricing && item?.variants[0].pricing?.price !== item?.variants[0].pricing?.mrp && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-green-600 font-medium">
+                    Save{" "}
+                    {formatPrice(
+                      calculateSavings(item?.variants[0]?.pricing?.mrp, item?.variants[0].pricing?.price)
+                    )}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    ({item?.discount}% off)
+                  </span>
                 </div>
-
-                {/* Savings */}
-                {item?.price && item?.price !== item?.actualPrice && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-green-600 font-medium">
-                      Save{" "}
-                      {formatPrice(
-                        calculateSavings(item?.price, item?.actualPrice)
-                      )}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      ({item?.discount}% off)
-                    </span>
-                  </div>
-                )}
-
-                {/* Original price */}
-                <div className="text-sm text-gray-500 line-through mt-1">
-                  ₹ {Math.floor(item?.price)}
-                </div>
+              )}
+              <div className="text-sm text-gray-500 line-through mt-1">
+                ₹ {Math.floor(item?.variants[0].pricing?.price)}
               </div>
             </div>
           </SwiperSlide>

@@ -30,6 +30,7 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+console.log(cartItems);
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
@@ -113,6 +114,8 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
   };
 
   const cartToDisplay = isLoggedIn ? cartItems : localCart;
+  console.log(cartToDisplay);
+  
   const total = cartToDisplay.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -122,17 +125,15 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 ${
-          isOpen ? "bg-opacity-50" : "bg-opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 ${isOpen ? "bg-opacity-50" : "bg-opacity-0 pointer-events-none"
+          }`}
         onClick={onClose}
       />
 
       {/* Cart Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
