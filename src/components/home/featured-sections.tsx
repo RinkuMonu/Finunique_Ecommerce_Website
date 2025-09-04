@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 
 const FeaturedSections = () => {
   const slugify = (text) =>
-    text?.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-');
+    text?.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
   const [groupedCategories, setGroupedCategories] = useState({});
@@ -16,14 +16,23 @@ const FeaturedSections = () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
+        console.log(data);
 
         const grouped = {};
         if (Array.isArray(data?.website?.categories)) {
-          const namesOnly = data.website.categories.filter((item) => item.name);
-          // console.log("Category Names:", namesOnly);
+          // ✅ Sirf wahi categories lo jisme name aur image dono ho
+          const validCategories = data.website.categories.filter(
+            (item) => item.name && item.image
+          );
 
-          data.website.categories.forEach((item) => {
-            const sub = item?.subcategory;
+          console.log(
+            "✅ Valid Categories (with name & image):",
+            validCategories
+          );
+
+          // ✅ Grouping by subcategory
+          validCategories.forEach((item) => {
+            const sub = item?.subcategory?.trim()?.toLowerCase();
             if (!grouped[sub]) grouped[sub] = [];
             grouped[sub].push(item);
           });

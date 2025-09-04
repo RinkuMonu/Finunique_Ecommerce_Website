@@ -176,7 +176,7 @@ export default function CategoryPage() {
   const buildQueryParams = () => {
     const qp = new URLSearchParams();
     qp.set("referenceWebsite", referenceWebsite);
-    if (catagory1) qp.set("category", catagory1);
+    if (catagory1) qp.set("subcategory", catagory1);
 
     const page = Number(searchParams.get("page") || pageMeta.currentPage || 1);
     const limit = Number(searchParams.get("limit") || pageMeta.pageSize || 24);
