@@ -1,58 +1,33 @@
-name: Deploy Vite (dist) to CWP
+name: Deploy React App to CWP
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install & Build (Vite -> dist)
+      - name: Install Dependencies & Build
         run: |
-          set -euxo pipefail
           npm install --legacy-peer-deps
           npm run build
-          # sanity check: dist must exist and have index.html
-          test -d dist && test -f dist/index.html
 
-      - name: Show build output (debug)
+      - name: Zip build files
         run: |
-          echo "PWD: $(pwd)"
-          ls -la
-          echo "--- dist listing ---"
-          ls -la dist
+          tar -czvf dist.tar.gz -C dist .
 
-      - name: Archive dist
-        run: |
-          set -euxo pipefail
-          tar -czf dist.tar.gz -C dist .
-
-      # Remote prep: ensure target exists & check disk
-      - name: Prepare remote directory
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22527
-          script: |
-            set -euxo pipefail
-            mkdir -p /home/finuniqq/public_html
-            df -h
-            # optional: ensure ownership (uncomment if needed)
-            # chown -R finuniqq:finuniqq /home/finuniqq/public_html
-
-      - name: Upload archive via SCP
+      - name: Copy Zip to Server via SCP
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -61,45 +36,16 @@ jobs:
           port: 22527
           source: "dist.tar.gz"
           target: "/home/finuniqq/"
-          debug: true
-          overwrite: true
 
-      - name: Unpack to public_html
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Unzip files on Server via SSH
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22527
           script: |
-            set -euxo pipefail
             rm -rf /home/finuniqq/public_html/*
-            tar -xzf /home/finuniqq/dist.tar.gz -C /home/finuniqq/public_html
-            rm -f /home/finuniqq/dist.tar.gz
-            ls -la /home/finuniqq/public_html
-
-      # OPTIONAL: Single-Page App routing (.htaccess) — enable if needed
-      - name: Ensure SPA .htaccess (optional)
-        if: always()
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22527
-          script: |
-            set -euxo pipefail
-            HT=/home/finuniqq/public_html/.htaccess
-            if ! grep -q "RewriteEngine On" "$HT" 2>/dev/null; then
-              cat > "$HT" <<'EOF'
-            Options -Indexes
-            <IfModule mod_rewrite.c>
-              RewriteEngine On
-              RewriteBase /
-              RewriteCond %{REQUEST_FILENAME} !-f
-              RewriteCond %{REQUEST_FILENAME} !-d
-              RewriteRule ^ index.html [L]
-            </IfModule>
-            EOF
-            fi
-            echo "Final files:" && ls -la /home/finuniqq/public_html
+            mkdir -p /home/finuniqq/public_html
+            tar -xzvf /home/finuniqq/dist.tar.gz -C /home/finuniqq/public_html
+            rm /home/finuniqq/dist.tar.gz
