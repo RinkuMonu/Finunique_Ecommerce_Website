@@ -45,6 +45,8 @@ const Premium = () => {
     fetchProducts();
   }, [baseUrl, referenceWebsite]);
 
+  console.log("smart watches productsssssss:", products);
+
   return (
    <>
     <div className="bg-gray-50 py-6 px-4">
@@ -113,18 +115,18 @@ const Premium = () => {
                   {item?.productName}
                 </h3>
                 <div className="flex items-center gap-1 text-lg font-bold text-black">
-                  <span className="rupee mb-1">₹</span> {Math.floor(item?.actualPrice)}
+                  <span className="rupee mb-1">₹</span> {Math.floor(item?.variants[0]?.pricing?.price )}
                 </div>
-                {item?.price && item?.price !== item?.actualPrice && (
+                {item?.variants[0]?.pricing?.price && item?.variants[0]?.pricing?.price  !== item?.variants[0]?.pricing?.mrp  && (
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-green-600 font-medium">
-                      Save {formatPrice(calculateSavings(item?.price, item?.actualPrice))}
+                      Save {formatPrice(calculateSavings(item?.variants[0]?.pricing?.price , item?.variants[0]?.pricing?.mrp ))}
                     </span>
                     <span className="text-xs text-gray-500">({item?.discount}% off)</span>
                   </div>
                 )}
                 <div className="text-sm text-gray-500 line-through mt-1">
-                  <span className="rupee">₹</span> {Math.floor(item?.price)}
+                  <span className="rupee">₹</span> {Math.floor(item?.variants[0]?.pricing?.mrp )}
                 </div>
               </div>
             </Link>
