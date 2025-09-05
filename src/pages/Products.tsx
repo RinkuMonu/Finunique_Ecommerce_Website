@@ -120,7 +120,7 @@ export default function CategoryPage() {
 
   // ------- filter states (mirrors URL) -------
   const initialMinPrice = Number(searchParams.get("minPrice") || 0);
-  const initialMaxPrice = Number(searchParams.get("maxPrice") || 5_000_000);
+  const initialMaxPrice = Number(searchParams.get("maxPrice") || 30000);
   const [priceRange, setPriceRange] = useState<[number, number]>([
     initialMinPrice,
     initialMaxPrice,
